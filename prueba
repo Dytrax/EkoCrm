@@ -1,232 +1,86 @@
-(function() {
-    var app = angular.module('pqrControllers', ['angular.morris', 'ngMaterial', 'ngMessages', 'ngAnimate', 'ngRoute' ,'ekosaveAdministracion'])
-
-    .controller('pqrMainController', function($scope, $mdDialog, $mdMedia, $location, $localStorage, $http , $mdToast, $timeout, $mdSidenav, configuracionServidor, pqrs) {
-
-        $scope.cambiarEstado(); 
-        $scope.pqrsAbiertas = [];
-        $scope.pqrsProceso = [];
-        $scope.pqrsCerradas = [];
-        $scope.perfiles = {7:"SuperAdministrador", 5:"Ejecutivo", 6: "Administrador", 10: "Soporte", 9: "Usuario de Registro", 8: "Administrador"};
-
-        $scope.query = {
-            "filter":"",
-            "order": '',
-            "limit": 5,
-            "page": 1
-        };
-
-        $scope.logPagination = function (page, limit) {
-            $scope.query.page=page;
-            $scope.query.limit=limit;
-        }
-
-        $scope.consultar = function(){
-
-            pqrs.consultar().then(function(respuesta){
-
-              $scope.pqrsAbiertas = [];
-              $scope.pqrsProceso = [];
-              $scope.pqrsCerradas = [];
-
-              if(respuesta.status == 200){
-
-                console.log(respuesta);
-
-                    //soporte
-                    if($localStorage.currentUser.data.profileId==10){
-
-                        for(ejecutivo in respuesta.data){
-
-                            for(cliente in respuesta.data[ejecutivo].clients){
-
-                                for(pqr in respuesta.data[ejecutivo].clients[cliente].pqrs ){
-
-                                    if( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr].state == 1 ){
-                                        $scope.pqrsAbiertas.push( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr] );
-                                    }
-                                    else if(respuesta.data[ejecutivo].clients[cliente].pqrs[pqr].state == 2){
-                                        $scope.pqrsProceso.push( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr] );
-                                    }
-                                    else{
-                                        $scope.pqrsCerradas.push( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr] );
-                                    }
-
-                                }
-
-                            }
-
-                        }
-                    }
-                    else if($localStorage.currentUser.data.profileId==5){
+git init
+git status
+git add .
+git commit -m "Mensaje del commit"
+git remote add origin https://github.com/Dytrax/EkoCrm.git //Añadir cambios al master
 
 
-                        console.log("es 5");
-                        for(cliente in respuesta.data){
-
-                            for(pqr in respuesta.data[cliente].pqrs ){
-
-                                if(respuesta.data[cliente].pqrs[pqr].state == 1){
-                                    $scope.pqrsAbiertas.push( respuesta.data[cliente].pqrs[pqr] );
-                                }
-                                else if(respuesta.data[cliente].pqrs[pqr].state == 2){
-                                    $scope.pqrsProceso.push( respuesta.data[cliente].pqrs[pqr] );
-                                }
-                                else{
-                                    $scope.pqrsCerradas.push( respuesta.data[cliente].pqrs[pqr] );
-                                }
-
-                            }
-
-                        }
 
 
-                    }
 
-                    console.log($scope.pqrs);
-                }
-                else{
-                    $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
-                }
-            });
-        }
 
-        $scope.consultar();
+let openRequest = answer[1].map(s=>{
 
-        $scope.seguimiento = function(ev, siguiendo){  
 
-            console.log(siguiendo); 
 
-            $scope.siguiendo = siguiendo;  
 
-            if(siguiendo.state == 0){
-                var tmp =  "views/pqr/visualizador.html";  
-            }  
-            else{
-                var tmp =  "views/pqr/seguimiento.html";
+
+            return {
+                //empresasNames:
+                //pqrsCompanyXcerradas:s.filter(n=>n.name==="Avofruit SAS"),
+                idCompany:s.id,
+                companyName:s.businessName,
+                pqrsCompanyAbiertas:s.pqrs.filter(p=>p.state===1),
+                pqrsCompanyCerradas:s.pqrs.filter(p=>p.state===0),
+                pqrsCompanyEnProceso:s.pqrs.filter(p=>p.state===2),               
+                
             }
+            
 
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
-            $mdDialog.show({
-                controller: "seguimientoController",
-                templateUrl:  tmp,
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose:true,
-                fullscreen: useFullScreen,
-                scope:$scope,
-                preserveScope: true,
+        })
 
-            })
-            .then(function(answer) {
-                $mdDialog.hide();
-            }, function() {
+        /* this.setState({
+            dataSource:openRequest
+        }) */
+        console.log(openRequest)
+        
+        let cerradas = openRequest.filter(n=>n.idCompany===22)
+        console.log(cerradas)
+        cerradas = cerradas[0]["pqrsCompanyCerradas"];
 
-            });
-            $scope.$watch(function() {
-                return $mdMedia('xs') || $mdMedia('sm');
-            }, function(wantsFullScreen) {
-                $scope.customFullscreen = (wantsFullScreen === true);
-            });
+        console.log(cerradas);
+        let datos  = [];
+        let objeto = {};
 
-        }
-
-        $scope.validarTamano= function(input,min,max){
-
-            console.log(input);
-
-            if ($scope.formulario[""+input].toString().length < min || $scope.formulario[""+input].toString().length > max) {
-
-                $scope.formularioEnvio[""+input].$error.validarTamano = true;
-                $scope.formularioEnvio.$valid = false;
-                $scope.formularioEnvio[""+input].$invalid=true;
-                console.log("no valido ");
-
+        for (var clave in openRequest){
+            
+            /* console.log("clave")
+            console.log(clave)
+            console.log("json[clave]")
+            console.log(openRequest[clave].pqrsCompanyCerradas) */
+            /* console.log("CompanyName")
+            console.log(openRequest[clave].companyName) */
+            for( var clave2 in openRequest[clave].pqrsCompanyCerradas){
+                datos.push({
+                    "CompanyName":openRequest[clave].companyName,
+                    "title":openRequest[clave].pqrsCompanyCerradas[clave2].title,
+                    "dateInit":openRequest[clave].pqrsCompanyCerradas[clave2].dateInit.slice(0,10)
+                })
+                /* console.log("Ttile")
+                console.log(openRequest[clave].pqrsCompanyCerradas[clave2].title,)
+                console.log("CompanyName")
+                console.log(openRequest[clave].companyName)
+                console.log("Fecha de inicio")
+                console.log(openRequest[clave].pqrsCompanyCerradas[clave2].dateInit) */
             }
-            else {
-                $scope.formularioEnvio[""+input].$error.validarTamano = false;
-                $scope.formularioEnvio[""+input].$invalid=false;
-                console.log("valido ");
-            }
+                
+                /* console.log("Descripción")
+                console.log(openRequest[clave].pqrsCompanyCerradas[clave2].description) */
+            
         }
-
-        $scope.eliminar = function(ev, id, nombre){
-
-            var confirm = $mdDialog.confirm()
-            .title('Eliminar PQR: '+nombre)
-            .textContent('Esta acción no puede deshacerse')
-            .ariaLabel('modalPQR')
-            .targetEvent(ev)
-            .ok('Eliminar')
-            .cancel('Cancelar');
-
-            $mdDialog.show(confirm).then(function() {
-
-                pqrs.borrar(id).then(function(respuesta){
-
-                    if(respuesta.status == 204){
-                        $scope.mensajes.parentProperty("PQR eliminado satisfactoriamente.", "Aceptar", 3000);
-                        $scope.consultar();
-                    }
-                    else{
-                        $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
-                    }       
-
-                });
-
-            }, function() {
-                console.log("liminar n");
-            });
-        }
-
-    })
-
-
-.controller('seguimientoController', function($scope, $mdDialog, $mdMedia, $location, $localStorage, $http , $mdToast, $timeout, $mdSidenav, administracionUsuarios, configuracionServidor, pqrs) {
-
-    $scope.visor = $localStorage.currentUser.data.id;
-    $scope.formulario = {};
-
-    $scope.viewDownload = function(archivo){
-        console.log(configuracionServidor.protocolo+configuracionServidor.servidor+configuracionServidor.puertoCRM+"/v1/pqr/pqrs/uploads/"+archivo.pqrId+"/"+archivo.fileName);
-        window.open(configuracionServidor.protocolo+configuracionServidor.servidor+configuracionServidor.puertoCRM+"/v1/pqr/pqrs/uploads/"+archivo.pqrId+"/"+archivo.fileName);
+        //objeto.datos = datos;
+        console.log("datos")
+        console.log(datos)
+        console.log("objeto")
+        console.log(objeto.datos)
+        console.log("Json Creado")
+        console.log(JSON.stringify(objeto));
+        this.setState({
+            dataSource:datos
+        })
+        //console.log(this.state)
+        //console.log(openRequest[0].companyName)
+        //console.log(openRequest[0].pqrsCompanyCerradas[0].title)
+        //console.log(openRequest[0].pqrsCompanyCerradas[0].dateInit)
+        
     }
-
-
-    $scope.agregarSeguimiento = function(){
-
-        pqrs.agregarSeguimiento( {pqrId: $scope.siguiendo.id ,description: $scope.formulario.descripcion , dateExecution: new Date() } ).then(function(respuesta){
-
-            if(respuesta.status == 201){
-               $scope.mensajes.parentProperty("Seguimiento agregado satisfactoriamente.", "Aceptar", 3000);
-               $scope.consultar();
-               $mdDialog.hide();
-           }
-           else{
-            $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
-        }
-
-    });
-
-    }
-
-    $scope.cerrarPQR = function(){
-
-     pqrs.cerrarPQR( {pqrId: $scope.siguiendo.id ,description: $scope.formulario.descripcion , dateExecution: new Date() } ).then(function(respuesta){
-
-        if(respuesta.status == 201){
-           $scope.mensajes.parentProperty("PQR cerrado satisfactoriamente.", "Aceptar", 3000);
-           $scope.consultar();
-           $mdDialog.hide();
-       }
-       else{
-        $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
-    }
-
-});
-
- }
-
-})
-
-})();

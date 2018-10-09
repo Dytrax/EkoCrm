@@ -18,101 +18,33 @@ export default class AbiertasScreen extends Component{
         super()
         this.state = {
             dataSource: [],
-            dataSource2: []
+            
 
         }
     }
      async componentWillMount(){
         const data = this.props.navigation.getParam("dataSource")
-        console.log("dataaaaaaaaaaaa")
-        //console.log(this.props.navigation.state.params.dataSource)
-        const token = await DB.getData("token");
-        const answer = await API.getRequest(token);
-        console.log("answer")
-        console.log(answer)
-        let abiertasAnswer = answer[1]
-        console.log("abiertasAnswer")
-        console.log(abiertasAnswer.filter(n=>n.name==="Avofruit SAS"))
-
-
-
-
-
-        let openRequest = answer[1].map(s=>{
-
-
-
-
-
-            return {
-                //empresasNames:
-                //pqrsCompanyXcerradas:s.filter(n=>n.name==="Avofruit SAS"),
-                idCompany:s.id,
-                companyName:s.businessName,
-                pqrsCompanyAbiertas:s.pqrs.filter(p=>p.state===1),
-                pqrsCompanyCerradas:s.pqrs.filter(p=>p.state===0),
-                pqrsCompanyEnProceso:s.pqrs.filter(p=>p.state===2),               
-                
-            }
-            
-
-        })
-
-        /* this.setState({
-            dataSource:openRequest
-        }) */
-        console.log(openRequest)
+        const itemid= this.props.navigation.getParam("itemId")
+        console.log("Id Selected")
+        console.log(itemid)
+        console.log("data")
+        console.log(data)
+        let filtroData = data.filter(n=>n.id===itemid)
+        console.log("filtroData")
+        console.log(filtroData)
         
-        let cerradas = openRequest.filter(n=>n.idCompany===22)
-        console.log(cerradas)
-        cerradas = cerradas[0]["pqrsCompanyCerradas"];
-
-        console.log(cerradas);
-        let datos  = [];
-        let objeto = {};
-
-        for (var clave in openRequest){
-            
-            /* console.log("clave")
-            console.log(clave)
-            console.log("json[clave]")
-            console.log(openRequest[clave].pqrsCompanyCerradas) */
-            /* console.log("CompanyName")
-            console.log(openRequest[clave].companyName) */
-            for( var clave2 in openRequest[clave].pqrsCompanyCerradas){
-                datos.push({
-                    "CompanyName":openRequest[clave].companyName,
-                    "title":openRequest[clave].pqrsCompanyCerradas[clave2].title,
-                    "dateInit":openRequest[clave].pqrsCompanyCerradas[clave2].dateInit.slice(0,10)
-                })
-                /* console.log("Ttile")
-                console.log(openRequest[clave].pqrsCompanyCerradas[clave2].title,)
-                console.log("CompanyName")
-                console.log(openRequest[clave].companyName)
-                console.log("Fecha de inicio")
-                console.log(openRequest[clave].pqrsCompanyCerradas[clave2].dateInit) */
-            }
-                
-                /* console.log("Descripción")
-                console.log(openRequest[clave].pqrsCompanyCerradas[clave2].description) */
-            
-        }
-        //objeto.datos = datos;
-        console.log("datos")
-        console.log(datos)
-        console.log("objeto")
-        console.log(objeto.datos)
-        console.log("Json Creado")
-        console.log(JSON.stringify(objeto));
+        filtroData = filtroData[0]["pqrsCompanyCerradas"];
+        console.log("filtrado final")
+        console.log(filtroData)
         this.setState({
-            dataSource:datos
+
         })
-        //console.log(this.state)
-        //console.log(openRequest[0].companyName)
-        //console.log(openRequest[0].pqrsCompanyCerradas[0].title)
-        //console.log(openRequest[0].pqrsCompanyCerradas[0].dateInit)
+     }
+
+
+
+
         
-    }
     //<Text>Fecha</Text>
     //<Text>Company Name</Text>
     //renderItem={this.renderItem}

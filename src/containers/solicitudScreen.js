@@ -100,9 +100,10 @@ export default class SolicitudScreen extends Component {
       }; 
 
       GetItem (item) {
+        console.log("Item Selected")
         console.log(item)
         this.props.navigation.navigate('SolicitudesCompanyTab', {
-            itemCompanyName: item,
+            itemId: item,
             dataSource:this.state.dataSource
           });
         //this.props.navigation.navigate("");
@@ -130,7 +131,7 @@ export default class SolicitudScreen extends Component {
             elevation: 5
             
             
-            }} onPress={()=>{this.GetItem(item.companyName)}}>
+            }} onPress={()=>{this.GetItem(item.id)}}>
 
                 <View style={{flex:3,
                 borderRightWidth:1,borderRightColor:"#CED0CE",
