@@ -15,11 +15,12 @@ export default function Footer(props){
             onPress={props.actionLogin}
             underlayColor="white"
           >
-            <View style={styles.button}>
+            
               <Text style={styles.buttonText}>Iniciar Sesión</Text>
-            </View>
+            
           </TouchableHighlight>
           <Text style={styles.colorForgetButton}>Olvidaste tu contraseña</Text>
+          
         </View>
     )
 }

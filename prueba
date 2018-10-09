@@ -1,0 +1,232 @@
+(function() {
+    var app = angular.module('pqrControllers', ['angular.morris', 'ngMaterial', 'ngMessages', 'ngAnimate', 'ngRoute' ,'ekosaveAdministracion'])
+
+    .controller('pqrMainController', function($scope, $mdDialog, $mdMedia, $location, $localStorage, $http , $mdToast, $timeout, $mdSidenav, configuracionServidor, pqrs) {
+
+        $scope.cambiarEstado(); 
+        $scope.pqrsAbiertas = [];
+        $scope.pqrsProceso = [];
+        $scope.pqrsCerradas = [];
+        $scope.perfiles = {7:"SuperAdministrador", 5:"Ejecutivo", 6: "Administrador", 10: "Soporte", 9: "Usuario de Registro", 8: "Administrador"};
+
+        $scope.query = {
+            "filter":"",
+            "order": '',
+            "limit": 5,
+            "page": 1
+        };
+
+        $scope.logPagination = function (page, limit) {
+            $scope.query.page=page;
+            $scope.query.limit=limit;
+        }
+
+        $scope.consultar = function(){
+
+            pqrs.consultar().then(function(respuesta){
+
+              $scope.pqrsAbiertas = [];
+              $scope.pqrsProceso = [];
+              $scope.pqrsCerradas = [];
+
+              if(respuesta.status == 200){
+
+                console.log(respuesta);
+
+                    //soporte
+                    if($localStorage.currentUser.data.profileId==10){
+
+                        for(ejecutivo in respuesta.data){
+
+                            for(cliente in respuesta.data[ejecutivo].clients){
+
+                                for(pqr in respuesta.data[ejecutivo].clients[cliente].pqrs ){
+
+                                    if( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr].state == 1 ){
+                                        $scope.pqrsAbiertas.push( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr] );
+                                    }
+                                    else if(respuesta.data[ejecutivo].clients[cliente].pqrs[pqr].state == 2){
+                                        $scope.pqrsProceso.push( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr] );
+                                    }
+                                    else{
+                                        $scope.pqrsCerradas.push( respuesta.data[ejecutivo].clients[cliente].pqrs[pqr] );
+                                    }
+
+                                }
+
+                            }
+
+                        }
+                    }
+                    else if($localStorage.currentUser.data.profileId==5){
+
+
+                        console.log("es 5");
+                        for(cliente in respuesta.data){
+
+                            for(pqr in respuesta.data[cliente].pqrs ){
+
+                                if(respuesta.data[cliente].pqrs[pqr].state == 1){
+                                    $scope.pqrsAbiertas.push( respuesta.data[cliente].pqrs[pqr] );
+                                }
+                                else if(respuesta.data[cliente].pqrs[pqr].state == 2){
+                                    $scope.pqrsProceso.push( respuesta.data[cliente].pqrs[pqr] );
+                                }
+                                else{
+                                    $scope.pqrsCerradas.push( respuesta.data[cliente].pqrs[pqr] );
+                                }
+
+                            }
+
+                        }
+
+
+                    }
+
+                    console.log($scope.pqrs);
+                }
+                else{
+                    $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
+                }
+            });
+        }
+
+        $scope.consultar();
+
+        $scope.seguimiento = function(ev, siguiendo){  
+
+            console.log(siguiendo); 
+
+            $scope.siguiendo = siguiendo;  
+
+            if(siguiendo.state == 0){
+                var tmp =  "views/pqr/visualizador.html";  
+            }  
+            else{
+                var tmp =  "views/pqr/seguimiento.html";
+            }
+
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+            $mdDialog.show({
+                controller: "seguimientoController",
+                templateUrl:  tmp,
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose:true,
+                fullscreen: useFullScreen,
+                scope:$scope,
+                preserveScope: true,
+
+            })
+            .then(function(answer) {
+                $mdDialog.hide();
+            }, function() {
+
+            });
+            $scope.$watch(function() {
+                return $mdMedia('xs') || $mdMedia('sm');
+            }, function(wantsFullScreen) {
+                $scope.customFullscreen = (wantsFullScreen === true);
+            });
+
+        }
+
+        $scope.validarTamano= function(input,min,max){
+
+            console.log(input);
+
+            if ($scope.formulario[""+input].toString().length < min || $scope.formulario[""+input].toString().length > max) {
+
+                $scope.formularioEnvio[""+input].$error.validarTamano = true;
+                $scope.formularioEnvio.$valid = false;
+                $scope.formularioEnvio[""+input].$invalid=true;
+                console.log("no valido ");
+
+            }
+            else {
+                $scope.formularioEnvio[""+input].$error.validarTamano = false;
+                $scope.formularioEnvio[""+input].$invalid=false;
+                console.log("valido ");
+            }
+        }
+
+        $scope.eliminar = function(ev, id, nombre){
+
+            var confirm = $mdDialog.confirm()
+            .title('Eliminar PQR: '+nombre)
+            .textContent('Esta acción no puede deshacerse')
+            .ariaLabel('modalPQR')
+            .targetEvent(ev)
+            .ok('Eliminar')
+            .cancel('Cancelar');
+
+            $mdDialog.show(confirm).then(function() {
+
+                pqrs.borrar(id).then(function(respuesta){
+
+                    if(respuesta.status == 204){
+                        $scope.mensajes.parentProperty("PQR eliminado satisfactoriamente.", "Aceptar", 3000);
+                        $scope.consultar();
+                    }
+                    else{
+                        $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
+                    }       
+
+                });
+
+            }, function() {
+                console.log("liminar n");
+            });
+        }
+
+    })
+
+
+.controller('seguimientoController', function($scope, $mdDialog, $mdMedia, $location, $localStorage, $http , $mdToast, $timeout, $mdSidenav, administracionUsuarios, configuracionServidor, pqrs) {
+
+    $scope.visor = $localStorage.currentUser.data.id;
+    $scope.formulario = {};
+
+    $scope.viewDownload = function(archivo){
+        console.log(configuracionServidor.protocolo+configuracionServidor.servidor+configuracionServidor.puertoCRM+"/v1/pqr/pqrs/uploads/"+archivo.pqrId+"/"+archivo.fileName);
+        window.open(configuracionServidor.protocolo+configuracionServidor.servidor+configuracionServidor.puertoCRM+"/v1/pqr/pqrs/uploads/"+archivo.pqrId+"/"+archivo.fileName);
+    }
+
+
+    $scope.agregarSeguimiento = function(){
+
+        pqrs.agregarSeguimiento( {pqrId: $scope.siguiendo.id ,description: $scope.formulario.descripcion , dateExecution: new Date() } ).then(function(respuesta){
+
+            if(respuesta.status == 201){
+               $scope.mensajes.parentProperty("Seguimiento agregado satisfactoriamente.", "Aceptar", 3000);
+               $scope.consultar();
+               $mdDialog.hide();
+           }
+           else{
+            $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
+        }
+
+    });
+
+    }
+
+    $scope.cerrarPQR = function(){
+
+     pqrs.cerrarPQR( {pqrId: $scope.siguiendo.id ,description: $scope.formulario.descripcion , dateExecution: new Date() } ).then(function(respuesta){
+
+        if(respuesta.status == 201){
+           $scope.mensajes.parentProperty("PQR cerrado satisfactoriamente.", "Aceptar", 3000);
+           $scope.consultar();
+           $mdDialog.hide();
+       }
+       else{
+        $scope.mensajes.parentProperty("Error al consultar los datos.", "Aceptar", 3000);
+    }
+
+});
+
+ }
+
+})
+
+})();

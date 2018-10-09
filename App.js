@@ -8,7 +8,7 @@ import SplashScreen from 'react-native-splash-screen';
 
 
 import Login from './src/containers/loginScreen'
-
+import RootStack from './router/RootStack'
 export default class App extends Component {
 /*     constructor(){
       super();
@@ -29,7 +29,7 @@ export default class App extends Component {
            
     render(){
         return(
-            <Login/>                
+            <RootStack/>                
         );
     }
 }

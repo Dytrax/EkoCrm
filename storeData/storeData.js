@@ -13,7 +13,7 @@ class DB{
           const value = await AsyncStorage.getItem(key);
           if (value !== null) {
             // We have data!!
-            console.log(value);
+            //console.log(value);
             return value
           }
          } catch (error) {
