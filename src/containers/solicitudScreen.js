@@ -5,113 +5,82 @@ import {
     StyleSheet,
     FlatList,
     Dimensions,
-    Alert,
     TouchableOpacity,
-    Platform
+    Platform,
+    ActivityIndicator,
+    
 } from 'react-native'
-import { SearchBar } from 'react-native-elements'
 import DB from "../../storeData/storeData"
 import API from "../../api/Api"
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-const WIDTH = Dimensions.get("window").width;
-const HEIGHT = Dimensions.get("window").height;
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+import Header from "../components/headerComponent"
 export default class SolicitudScreen extends Component {
     constructor(){
         super()
         this.state = {
-            dataSource: []
+            searchBar:false,
+            copyDataSource: [],
+            dataSource: [],
+            loadingData: true,
         }
     }
 
     async componentWillMount(){
+        //Getting the token from AsyncStorageDatabase
         const token = await DB.getData("token");
+        //Getting "La Información de Solicitudes" from the BackendApi
         const answer = await API.getRequest(token);
-        console.log(answer)
-        let openRequest = answer[1].map(s=>{
-            return {
-                //empresasNames:
-                id:s.id.toString(),
-                companyName:s.businessName,
-                pqrsCompanyAbiertas:s.pqrs.filter(p=>p.state===1),
-                pqrsCompanyCerradas:s.pqrs.filter(p=>p.state===0),
-                pqrsCompanyEnProceso:s.pqrs.filter(p=>p.state===2),
-                quantitypqrsCompanyAbiertas:(s.pqrs.filter(p=>p.state===1)).length,
-                quantitypqrsCompanyCerradas:s.pqrs.filter(p=>p.state===0).length,
-                quantitypqrsCompanyEnProceso:s.pqrs.filter(p=>p.state===2).length,                 
+        //console.log(answer)
+        if (answer[0]==200){
+            let openRequest = answer[1].map(s=>{
+                return {
+                    //Filtering the information and forming the Json if the token still alive
+                    id:s.id.toString(),
+                    companyName:s.businessName,
+                    pqrsCompanyAbiertas:s.pqrs.filter(p=>p.state===1),
+                    pqrsCompanyCerradas:s.pqrs.filter(p=>p.state===0),
+                    pqrsCompanyEnProceso:s.pqrs.filter(p=>p.state===2),
+                    quantitypqrsCompanyAbiertas:(s.pqrs.filter(p=>p.state===1)).length,
+                    quantitypqrsCompanyCerradas:s.pqrs.filter(p=>p.state===0).length,
+                    quantitypqrsCompanyEnProceso:s.pqrs.filter(p=>p.state===2).length,                 
+                    
+                }
                 
-            }
+                //Sorting the Json 
+            }).sort((a,b)=>b.quantitypqrsCompanyEnProceso-a.quantitypqrsCompanyEnProceso)
+            /* console.log("openRequest")
+            console.log(openRequest) */
+            this.setState({
+                copyDataSource:openRequest,
+                dataSource:openRequest,
+                loadingData:false
+            }) 
+        }else if(answer[0]==403){
+            //Removing the token if the token isn`t still alive
+            await DB.removeItemValue("token")
+            //if token fail go to Login='Home'
+            this.props.navigation.navigate('Home')
             
-
-        }).sort((a,b)=>b.quantitypqrsCompanyEnProceso-a.quantitypqrsCompanyEnProceso)
-        console.log("openRequest")
-        console.log(openRequest)
-        this.setState({
-            dataSource:openRequest
-        }) 
+        }
+        
         
     }
 
-    renderSeparator = () => {
-        return (
-          <View
-            style={{
-              
-              height: 1,
-              width: WIDTH,
-              backgroundColor: "#CED0CE",
-              alignSelf:"center",
-              //marginTop:"3%"
-              //marginLeft: "5%",
-            
-              //marginTop:"3%",
-              
-              //marginRight:"5%"
-            }}
-          />
-        );
-      };
 
-      renderHeader = () => {
-        return <SearchBar placeholder="Buscar..." lightTheme round 
-            inputStyle={{backgroundColor: 'white'}}
-            containerStyle={{shadowColor: 'rgba(0,0,0, .4)', // IOS
-            shadowOffset: { height: 1, width: 1 }, // IOS
-            shadowOpacity: 1, // IOS
-            shadowRadius:2, //IOS
-            backgroundColor: '#fff', 
-            borderWidth:1, 
-            borderRadius: 100,
-            ...Platform.select({
-            ios: {
-                borderColor:"rgb(190,190,190)",
-            },
-            android: {
-                borderColor:"rgb(190,190,190)",
-            },
-            }),
-            
-            width:WIDTH-20,
-            elevation: 3,
-            //height:45,
-            alignSelf:"center"
-            ,marginTop:5
-            }}
-        />;
-      }; 
-
-      GetItem (item) {
+    onItemClick (item) {
         console.log("Item Selected")
         console.log(item)
+        //SolicitudesCompanyTab
+        DB.store("itemId", item);
         this.props.navigation.navigate('SolicitudesCompanyTab', {
-            itemId: item,
-            dataSource:this.state.dataSource
+            //itemId: item,
+            //dataSource:this.state.dataSource
           });
-        //this.props.navigation.navigate("");
-        //Alert.alert(item);
         
-        }
+        
+    }
 
-      renderItem = ({item}) => {
+    renderItem = ({item}) => {
         console.log({item})
          return(
             <TouchableOpacity style={{flexDirection:"row",
@@ -131,7 +100,7 @@ export default class SolicitudScreen extends Component {
             elevation: 5
             
             
-            }} onPress={()=>{this.GetItem(item.id)}}>
+            }} onPress={()=>{this.onItemClick(item.id)}}>
 
                 <View style={{flex:3,
                 borderRightWidth:1,borderRightColor:"#CED0CE",
@@ -144,7 +113,7 @@ export default class SolicitudScreen extends Component {
                 <View style={{flex:1,height:80}}>
                     <View style={{flex:1,flexDirection:"row"}}>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-                            <Icon name="folder-open" size={20}  
+                            <Icon2 name="folder-open" size={20}  
                             style={{marginLeft:3,color:"rgb(54,176,88)"}} 
                             />
                         </View>
@@ -156,22 +125,22 @@ export default class SolicitudScreen extends Component {
                     </View>
                     <View style={{flex:1,flexDirection:"row"}}>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-                            <Icon name="clock-end" size={20}  
+                            <Icon2 name="clock-end" size={20}  
                                     style={{flex:1,marginLeft:3,color:"rgb(252,140,1)"}} 
                                     />
                         </View>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-                            <Text >{item.quantitypqrsCompanyCerradas}</Text>
+                            <Text >{item.quantitypqrsCompanyEnProceso}</Text>
                         </View>
                     </View>
                     <View style={{flex:1,flexDirection:"row"}}>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-                            <Icon name="folder" size={20}  
+                            <Icon2 name="folder" size={20}  
                                     style={{flex:1,marginLeft:3,color:"rgb(226,65,55)"}} 
                                     />
                         </View>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-                            <Text style={{flex:1}}>{item.quantitypqrsCompanyEnProceso}</Text>
+                            <Text style={{flex:1}}>{item.quantitypqrsCompanyCerradas}</Text>
                         </View>
                     </View>
                     
@@ -185,35 +154,72 @@ export default class SolicitudScreen extends Component {
         
         
     }
-    
+
+    actionBar = (text) =>{
+        let barText = text
+        let datos = this.state.copyDataSource.filter(
+            
+            s=>{
+                return s.companyName.toUpperCase().search(text.toUpperCase()) != -1
+            }
+            
+        )
+        /* console.log("datos")
+        console.log(datos)
+        console.log("barText.length")
+        console.log(barText.length)
+        console.log("barText")
+        console.log(barText) */
+        if (barText.length>0){
+            this.setState({
+                searchBar:true,
+                dataSource:datos
+            })
+        }else{
+            this.setState({
+                searchBar:false,
+                dataSource:datos
+            })
+        }
+        
+    }
+
     render(){
+          
         return(
             <View style={styles.container}>
-            <View style={styles.header}>
-                <Icon name="menu" size={30}  
-                style={{flex:1,alignSelf:"center",marginLeft:10,color:"white"}} 
-                onPress={()=>this.props.navigation.openDrawer()}/>
-                <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-                <Text style={{fontWeight:"bold",fontSize:15,color:"white"}}>Solicitudes</Text>
+                <View style={styles.headerContainer}>
+                    <Header 
+                    showSearch={true}
+                    titulo={"Solicitudes"} 
+                    name={"menu"} 
+                    actionIcon={()=>this.props.navigation.openDrawer()}
+                    state={this.state.searchBar}
+                    actionSearchBar={this.actionBar}/>
+                    
                 </View>
-                <View style={{flex:1,alignItems:"flex-end",justifyContent:"center"}}>
-                {/* <Text>Buscar</Text> */}
+                
+                <View style={styles.subcontainer}>
+                <View style={[styles.bodyContainer]}>
+                    {this.state.loadingData ? (
+                        <View style={[styles.body,styles.indicator]}>
+                            <ActivityIndicator size="large" color="#ff0050" />
+                        </View>
+                        ) : (
+                        <View style={styles.body}>    
+                            <FlatList
+                                data={this.state.dataSource}
+                                renderItem={this.renderItem}
+                                keyExtractor={item => item.id}
+                            />
+                        </View>
+                        )}   
+                </View>
+                    
                 </View>
                 
             </View>
-            <View style={styles.body}>
-            <FlatList
-                data={this.state.dataSource}
-                renderItem={this.renderItem}
-                ListHeaderComponent={this.renderHeader}
-                //ItemSeparatorComponent={this.renderSeparator}
-                keyExtractor={item => item.id}
-                //ItemSeparatorComponent={this.renderSeparator}
-            />
 
-            </View>
-            
-            </View>
         )
     }
 }
@@ -221,33 +227,24 @@ export default class SolicitudScreen extends Component {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        
-        //alignItems:"center",
-        //justifyContent:"center",   
+        backgroundColor:"#fff"
     },
-    container1:{
+    subcontainer:{
         flex:1
     },
-    header:{
-        flex:1,
-        backgroundColor:"rgb(138,200,1)",
-        flexDirection:"row",
-        width:WIDTH,
-        
-            
+    headerContainer:{
+        justifyContent:"center",
+        alignItems:"center",
+        height: Platform.OS === 'android' ? 60 : 60,
+    },
+    bodyContainer:{
+        flex:90
     },
     body:{
-        flex:10,
-        backgroundColor:"white",
-        width:WIDTH,
-        //padding:5,
-        //paddingTop:10
-        //alignItems:"center",
-        //justifyContent:"center",
+        flex:1,
     },
-    /* titleAndDate:{
-        justifyContent:"space-between"
-        data={list}
-                    renderItem={this.renderItem}
-    } */
+    indicator:{
+        alignItems:"center",
+        justifyContent:"center"
+    }
 })

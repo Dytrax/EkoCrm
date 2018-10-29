@@ -24,16 +24,18 @@ import BodyLogin from "../components/login/body";
 import FooterLogin from "../components/login/footer";
 import API from "../../api/Api";
 import DB from "../../storeData/storeData";
-
+import DropdownAlert from 'react-native-dropdownalert';
+//connect ECONNREFUSED 23.96.102.56:3306
 
 export default class LoginScreen extends Component {
   async componentWillMount(){
-    /* const token = await DB.getData("token");
+    //Verify If the token still living, if its true login user automatically
+     /* const token = await DB.getData("token");
     if (token){
       this.props.navigation.navigate("Drawer");
     }if (!token){
       this.props.navigation.navigate("Home");
-    }  */
+    }   */
   }
 
   constructor() {
@@ -52,22 +54,24 @@ export default class LoginScreen extends Component {
   callAPI = async () => {
     //answer is the answer of the try/catch authentication
     //answer[0] status, answer[1] Json data
-    const answer = await API.loginAuthentication(
+    let answer = await API.loginAuthentication(
       "ejecutivo2@leadis.co",//this.state.email,
       "Hola@321"//this.state.password
     );
-    //console.log(answer)
-    
+    console.log(answer)
+    //console.log(answer[1].user.companyId)
+    console.log("jejejee")
     //answer status=200 Can Login
     if (answer[0] === 200) {
+      
       this.setState({
         status:answer[0],
       });
       //Saving the user Data with AsyncStorage
-      await DB.store("email", this.state.email);
+      await DB.store("email", answer[1].user.email);
       await DB.store("token", answer[1].token);
-      const token = await DB.getData("token");
-      //console.log(token);
+      await DB.store("companyId", answer[1].user.companyId.toString());
+      
       //RN Navigation action
       this.props.navigation.navigate("Drawer");
     } else {
@@ -75,6 +79,10 @@ export default class LoginScreen extends Component {
       //answer[0] status, answer[1] message from backend
       console.log(answer[0]);
       console.log(answer[1].message);
+      if (answer[1].message==="connect ECONNREFUSED 23.96.102.56:3306"){
+          this.dropdown.alertWithType('error', 'Error', "Lo sentimos por el momento no tenemos servicio, intenta más tarde");
+      }
+          
       this.setState({
         status:answer[0],
         message:answer[1].message
@@ -89,11 +97,13 @@ export default class LoginScreen extends Component {
     console.log(value);
     this.state[stateToChange] = value;
   };
-
+   goToForget = ()=>{
+    this.props.navigation.navigate("Forget")
+  } 
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="rgb(144,184,54)" barStyle="light-content" />
+        <StatusBar backgroundColor="black" barStyle="light-content" />
         <HeaderLogin />
 
         <BodyLogin change={this.stateChange} />
@@ -102,7 +112,8 @@ export default class LoginScreen extends Component {
         ) : (
           <Text></Text>
         )}
-        <FooterLogin actionLogin={this.callAPI} />
+        <FooterLogin actionLogin={this.callAPI} actionForget={this.goToForget} />
+        <DropdownAlert ref={ref => this.dropdown = ref} />
       </View>
     );
   }

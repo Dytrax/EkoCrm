@@ -1,16 +1,75 @@
-import { createBottomTabNavigator } from "react-navigation";
-import AbiertasScreen from "../src/containers/tabsSolicitud/abiertasScreen";
-import CerradasScreen from "../src/containers/tabsSolicitud/cerradasScreen";
-import EnProcesoScreen from "../src/containers/tabsSolicitud/enProcesoScreen";
-import React from "react"
-//createBottomTabNavigator
+import React from 'react';
+import { Text, View, Button } from 'react-native';
+import {
+  createBottomTabNavigator,
+  createStackNavigator,
+  NavigationEvents,
+  StackActions,
+  NavigationActions
+} from 'react-navigation';
+import PruebaScreen from "../src/containers/pruebaScreen";
+import AbiertasScreen from '../src/containers/tabsSolicitud/abiertasScreen';
+import EnProcesoScreen from '../src/containers/tabsSolicitud/enProcesoScreen';
+import CerradasScreen from '../src/containers/tabsSolicitud/cerradasScreen';
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 
-const TabsSolicitud = createBottomTabNavigator({
-    Abiertas:{ screen: AbiertasScreen,
-        
-        navigationOptions: () => ({
-            tabBarLabel:'Abiertas',
+/* const stackchat = createStackNavigator({
+    PruebaScreen:{ screen: PruebaScreen}
+  },{
+    navigationOptions: () => ({
+        header: null,
+        gesturesEnabled: false
+
+      })
+  }); */
+
+const stack1 = createStackNavigator({
+    Tab1:{ screen: AbiertasScreen},
+  },{
+    navigationOptions: () => ({
+        header: null,
+        gesturesEnabled: false
+
+      })
+  });
+
+const stack2 = createStackNavigator({
+    Tab2:{ screen: EnProcesoScreen },
+    
+  },{
+    navigationOptions: () => ({
+        header: null,
+        gesturesEnabled: false
+
+      })
+  });
+
+const stack3 = createStackNavigator({
+    Tab3:{ screen: CerradasScreen },
+  },{
+    navigationOptions: () => ({
+        header: null,
+        gesturesEnabled: false
+
+      })
+  });
+
+
+  export default TabsSolicitud2 = createBottomTabNavigator(
+    {
+      'Stack1': {
+        screen: stack1,
+        navigationOptions: {
+          tabBarOnPress: ({ navigation, defaultHandler }) => {
+            defaultHandler();
+  
+            const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'Tab1' })],
+            });
+            navigation.dispatch(resetAction);
+          },
+          tabBarLabel:'Abiertas',
             tabBarOptions: {
                 showLabel: true, // hide labels
                 activeTintColor: "rgb(54,176,88)", // active icon color
@@ -36,10 +95,20 @@ const TabsSolicitud = createBottomTabNavigator({
                 
                 
             )
-        })
-    },
-    EnProceso:{ screen: EnProcesoScreen,
-        navigationOptions: () => ({
+        },
+      },
+      'Stack2': {
+        screen: stack2,
+        navigationOptions: {
+            tabBarOnPress: ({ navigation, defaultHandler }) => {
+              defaultHandler();
+    
+              const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: 'Tab2' })],
+              });
+              navigation.dispatch(resetAction);
+            },
             tabBarLabel:'En Proceso',
             tabBarOptions: {
                 showLabel: true, // hide labels
@@ -66,11 +135,20 @@ const TabsSolicitud = createBottomTabNavigator({
                 
                 
             )
-        })
+          }
+      },
+      'Stack3': {
+        screen: stack3,
+        navigationOptions: {
+            tabBarOnPress: ({ navigation, defaultHandler }) => {
+              defaultHandler();
     
-    },
-    Cerradas:{ screen: CerradasScreen,
-        navigationOptions: () => ({
+              const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({ routeName: 'Tab3' })],
+              });
+              navigation.dispatch(resetAction);
+            },
             tabBarLabel:'Cerradas',
             tabBarOptions: {
                 showLabel: true, // hide labels
@@ -96,35 +174,12 @@ const TabsSolicitud = createBottomTabNavigator({
                 
                 
             )
-        })
+          }
+      },
+      
+    },
+    {
+      //lazy: false,
     }
-
+  );
   
-},{
-    //order:['Abiertas','EnProceso','Cerradas'],
-    animationEnabled:true,
-    lazy: false
-    /* tabBarOptions: {
-        showLabel: true, // hide labels
-        activeTintColor: '#F8F8F8', // active icon color
-        inactiveTintColor: '#586589',  // inactive icon color
-        style: {
-            //backgroundColor: '#171F33' // TabBar background
-            backgroundColor:"rgb(2,87,23)"
-        }
-    } */
-    
-}   
-);
-
-
-/* tabBarOptions: {
-    showLabel: false, // hide labels
-    activeTintColor: '#F8F8F8', // active icon color
-    inactiveTintColor: '#586589',  // inactive icon color
-    style: {
-        //backgroundColor: '#171F33' // TabBar background
-        backgroundColor:"rgb(2,87,23)"
-    }
-} */
-export default TabsSolicitud;

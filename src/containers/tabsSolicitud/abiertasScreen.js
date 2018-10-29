@@ -5,120 +5,195 @@ import {
     StyleSheet,
     FlatList,
     Dimensions,
+    TouchableOpacity,
+    Platform,
+    ActivityIndicator
 } from 'react-native';
-import { SearchBar } from 'react-native-elements'
-import API from "../../../api/Api"
-import DB from "../../../storeData/storeData"
-import Separator from "../../components/flatListComponents/horizontal-separator"
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+import Header from "../../components/headerComponent"
+import DB from "../../../storeData/storeData"
+import API from "../../../api/Api"
+
 export default class AbiertasScreen extends Component{
     constructor(){
         super()
         this.state = {
             dataSource: [],
-            
-
+            companyName:"",
+            searchBar:false,
+            textSearchBar:"",
+            copyDataSource: [],
+            loadingData: true,
         }
+        
     }
      async componentWillMount(){
-        const data = this.props.navigation.getParam("dataSource")
-        const itemid= this.props.navigation.getParam("itemId")
-        console.log("Id Selected")
-        console.log(itemid)
-        console.log("data")
-        console.log(data)
-        let filtroData = data.filter(n=>n.id===itemid)
-        console.log("filtroData")
-        console.log(filtroData)
-        
-        filtroData = filtroData[0]["pqrsCompanyCerradas"];
-        console.log("filtrado final")
-        console.log(filtroData)
-        this.setState({
+        const token = await DB.getData("token");
+        const itemId = await DB.getData("itemId");
+        console.log("item selected: " + itemId )
+        answer = await API.getRequest(token);
+        if (answer[0]==200){
+            let data = API.dataFilter(answer[1])
+            console.log(data)
+            let filtroData = data.filter(n=>n.id===itemId)
+            console.log("filtroData")
+            let companyName = filtroData[0]["companyName"]
+            console.log(companyName)
+            filtroData = filtroData[0]["pqrsCompanyAbiertas"];
+            console.log("filtrado final")
+            console.log(filtroData)
+            this.setState({
+                dataSource:filtroData,
+                companyName:companyName,
+                copyDataSource: filtroData,
+                loadingData:false
+            })
+            console.log("this.state.companyName")
+            console.log(this.state.companyName)
+            
+            
+        }else if(answer[0]==403){
+            //Removing the token if the token isn`t still alive
+            await DB.removeItemValue("token")
+            //if token fail go to Login='Home'
+            this.props.navigation.navigate('Home')
+            
+        }
 
-        })
+        
      }
-
-
-
-
         
-    //<Text>Fecha</Text>
-    //<Text>Company Name</Text>
-    //renderItem={this.renderItem}
-    renderSeparator = () => {
-        return (
-          <View
-            style={{
-              height: 1,
-              width: WIDTH,
-              backgroundColor: "#CED0CE",
-              //marginLeft: "14%"
-            }}
-          />
-        );
-      };
+     
 
 
-     renderItem = ({item}) => {
-        console.log({item})
-         return(
-            <View style={{flexDirection:"row",margin:3,
-            borderBottomWidth:1,borderBottomColor:"#CED0CE"}}>
-            <View style={{flex:1,alignItems:"flex-start",justifyContent:"center"}}>
-                <Text style={{color:"black",marginBottom:4}}>{item.title}</Text>
-                <Text style={{color:"black"}}>{item.CompanyName}</Text>
-                
-                
-            </View>
-            
-            <Text style={{color:"black",alignSelf:"flex-start"}}>{item.dateInit}</Text>
-            </View>
-         )
-            
-            
-         
+     onItemClick (item) {
+        
+        //console.log("itemChat"+item.id)
+        //DB.store("itemChat", item.id.toString());
+        //DB.store("pantalla", "pqrsCompanyAbiertas");
+        console.log("item")
+        console.log(item)
+        this.props.navigation.navigate('PruebaScreen', {
+            pantalla: "pqrsCompanyAbiertas",
+            itemChat:item.id,
+            dataSource:item
+        });    
         
         
     }
-    /* itemSeparator = ()=>{
-        return(
-            <Separator  ></Separator>
-        )
-    }  */
 
-     renderHeader = () => {
-        return <SearchBar placeholder="Type Here..." lightTheme round />;
-      }; 
+    renderItem = ({item}) => {
+        //console.log({item})
+        console.log("item.dateInit " + item.dateInit)
+         return(
+         
+         
+            <TouchableOpacity style={{
+            borderRadius: 4,
+            marginBottom:2,
+            marginTop:5,
+            marginLeft:5,
+            marginRight:5,
+            shadowColor: 'rgba(0,0,0, .4)', // IOS
+            shadowOffset: { height: 1, width: 1 }, // IOS
+            shadowOpacity: 1, // IOS
+            shadowRadius: 3, //IOS
+            backgroundColor: '#fff', 
+            elevation: 5
+            
+            
+            }} onPress={()=>this.onItemClick(item)}>
+                <View style={{justifyContent:"center",alignItems:"center"}}>
+                    <View style={{flexDirection:"row"}}>
+                        <Icon2 name="ray-start" size={20}  
+                                style={{marginLeft:3,color:"rgb(54,176,88)"}} 
+                                />
+                        <Text>{new Date(item.dateInit).toLocaleString()}</Text>
+                    </View>
+                    <Text >{item.title}</Text>
+                    
+                </View>
+                
+            </TouchableOpacity>
+         
+            
+
+         )
+                
+    }
     
+    
+    actionBar = (text) =>{
+        let barText = text
+
+        
+        let datos = this.state.copyDataSource.filter(
+            
+            s=>{
+                return s.title.toUpperCase().search(text.toUpperCase()) != -1
+            }
+            
+        )
+        /* console.log("datos")
+        console.log(datos)
+        console.log("barText.length")
+        console.log(barText.length)
+        console.log("barText")
+        console.log(barText) */
+        if (barText.length>0){
+            this.setState({
+                searchBar:true,
+                dataSource:datos
+            })
+        }else{
+            this.setState({
+                searchBar:false,
+                dataSource:datos
+            })
+        }
+        
+    }
+
     render(){
         
         return(
             
             <View style={styles.container}>
-            <View style={styles.header}>
-                <Icon name="menu" size={30}  
-                style={{flex:1,alignSelf:"center",marginLeft:10}} 
-                onPress={()=>this.props.navigation.openDrawer()}/>
-                <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
-                <Text style={{fontWeight:"bold",fontSize:15}}>Abiertas</Text>
-                </View>
-                <View style={{flex:1,alignItems:"flex-end",justifyContent:"center"}}>
-                {/* <Text>Buscar</Text> */}
-                </View>
+            <View style={styles.headerContainer}>
+                    <Header 
+                    showSearch={true}
+                    titulo={this.state.companyName} 
+                    name={"keyboard-backspace"}  
+                    actionIcon={()=>{this.props.navigation.goBack(null)}} 
+                    state={this.state.searchBar}
+                    actionSearchBar={this.actionBar}/>
+                    
+            </View>
+           
+            <View style={styles.subcontainer}>
                 
-            </View>
-            <View style={styles.body}>
-            <FlatList
-                data={this.state.dataSource}
-                renderItem={this.renderItem}
-                ListHeaderComponent={this.renderHeader}
-                //ItemSeparatorComponent={this.renderSeparator}
-            />
+                {this.state.loadingData ? (
+                        <View style={[styles.body,styles.indicator]}>
+                            <ActivityIndicator size="large" color="#ff0050" />
+                        </View>
+                        ) : (
+                        <View style={styles.body}>    
+                            <FlatList
+                            data={this.state.dataSource}
+                            renderItem={this.renderItem}
+                            keyExtractor={item => item.id.toString()}
+                            
+                            />
+                        </View>
+                        )}
+                
+                 
 
+           
             </View>
+            
             
             </View>
         )
@@ -128,29 +203,22 @@ export default class AbiertasScreen extends Component{
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        //alignItems:"center",
-        //justifyContent:"center",   
     },
-    container1:{
+    subcontainer:{
         flex:1
     },
-    header:{
-        flex:1,
-        backgroundColor:"rgb(135,179,90)",
-        flexDirection:"row",
-        width:WIDTH,
-            
+    headerContainer:{
+        justifyContent:"center",
+        alignItems:"center",
+        height: Platform.OS === 'android' ? 60 : 60,
     },
     body:{
-        flex:10,
-        backgroundColor:"white",
-        width:WIDTH,
-        //alignItems:"center",
-        //justifyContent:"center",
+        backgroundColor: '#fff', 
+        flex:1,
+        
     },
-    /* titleAndDate:{
-        justifyContent:"space-between"
-        data={list}
-                    renderItem={this.renderItem}
-    } */
+    indicator:{
+        alignItems:"center",
+        justifyContent:"center"
+    }
 })

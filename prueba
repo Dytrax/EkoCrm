@@ -2,18 +2,20 @@ git init
 git status
 git add .
 git commit -m "Mensaje del commit"
-git remote add origin https://github.com/Dytrax/EkoCrm.git //Añadir cambios al master
+git remote add origin https://github.com/Dytrax/EkoCrm.git //Añadir cambios al master en la web
 
-
-
-
-
-
+git checkout -b dev
+ git add .
+ git commit -m "logi funcional"
+ git push origin dev
+git checkout dev //Cambiar el branch
 let openRequest = answer[1].map(s=>{
 
+android:windowSoftInputMode="adjustNothing"
 
-
-
+{/* <KeyboardAvoidingView behavior="padding"
+                keyboardVerticalOffset={Platform.OS==='android' ? -200:null}
+                > */}
 
             return {
                 //empresasNames:

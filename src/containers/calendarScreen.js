@@ -31,6 +31,7 @@ export default class Calendar extends Component{
                     <Text>Body</Text>
                 </View>
                 <View style={styles.footer}>
+                    <Text>http://138.197.160.240:7002/v1/pqr/pqrs/uploads/18/datos.xlsx</Text>
                     <Text>Footer</Text>
                 </View>
                 

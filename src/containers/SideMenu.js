@@ -7,12 +7,28 @@ import Logo from "../../assets/Logo.png"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconCrm from "react-native-vector-icons/MaterialCommunityIcons";
 import IconRequest from "react-native-vector-icons/MaterialIcons";
+import DB from "../../storeData/storeData"
+import CONFIG from "../../config/config"
+import colors from "../../config/colors"
+const URL_IMAGEN = `${CONFIG.URL_BASE}:${CONFIG.PORT_IMAGE}/${CONFIG.VERSION_API_IMAGE}/configuration-image/`
 class SideMenu extends Component {
   constructor(){
     super()
     this.state = {
       eyeSlash:0,
+      imageCompany:"",
+      email:""
     }
+  }
+  async componentWillMount(){
+    const compnayId = await DB.getData("companyId");
+    const email = await DB.getData("email");
+    console.log(email)
+    this.setState({
+      imageCompany:URL_IMAGEN+compnayId,
+      email:email
+    })
+    console.log(URL_IMAGEN+compnayId)
   }
   navigateToScreen = (route) => () => {
     const navigateAction = NavigationActions.navigate({
@@ -31,15 +47,16 @@ class SideMenu extends Component {
   }
   //source={{uri : 'https://www.iconsdb.com/icons/preview/white/square-xxl.png'}}
   /* source={
-    {uri : 'https://wallpaper-house.com/data/out/10/wallpaper2you_388555.jpg'}} */
+    {uri : 'https://wallpaper-house.com/data/out/10/wallpaper2you_388555.jpg'}}
+    source={
+        {uri : 'http://hdwpro.com/wp-content/uploads/2017/01/Nice-Green-Background.jpg'}} */
   render () {
     return (
       <View style={styles.container}>
         <View style={{height:200}}>
-        <ImageBackground  
-            style={{width: '100%', height: '100%',flexDirection:"row"}}
-            source={
-    {uri : 'https://wallpaper-house.com/data/out/10/wallpaper2you_388555.jpg'}}
+        <View  
+            style={[{width: '100%', height: '100%',flexDirection:"row",},colors.primaryColor]}
+            
             
           >
           
@@ -56,7 +73,7 @@ class SideMenu extends Component {
           }}
 
           />
-          <Image  source={Logo}
+          <Image  source={{uri:this.state.imageCompany}}
           style={{height:80,width:80,
           resizeMode:"contain",
           alignSelf:'flex-start',
@@ -72,14 +89,14 @@ class SideMenu extends Component {
           <View style={{marginTop:70}}>
           <Text style={{color:"rgb(255,255,255)",marginLeft:5,fontWeight: "bold",fontSize:17}}>EkoEnergia</Text>
           <Text style={{color:"rgb(255,255,255)",marginLeft:5,fontWeight: "bold",fontSize:15}}>Ejecutivo de cuenta</Text>
-          <Text style={{color:"rgb(255,255,255)",marginLeft:5,fontWeight: "bold",fontSize:15}}>Ejecutivo2@leadis.co</Text>
+          <Text style={{color:"rgb(255,255,255)",marginLeft:5,fontWeight: "bold",fontSize:15}}>{this.state.email}</Text>
           </View>
           
           
           
 
 
-        </ImageBackground>
+        </View>
         
         </View>
         
@@ -88,8 +105,8 @@ class SideMenu extends Component {
       
         
         <ScrollView>
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===0 && styles.onTabCalendar]} onPress={()=>{this.controlTabNavigator('Calendar',0)}}>
-                <Icon name="calendar-check" size={16}  
+            <View style={[styles.offTabCalendar, this.state.eyeSlash===0 && (styles.onTabCalendar,colors.lightColor)]} onPress={()=>{this.controlTabNavigator('Calendar',0)}}>
+                <Icon name="calendar-check" size={18}  
                 style={[styles.offIcon, this.state.eyeSlash===0 && styles.onIcon]}/>
     
                 <TouchableHighlight onPress={()=>{this.controlTabNavigator('Calendar',0)}} underlayColor="white"
@@ -101,8 +118,9 @@ class SideMenu extends Component {
                 </TouchableHighlight>
                 
             </View>
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===1 && styles.onTabCalendar]}>
-            <IconCrm name="folder-search" size={16} 
+            
+            <View style={[styles.offTabCalendar, this.state.eyeSlash===1 && (styles.onTabCalendar,colors.lightColor)]}>
+            <IconCrm name="folder-account" size={18} 
             style={[styles.offIcon, this.state.eyeSlash===1 && styles.onIcon]} />
     
                 <TouchableHighlight onPress={()=>{this.controlTabNavigator('Crm',1)}} underlayColor="white"
@@ -114,8 +132,8 @@ class SideMenu extends Component {
                 </TouchableHighlight>
               
             </View>
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===2 && styles.onTabCalendar]}>
-            <IconRequest name="question-answer" size={16} 
+            <View style={[styles.offTabCalendar, this.state.eyeSlash===2 && (styles.onTabCalendar,colors.lightColor)]}>
+            <IconRequest name="question-answer" size={18} 
             style={[styles.offIcon, this.state.eyeSlash===2 && styles.onIcon]} />
             <TouchableHighlight onPress={()=>{this.controlTabNavigator('SolicitudScreen',2)}} underlayColor="white"
                 style={{flex:1}}>
@@ -133,7 +151,7 @@ class SideMenu extends Component {
           
         </ScrollView>
         <View style={styles.footerContainer}>
-          <Text>Footer</Text>
+          
         </View>
       </View>
     );
@@ -145,7 +163,7 @@ const styles = StyleSheet.create({
       },
       onTabCalendar:{
         flexDirection:"row",
-        backgroundColor:"rgb(245,245,245)"
+        //backgroundColor:"#76ad60"
       },
       offTabCalendar:{
         flexDirection:"row",
@@ -174,7 +192,7 @@ const styles = StyleSheet.create({
       onPressFont:{
         paddingVertical: 10,
         paddingHorizontal: 5,
-        color:"rgb(139,179,75)",
+        color:"rgb(245,245,246)",
         fontWeight:'bold'
       },
       offIcon:{
@@ -184,8 +202,13 @@ const styles = StyleSheet.create({
       },
       onIcon:{
         alignSelf:"center",
-        color:"rgb(139,179,75)",
+        color:"rgb(245,245,246)",
         marginLeft:10
+      },
+      section:{
+        paddingLeft:10,
+        paddingVertical: 10,
+        backgroundColor:"rgb(225,226,225)"
       }
 });
 SideMenu.propTypes = {

@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
+
 export default function Footer(props){
     return(
         <View style={styles.container}>
@@ -19,8 +20,11 @@ export default function Footer(props){
               <Text style={styles.buttonText}>Iniciar Sesión</Text>
             
           </TouchableHighlight>
-          <Text style={styles.colorForgetButton}>Olvidaste tu contraseña</Text>
-          
+          <TouchableHighlight
+          onPress={props.actionForget}
+          >
+            <Text style={styles.colorForgetButton} >Olvidaste tu contraseña</Text>
+          </TouchableHighlight>
         </View>
     )
 }
