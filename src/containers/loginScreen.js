@@ -55,7 +55,7 @@ export default class LoginScreen extends Component {
     //answer is the answer of the try/catch authentication
     //answer[0] status, answer[1] Json data
     let answer = await API.loginAuthentication(
-      "ejecutivo2@leadis.co",//this.state.email,
+      "ejecutivo3@leadis.co",//this.state.email,
       "Hola@321"//this.state.password
     );
     console.log(answer)

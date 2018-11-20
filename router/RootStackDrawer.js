@@ -17,7 +17,7 @@ import Calendar from '../src/containers/calendarScreen';
 import TabsCrm from './RootStackTab';
 import RootStackSolicitud from './RootStackSolicitud';
 import SideMenu from '../src/containers/SideMenu';
-
+import RootStackCrm from './RootStackCrm'
 /* const CustomDrawerComponent = (props) => {
   return(
   <View style={{flex:1}}>
@@ -36,7 +36,7 @@ const MyDrawer = createDrawerNavigator({
     screen:Calendar
   },
   Crm:{
-    screen: TabsCrm
+    screen: RootStackCrm
   },
   Solicitud: {
     screen: RootStackSolicitud,

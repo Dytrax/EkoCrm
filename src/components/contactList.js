@@ -10,8 +10,10 @@ import ContactItem from "../components/contactItem"
 export default class ContactList extends Component {
 
     renderItem = ({item}) => {
+        //console.log("item")
+        //console.log(item)
         return(
-        <ContactItem {...item}></ContactItem>
+        <ContactItem {...item} showModal={this.props.editModal}></ContactItem>
         )
     }
 

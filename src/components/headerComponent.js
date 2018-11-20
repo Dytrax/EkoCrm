@@ -25,10 +25,11 @@ function HeaderComponent(props){
                         </View>
                         
                         
-                        <View style={{flex:90,alignItems:"center",justifyContent:"center"}}>
+                        <View style={{flex:80,alignItems:"center",justifyContent:"center"}}>
                             <Text style={{fontWeight:"bold",fontSize:15,color:"white"}}>{props.titulo}</Text>
                         </View>
-                        {props.showSearch===true ? (
+                        {props.showSearch===true  ? (
+                            
                             <View style={{flex:10,alignItems:"flex-end",justifyContent:"center"}}>
                             
                                 <SearchBar
@@ -43,10 +44,9 @@ function HeaderComponent(props){
                         
                             </View>
                             ) : (
-                            <View style={{flex:10,alignItems:"flex-end",justifyContent:"center"}}>
-                    
-                            </View>
-                        )}   
+                            <View style={{flex:10}}></View>
+                        )}
+                        
                         
                     
                 </View>

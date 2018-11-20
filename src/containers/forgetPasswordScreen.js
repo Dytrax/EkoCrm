@@ -123,12 +123,9 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         textAlign: "center",
-        //paddingVertical: 4,
-        //paddingHorizontal: 10,
         color: "white",
         fontSize: 18,
-        //marginTop:20,
-        //marginBottom:20,
+        
       },
       forgetButton:{
         justifyContent:"center",

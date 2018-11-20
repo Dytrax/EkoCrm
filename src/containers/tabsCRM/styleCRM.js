@@ -1,4 +1,6 @@
-import { StyleSheet,Platform } from 'react-native';
+import { StyleSheet,Platform,Dimensions } from 'react-native';
+const WIDTH = Dimensions.get("window").width;
+const HEIGHT = Dimensions.get("window").height;
 export default StyleSheet.create({
     container:{
         flex:1,
@@ -13,7 +15,7 @@ export default StyleSheet.create({
         height: Platform.OS === 'android' ? 60 : 60,
     },
     bodyContainer:{
-        flex:90
+        flex:1
     },
     body:{
         flex:1,

@@ -30,7 +30,7 @@ export default class SolicitudScreen extends Component {
         const token = await DB.getData("token");
         //Getting "La Información de Solicitudes" from the BackendApi
         const answer = await API.getRequest(token);
-        //console.log(answer)
+        console.log(answer)
         if (answer[0]==200){
             let openRequest = answer[1].map(s=>{
                 return {

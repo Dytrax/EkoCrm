@@ -8,7 +8,10 @@ export default StyleSheet.create({
     },
     lightColor:{
         backgroundColor:"#76ad60"
+    },
+    buttonColor:{
+        backgroundColor:"rgb(144,184,54)"
     }
 
-
+    
 })

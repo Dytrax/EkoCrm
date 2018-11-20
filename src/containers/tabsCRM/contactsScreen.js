@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     ActivityIndicator,
+    ScrollView
     
 } from 'react-native';
 import styles from "./styleCRM.js"
@@ -12,7 +13,11 @@ import ContactList from "../../components/contactList"
 import DB from "../../../storeData/storeData"
 import API from "../../../api/Api"
 import CONFIG from "../../../config/config"
+import EditModal from "./editModal"
+import Modal from "./modal"
+import { Overlay } from 'react-native-elements';
 const URL = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/contacts`
+const URL_COUNTRIES = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries`
 const list = [
     {
         title: 'Avengers',
@@ -40,21 +45,79 @@ const list = [
     }
     
 ]
-export default class ContactScreen extends Component{
+
+import { withNavigation, StackActions,NavigationActions } from "react-navigation";
+import FloatButton from '../../components/floatButton.js';
+
+const resetAction = StackActions.reset({
+    index: 0,
+    actions: [NavigationActions.navigate({ routeName: 'Tab1' })],
+  });
+let country="";
+ class ContactScreen extends Component{
+    static navigationOptions = {
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+            defaultHandler();
+  
+            const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'Tab1' })],
+            });
+            navigation.dispatch(resetAction);
+          },
+    }
+
     constructor(){
+        
         super()
         this.state = {
             searchBar:false,
             copyDataSource: [],
             dataSource: [],
-            loadingData: false,
+            loadingData: true,
+            isVisible: false,
+            showModal:false,
+            showEditModal:false,
+            idContactToEdit:"",
+            dataEditContact:[],
+            country:"",
+            
         }
     }
 
-    async componentWillMount(){
+     componentWillMount(){
+        
+    }
+    async componentDidMount(){
+        let mensaje = await DB.getData("Mensaje");
+        console.log("Mensaje")
+        console.log(mensaje)
+        DB.store("Mensaje","false")
         const token = await DB.getData("token");
         //Getting "La Información de Solicitudes" from the BackendApi
         const answer = await API.getDataBackEnd(token,URL)
+        
+         country =  await API.getDataBackEnd(token,URL_COUNTRIES)
+        let _country = country
+        
+        console.log(_country)
+        _country = _country["countries"].map(s=>{
+            return {
+                value:s.name,
+                code:s.code
+            }
+        })
+        console.log("_country")
+        console.log(_country)
+        //this.state.var=_country
+         this.setState({
+            
+            country:_country,
+            
+        }) 
+        console.log("country")
+        console.log(country)
+        console.log("answer")
         console.log(answer)
         if(answer!=false){
             let openRequest = answer.map(s=>{
@@ -63,13 +126,18 @@ export default class ContactScreen extends Component{
                 return {
                     id:s.id,
                     name:s.name,
-                    email:s.email,
+                    address:s.address,
+                    email:s.email,    
                     phone:s.phone,
-                    townName:s.town.name
-                    
+                    observations:s.observations,
+                    townName:s.town.name,
+                    townId:s.town.id,
+                    departmentCode:s.town.department.code,
+                    countryCode:s.town.department.country.code
                 }
             })
              this.setState({
+                loadingData:false,
                 dataSource:openRequest
             }) 
             console.log("openRequest")
@@ -79,7 +147,6 @@ export default class ContactScreen extends Component{
         }
         console.log(answer);
     }
-
     actionBar = (text) =>{
         let barText = text
         let datos = this.state.copyDataSource.filter(
@@ -103,13 +170,62 @@ export default class ContactScreen extends Component{
         }
         
     }
+    goToAdd = () =>{
+        this.setState({
+            showModal:true
+        })
+        /* this.props.navigation.navigate('AddContact',{
+            country:country
+        }) */
+    }
+    goToEdit = (id) => {
+        console.log("id Selected")
+        console.log(id)
+        console.log("this.state.dataSource")
+        console.log(this.state.dataSource)
+        let filtroData = this.state.dataSource.filter(n=>n.id===id)
+        console.log("filtroData")
+        console.log(filtroData)
+        this.setState({
+            showEditModal:true,
+            idContactToEdit:id,
+            dataEditContact:filtroData[0]
+        })
+    }
+    modalOff_ = () => {
+        this.setState({
+            showModal:false,
+            showEditModal:false
+        })
+        this.props.navigation.dispatch(resetAction)
+    }
 
+    backModalAction = () => {
+        this.setState({
+            showModal:false,
+            showEditModal:false
+        })
+    }
     render(){
         return(
             <View style={styles.container}>
+                <Modal show={this.state.showModal} 
+                modalOff={this.modalOff_} 
+                data={this.state.country} 
+                back={this.backModalAction}/>
+                <EditModal 
+                show={this.state.showEditModal}
+                back={this.backModalAction}
+                dataForm={this.state.dataEditContact}
+                data={this.state.country} 
+                modalOff={this.modalOff_} 
+                idContactToEdit={this.state.idContactToEdit}
+                />
+                
                 <View style={styles.headerContainer}>
                     <Header 
                     showSearch={true}
+                    selected={false}
                     titulo={"Contactos"} 
                     name={"menu"} 
                     actionIcon={()=>this.props.navigation.openDrawer()}
@@ -121,14 +237,34 @@ export default class ContactScreen extends Component{
                 <View style={styles.subcontainer}>
                 <View style={[styles.bodyContainer]}>
                     {this.state.loadingData ? (
+                        
                         <View style={[styles.body,styles.indicator]}>
                             <ActivityIndicator size="large" color="#ff0050" />
                         </View>
                         ) : (
+                        
                         <View style={styles.body}>    
-                            <ContactList listContacts={this.state.dataSource}/>
+                        
+                            <ContactList listContacts={this.state.dataSource} editModal={this.goToEdit}/>
+                            
+                            <FloatButton add={this.goToAdd}/>
+                            {/* <Overlay isVisible={this.state.isVisible} 
+                            onBackdropPress={() => this.setState({isVisible: false})}
+                            width={100}
+                            height={300}
+                            >   
+                                <ScrollView>
+                                    <Text>Hello from Ov</Text>
+                                </ScrollView>
+                                
+                            </Overlay> */}
+                            
                         </View>
+                        
+                        
                         )}   
+
+                        
                 </View>
                     
                 </View>
@@ -138,3 +274,4 @@ export default class ContactScreen extends Component{
     }
 }
 
+export default withNavigation(ContactScreen);

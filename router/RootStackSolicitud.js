@@ -5,12 +5,14 @@ import Chat from "../src/containers/chatSolicitudes/chat";
 import PruebaScreen from "../src/containers/pruebaScreen";
 import TabsSolicitud2 from "./stack2prueba"
 
+
 const RootStackSolicitud = createStackNavigator(
   {
     SolicitudScreen:{ screen: SolicitudScreen},
     SolicitudesCompanyTab:{ screen: TabsSolicitud2 },
     ChatScreen:{ screen: Chat},
-    PruebaScreen:{ screen: PruebaScreen}
+    PruebaScreen:{ screen: PruebaScreen},
+    
   },
   {
     navigationOptions: () => ({

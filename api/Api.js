@@ -1,5 +1,5 @@
 import CONFIG from "../config/config"
-import RNFetchBlob from 'rn-fetch-blob'
+//import RNFetchBlob from 'rn-fetch-blob'
 
 
 
@@ -111,12 +111,81 @@ class Api {
       //console.log('Este es',resjson)
       return [rest.status,resjson];
     } catch (errors) {
+      //console.log("catch errors: " + errors.Text());
+      
+
+
+  }
+  }
+
+  async PostData(token, url, bodyJson) {
+    try {
+      const rest = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body:JSON.stringify(bodyJson)
+      });
+
+      let resjson = await rest.json();
+      //console.log('Este es',resjson)
+      return [rest.status,resjson];
+    } catch (errors) {
       console.log("catch errors: " + errors.Text());
       
 
 
   }
   }
+
+  async PutData(token, url, bodyJson) {
+    try {
+      const rest = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body:JSON.stringify(bodyJson)
+      });
+
+      let resjson = await rest;
+      console.log('Este es',resjson)
+      return resjson
+    } catch (errors) {
+      console.log("catch errors: " + errors.Text());
+      
+
+
+  }
+  }
+
+  async DeleteContact(token, url) {
+    try {
+      const rest = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        }
+        
+      });
+
+      let resjson = await rest;
+      return resjson
+      //console.log('Este es',resjson)
+      //return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors);
+      
+
+
+  }
+  }
+
+
 
   dataFilter(data){
     let openRequest = data.map(s=>{
@@ -189,6 +258,7 @@ class Api {
 
       let resjson = await rest.json();
       //console.log('Este es',resjson)
+     
       if(rest.status==200){
         return resjson
       }else{
