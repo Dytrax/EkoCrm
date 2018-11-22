@@ -9,10 +9,12 @@ import {
 
 export default class OpportunityList extends Component{
     
+
+      
     renderItem = ({item}) => {
         
         return(
-            <TouchableOpacity onLongPress={()=>{console.log("Preisonado")}} 
+            <TouchableOpacity onLongPress={()=>{this.props.onLongPressOpportunity(item)}} 
             style={styles.card}
             
             >

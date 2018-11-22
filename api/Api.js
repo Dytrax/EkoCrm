@@ -184,6 +184,28 @@ class Api {
 
   }
   }
+  async Delete(token, url) {
+    try {
+      const rest = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        }
+        
+      });
+
+      let resjson = await rest;
+      return resjson
+      //console.log('Este es',resjson)
+      //return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors);
+      
+
+
+  }
+  }
 
 
 

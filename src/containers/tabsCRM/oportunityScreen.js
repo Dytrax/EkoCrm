@@ -3,7 +3,8 @@ import {
     View,
     Text,
     StyleSheet,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native';
 import styles from "./styleCRM"
 import Header from "../../components/headerComponent"
@@ -23,9 +24,10 @@ const URL_PRODUCTS= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}
 const URL_CONTACTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/contacts/`
 const URL_COUNTRIES = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries`
 const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries/`
+
 const resetAction = StackActions.reset({
     index: 0,
-    actions: [NavigationActions.navigate({ routeName: 'Tab2' })],
+    actions: [NavigationActions.navigate({ routeName: 'Tab3' })],
   });
 
 
@@ -35,14 +37,14 @@ const resetAction = StackActions.reset({
     2:"Exitosa",
     3:"No exitosa"
 }
-export default class ClientScreen extends Component{
+export default class OpportunityScreen extends Component{
     
     constructor(){
         super()
         
         this.state={
 
-
+            crmClientId:"",
             dataOpportunitiesList:[],
             copyDataOpportunitiesList:[],
             loadingData:true,
@@ -51,12 +53,14 @@ export default class ClientScreen extends Component{
             observations:"",
             dataClientList:[],
             productsChecked:[],
+            description:"",
             showModalAssignProduct:false,
             showModalAddOpportunity:false,
+            showModalCalendar:false,
             dataProductsList:[],
             editContactData:[],
-            
-            
+            dateSelectedCalendar:"",
+            dateSelectedCalendarToShow:"",
             //-----------------
             copyDataClientList:[],
             searchBar:false,
@@ -166,7 +170,7 @@ export default class ClientScreen extends Component{
 
     
     //var date = new Date().toISOString()
-    addOpportunity = () =>{
+    goAddOpportunity = () =>{
         this.setState({
             showModalAddOpportunity:true
         })
@@ -179,41 +183,90 @@ export default class ClientScreen extends Component{
         })
     }
 
+    addOpportunity = async () => {
+        let bodyJson = {
+            crmClientId: this.state.crmClientId,
+            dateInit: new Date().toISOString(),
+            dateInitActivity: this.state.dateSelectedCalendar,
+            descriptions:this.state.description,
+            observations:this.state.observations,
+            products:this.state.productsChecked,
+            title:this.state.title
+
+        }
+        console.log(bodyJson)
+        const token = await DB.getData("token");
+        let answer = await API.PostData(token,URL_OPPORTUNITIES,bodyJson)
+        console.log(answer)
+        //Falta hacer las validaciones
+        this.props.navigation.dispatch(resetAction)
+        
+        //this.props.navigation.navigate('Tab1')
+        //console.log(answer)
+        //this.props.modalOff()
+      }
     clientSelected =  (data) =>{
 
         console.log(data)
-        /* let code = data.code
-        const token = await DB.getData("token");
-        let departments =  await API.getDataBackEnd(token,URL_PICKERS+code+"/departments")
-        //console.log(departments)
-        departments=departments.map(s=>{
-            return {
-                value:s.name,
-                code:s.code
-            }
-        })
+        console.log(data.code)
+        this.stateChange("crmClientId",data.code)
         
-        this.setState({
-            departmentsList:departments
-        })  */
-        //console.log("this.state.departments")
-        //console.log(this.state.departments)
+       
       }
+
+      deleteOpportunity = async (id) =>{
+        const token = await DB.getData("token");
+        let answer = await API.Delete(token,URL_OPPORTUNITIES+"/"+id)
+        console.log("answer")
+        console.log(answer)
+        if (answer.status==204){
+            this.props.navigation.dispatch(resetAction)
+        }else{  
+            console.log("No fue posible borrar")
+            this.props.navigation.dispatch(resetAction)
+        }
+        
+        
+    }
+
+      editOpportunity = (item) => {
+        console.log(item)
+      }
+
+      askAgain = (id) =>{
+        
+        Alert.alert(
+            '¿Quieres eliminar esta oportunidad?',
+            'Este paso no se puede revertir',
+            [
+              
+              {text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+              {text: 'Aceptar', onPress: () => this.deleteOpportunity(id)},
+            ],
+            { cancelable: false }
+          )
+        //this.props.navigation.dispatch(resetAction)
+            
+        
+    }
+      onLongPressOpportunity = (item) =>{
+        
+        Alert.alert(
+            'Oportunidad Seleccionada',
+            item.title,
+            [
+              {text: 'Editar', onPress: () => this.editOpportunity(item)},
+              {text: 'Eliminar', onPress: ()=> this.askAgain(item.id)},
+              {text: 'Cancelar', onPress: () => console.log('OK Pressed'), style: 'cancel'},
+            ],
+            { cancelable: false }
+          )
+      
+       }
 
       
 
-    /* componentWillReceiveProps(nextProps) {
-        
-        if (nextProps.showModalAssignProduct !== this.state.showModalAssignProduct) {
-          this.setState({ 
-            showModalAssignProduct: nextProps.showModalAssignProduct
-
-        
-        });
-        }
-        
-            
-      } */
+    
 
     render(){
         console.log(this.state)
@@ -221,6 +274,7 @@ export default class ClientScreen extends Component{
             <View style={styles.container}>
                 <OpportunityModal states={this.state} goBack={this.goBackModalAction}
                     stateChange={this.stateChange} clientSelected={this.clientSelected}
+                    addOpportunity={this.addOpportunity}
                     
                 />
                 
@@ -249,9 +303,10 @@ export default class ClientScreen extends Component{
                         <View style={styles.body}>
                             
                             <OpportunityList OpportunityList={this.state.dataOpportunitiesList}
+                             onLongPressOpportunity={this.onLongPressOpportunity}
                                 
                             />
-                            <FloatButton add={this.addOpportunity}/>
+                            <FloatButton add={this.goAddOpportunity}/>
                             
                             
                             

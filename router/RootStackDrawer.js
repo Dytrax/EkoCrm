@@ -13,7 +13,7 @@ import { createDrawerNavigator,DrawerItems } from "react-navigation";
 import SolicitudScreen from "../src/containers/solicitudScreen";
 import CrmScreen from "../src/containers/crmScreen";
 import Logo from "../assets/Logo.png"
-import Calendar from '../src/containers/calendarScreen';
+import CalendarScreen from '../src/containers/calendarScreen';
 import TabsCrm from './RootStackTab';
 import RootStackSolicitud from './RootStackSolicitud';
 import SideMenu from '../src/containers/SideMenu';
@@ -33,7 +33,7 @@ import RootStackCrm from './RootStackCrm'
 } */
 const MyDrawer = createDrawerNavigator({
   Calendar:{
-    screen:Calendar
+    screen:CalendarScreen
   },
   Crm:{
     screen: RootStackCrm
