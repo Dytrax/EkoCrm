@@ -24,11 +24,13 @@ export default class OpportunityModal extends Component {
                 show={this.props.states.showModalAssignProduct}
                 stateChange={this.props.stateChange}
                 states={this.props.states}
+                
             />
             <CalendarModal
                 show={this.props.states.showModalCalendar}
                 stateChange={this.props.stateChange}
                 states={this.props.states}
+                minDate={this.props.states.minDate}
             />
 
             <View style={styles.container}>
@@ -39,7 +41,9 @@ export default class OpportunityModal extends Component {
                   
                   titulo={"Crear Oportunidad"} 
                   name={"keyboard-backspace"} 
-                  actionIcon={()=>{this.props.stateChange("showModalAddOpportunity",false)}} 
+                  actionIcon={()=>{this.props.stateChange("showModalAddOpportunity",false)
+                  this.props.initialState()
+                  }} 
 
                   />
                   
@@ -124,7 +128,7 @@ export default class OpportunityModal extends Component {
                         <View >
                                 <InputComponent 
                                         width={"100%"}
-                                        texto={"Descripción"} 
+                                        texto={"Descripción actividad"} 
                                         mensajeError={"Campo Requerido"} 
                                         state={"description"}
                                         stateChange={this.props.stateChange}

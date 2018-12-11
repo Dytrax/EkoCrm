@@ -27,6 +27,7 @@ export default class InputPrueba extends Component{
         
                 <Input
                     //shake={true}
+                    multiline = {true} 
                     containerStyle={{width:this.props.width}}
                     placeholder={this.props.texto}
                     errorMessage={this.state.error===true?this.props.mensajeError:null}

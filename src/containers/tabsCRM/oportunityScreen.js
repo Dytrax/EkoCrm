@@ -18,10 +18,12 @@ import { withNavigation, StackActions,NavigationActions } from "react-navigation
 import EditClientModal from './editClientModal';
 import OpportunityList from '../../components/crmOportunity/oportunityList';
 import OpportunityModal from './createOpportunityModa';
+import EditOpportunityModal from './editOpportunituModal';
+
 const URL_CLIENTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/clients`
 const URL_OPPORTUNITIES= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/oportunities`
 const URL_PRODUCTS= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/products`
-const URL_CONTACTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/contacts/`
+const URL_ACTIVITIES = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/activities`
 const URL_COUNTRIES = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries`
 const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries/`
 
@@ -41,9 +43,9 @@ export default class OpportunityScreen extends Component{
     
     constructor(){
         super()
-        
+        //this.state = this.initialState()
         this.state={
-
+            fromCalendar:false,
             crmClientId:"",
             dataOpportunitiesList:[],
             copyDataOpportunitiesList:[],
@@ -61,25 +63,41 @@ export default class OpportunityScreen extends Component{
             editContactData:[],
             dateSelectedCalendar:"",
             dateSelectedCalendarToShow:"",
-            //-----------------
-            copyDataClientList:[],
-            searchBar:false,
+            minDate: new Date(),
             
-            showEditModal:false,
-            countryList:[],
-            departmentsList:[],
-            townsList:[],
-            typeDocument:[],
-            contactsList:[],
-            userDocumentId:"",
-            townId:"",
-            townName:"",
-            departmentName:"",
-            documentTypeId:"",
-
-            idContactToEdit:""
+            //--------Edit Opportunities---------
+            showModalEditOpportunity:false,
+            itemToEdit:"",
+            description_next_activity:"",
+            copyminDate:"",
+            drop:false
+            
         }
     }
+    initialState = () => {
+        console.log("Aqui se incia su mamaa")
+        console.log(this.state)
+        this.setState({
+            productsChecked:[],
+            crmClientId:"",
+            title:"",
+            observations:"",
+            description:"",
+            dateSelectedCalendar:"",
+            dateSelectedCalendarToShow:"",
+            minDate: new Date(),
+            
+            //--------Edit Opportunities---------
+            showModalEditOpportunity:false,
+            itemToEdit:"",
+            description_next_activity:"",
+            copyminDate:""
+            
+        })
+    }
+
+     
+      
 
     async componentDidMount(){
         const token = await DB.getData("token");
@@ -89,7 +107,7 @@ export default class OpportunityScreen extends Component{
         const products = await API.getDataBackEnd(token,URL_PRODUCTS)
         console.log(products)
         
-        if (opportunities!=false && products!=false && clients!=false){
+        if (opportunities!=false || products!=false || clients!=false){
 
             
             let dataOpportunitiesList = opportunities.map(data=>{
@@ -99,11 +117,15 @@ export default class OpportunityScreen extends Component{
                     dateInit:data.dateInit,
                     crm_products:data.crm_products.length,
                     client:clients.filter(n=>n.id===data.crmClientId)[0].name,
-                    opportunityState:stateName[data.state]
+                    opportunityState:stateName[data.state],
+                    crm_activities:data.crm_activities
+                    
                 }
             })
-            //console.log(dataOpportunitiesList)
-
+            console.log("dataOpportunitiesList")
+            console.log(dataOpportunitiesList)
+            
+            
             let dataClientList = clients.map(s=>{
                 return {
                     value:s.name,
@@ -125,7 +147,10 @@ export default class OpportunityScreen extends Component{
                 dataOpportunitiesList:dataOpportunitiesList,
                 copyDataOpportunitiesList:dataOpportunitiesList,
                 dataClientList:dataClientList,
-                dataProductsList:dataProductsList
+                dataProductsList:dataProductsList,
+                //crm_finish_activities:crm_finish_activities,
+                //crm_inProcess_activities:crm_inProcess_activities,
+                //minDateEditOpportunity
             })
            
 
@@ -229,9 +254,7 @@ export default class OpportunityScreen extends Component{
         
     }
 
-      editOpportunity = (item) => {
-        console.log(item)
-      }
+      
 
       askAgain = (id) =>{
         
@@ -249,13 +272,65 @@ export default class OpportunityScreen extends Component{
             
         
     }
+
+    onPressOpportunity = (item) => {
+        console.log("item")
+        console.log(item)
+        let opportunityState = false
+        if (item.opportunityState === "Exitosa"){
+            opportunityState = true
+        }
+        let crm_finish_activities = item.crm_activities.filter(n=>n.state===0)
+        console.log("crm_finish_activities")
+        console.log(crm_finish_activities)
+        let crm_inProcess_activities = item.crm_activities.filter(n=>n.state===1)
+        console.log("crm_inProcess_activities")
+        console.log(crm_inProcess_activities)
+        console.log(crm_inProcess_activities.length)
+        let descriptionOpportunity = ""
+        let date = ""
+        let crmOpportunityId = ""
+        let activityId = ""
+        if (crm_inProcess_activities.length != 0){
+            
+            descriptionOpportunity = crm_inProcess_activities[0].observations
+            date = new Date(crm_inProcess_activities[0].dateInit);
+            date = (date.getMonth() + 1) + '/' + (date.getDate() + 1) + '/' +  date.getFullYear()
+            crmOpportunityId = item.id
+            activityId = crm_inProcess_activities[0].id
+        }else{
+            descriptionOpportunity = ""
+            date = ""
+            crmOpportunityId = ""
+            activityId = ""
+        }
+        //console.log(crm_inProcess_activities[0].observations)
+        //console.log(crm_inProcess_activities[0].dateInit)
+        console.log("-------------------------------------")
+        console.log(descriptionOpportunity)
+        console.log(date)
+        console.log(crmOpportunityId)
+        console.log(activityId)
+        this.stateChange("showModalEditOpportunity",true)
+        this.stateChange("itemToEdit",item)
+        this.setState({
+            crm_finish_activities:crm_finish_activities,
+            crm_inProcess_activities:crm_inProcess_activities,
+            descriptionOpportunity:descriptionOpportunity,
+            copyminDate:date,
+            crmOpportunityId:crmOpportunityId,
+            activityId:activityId,
+            dateEnd: new Date().toISOString(),
+            opportunityState: opportunityState,
+        })
+    }
       onLongPressOpportunity = (item) =>{
         
         Alert.alert(
             'Oportunidad Seleccionada',
             item.title,
             [
-              {text: 'Editar', onPress: () => this.editOpportunity(item)},
+              
               {text: 'Eliminar', onPress: ()=> this.askAgain(item.id)},
               {text: 'Cancelar', onPress: () => console.log('OK Pressed'), style: 'cancel'},
             ],
@@ -264,19 +339,77 @@ export default class OpportunityScreen extends Component{
       
        }
 
-      
+    successfulOpportunity = async () => {
+        console.log(this.state.crmOpportunityId)
+        let bodyJson = {
+            state:2
+        }
+        const token = await DB.getData("token")
+        console.log(URL_OPPORTUNITIES+'/'+ this.state.crmOpportunityId)
+        let successfulOpportunityPatch = await API.successfulOpportunity(token,URL_OPPORTUNITIES+'/'+ this.state.crmOpportunityId,bodyJson)
+        console.log(successfulOpportunityPatch)
+        //this.props.navigation.dispatch(resetAction)
+        console.log(successfulOpportunityPatch.status)
+        
+        if (successfulOpportunityPatch.status===412){
+            this.setState({
+                drop:true
+            })
+        
+        }
+    }
+    
+    back = async () => {
+        let bodyJson = {
+            activityId: this.state.activityId,
+            crmOpportunityId: this.state.crmOpportunityId,
+            dateEnd: this.state.dateEnd,
+            dateInit:this.state.dateSelectedCalendar,
+            descriptions: this.state.description_next_activity,       
+        }
+        
+        this.props.navigation.dispatch(resetAction)
+    }
+    closeActivity = async () => {
+        let bodyJson = {
+            activityId: this.state.activityId,
+            crmOpportunityId: this.state.crmOpportunityId,
+            dateEnd: this.state.dateEnd,
+            dateInit:this.state.dateSelectedCalendar,
+            descriptions: this.state.description_next_activity,       
+        }
+        console.log("bodyJson")
+        console.log(bodyJson)
+        
+        const token = await DB.getData("token");
+        let closeActivityPost = await API.PostData(token,URL_ACTIVITIES,bodyJson)
+        console.log("closeActivityPost")
+        console.log(closeActivityPost)
+        this.props.navigation.dispatch(resetAction)
+    }
 
     
 
     render(){
         console.log(this.state)
         return(
+            
             <View style={styles.container}>
+            
                 <OpportunityModal states={this.state} goBack={this.goBackModalAction}
                     stateChange={this.stateChange} clientSelected={this.clientSelected}
                     addOpportunity={this.addOpportunity}
+                    initialState={this.initialState}
                     
                 />
+
+                <EditOpportunityModal states={this.state} goBack={this.goBackModalAction}
+                    stateChange={this.stateChange} 
+                    initialState={this.initialState}
+                    closeActivity = {this.closeActivity}
+                    successfulOpportunity = { this.successfulOpportunity}
+                    backButton={this.back}
+                    />
                 
                 <View style={styles.headerContainer}>
                     <Header 
@@ -297,6 +430,7 @@ export default class OpportunityScreen extends Component{
                         
                         <View style={[styles.body,styles.indicator]}>
                             <ActivityIndicator size="large" color="#ff0050" />
+                            <FloatButton add={this.goAddOpportunity}/>
                         </View>
                         ) : (
                         
@@ -304,6 +438,7 @@ export default class OpportunityScreen extends Component{
                             
                             <OpportunityList OpportunityList={this.state.dataOpportunitiesList}
                              onLongPressOpportunity={this.onLongPressOpportunity}
+                             onPressOpportunity={this.onPressOpportunity}
                                 
                             />
                             <FloatButton add={this.goAddOpportunity}/>

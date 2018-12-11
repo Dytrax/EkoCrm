@@ -130,10 +130,10 @@ class Api {
       });
 
       let resjson = await rest.json();
-      //console.log('Este es',resjson)
+      console.log('Este es',resjson)
       return [rest.status,resjson];
     } catch (errors) {
-      console.log("catch errors: " + errors.Text());
+      console.log("catch errors: " + errors);
       
 
 
@@ -229,6 +229,30 @@ class Api {
   return openRequest
   }
 
+  async successfulOpportunity(token, url, bodyJson) {
+    try {
+      const rest = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body:JSON.stringify(bodyJson)
+        
+      });
+
+      let resjson = await rest;
+      return resjson
+      //console.log('Este es',resjson)
+      //return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors);
+      
+
+
+  }
+  }
+
   fileDownload(url,filename){
     let dirs = RNFetchBlob.fs.dirs
     console.log("dirs.DocumentDir")
@@ -296,5 +320,7 @@ class Api {
   }
   
 }
+
+
 
 export default new Api();
