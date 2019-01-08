@@ -1,5 +1,5 @@
 import CONFIG from "../config/config"
-//import RNFetchBlob from 'rn-fetch-blob'
+
 
 
 
@@ -11,14 +11,12 @@ const URL_CHAT_CLOSE = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_A
 
 //http://138.197.160.240:7002/v1/pqr/pqrs/uploads/18/datos.xlsx
 const URL_DOWNLOAD_FILES =`${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/pqr/pqrs/uploads/` 
-//var RNFetchBlob = require('react-native-fetch-blob').default;
+
 
 
 class Api {
   
-  async conectionBackEnd(header,body,url){
-    
-  }
+ 
 
   async loginAuthentication(email, password) {
     try {
@@ -125,6 +123,28 @@ class Api {
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
+        },
+        body:JSON.stringify(bodyJson)
+      });
+
+      let resjson = await rest.json();
+      console.log('Este es',resjson)
+      return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors);
+      
+
+
+  }
+  }
+
+  async PasswordRecover(url, bodyJson) {
+    try {
+      const rest = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          //Authorization: "Bearer " + token
         },
         body:JSON.stringify(bodyJson)
       });
@@ -253,44 +273,31 @@ class Api {
   }
   }
 
-  fileDownload(url,filename){
-    let dirs = RNFetchBlob.fs.dirs
-    console.log("dirs.DocumentDir")
-    console.log(dirs.DocumentDir)
-    console.log("URL")
-    console.log(URL_DOWNLOAD_FILES + url)
-    RNFetchBlob
-      .config({
-        fileCache : true,
-        // add this option that makes response data to be stored as a file,
-        // this is much more performant.
-        path : dirs.DownloadDir + "/" + url,
-        addAndroidDownloads : {
-          //useDownloadManager : true,
-          // Show notification when response data transmitted
-          notification : true,
-          // Title of download notification
-          title : 'Great ! Download Success ! :O ',
-          // File description (not notification description)
-          description : 'Archivo descargado',
-          //mime : 'image/png',
-          // Make the file scannable  by media scanner
-          mediaScannable : true,
-        }
-        //fileCache : true,
-      })
-      .fetch('GET', URL_DOWNLOAD_FILES + url, {
-        //some headers ..
-        //'Cache-Control': 'no-store'
-      }).progress((received, total) => {
-        console.log('progress', received / total)
-      })
-      .then((res) => {
-        // the temp file path
+  async changePassword(token, url, bodyJson) {
+    try {
+      const rest = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body:JSON.stringify(bodyJson)
         
-        console.log('The file saved to ', res.path())
-      })
-      }
+      });
+
+      let resjson = await rest;
+      return resjson
+      //console.log('Este es',resjson)
+      //return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors);
+      
+
+
+  }
+  }
+
+  
 
   async getDataBackEnd(token,URL){
     try {

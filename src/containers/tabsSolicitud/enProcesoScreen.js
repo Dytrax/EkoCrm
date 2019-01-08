@@ -172,6 +172,16 @@ export default class EnProcesoScreen extends Component{
         
     }
 
+    
+    _listEmptyComponent = () => {
+        return(
+            <View style={{marginTop:"50%"}}>
+                <Text style={{alignSelf:"center",fontSize:16}}>No hay solicitudes en proceso</Text>
+            </View>
+        )
+        
+    }
+
     render(){
         
         return(
@@ -199,7 +209,7 @@ export default class EnProcesoScreen extends Component{
                             data={this.state.dataSource}
                             renderItem={this.renderItem}
                             keyExtractor={item => item.id.toString()}
-                            
+                            ListEmptyComponent={this._listEmptyComponent}
                             />
                         </View>
                         )}

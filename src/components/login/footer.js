@@ -8,20 +8,22 @@ import {
 } from 'react-native'
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-
+import ButtonLogin from '../../components/buttonCircle'
 export default function Footer(props){
     return(
         <View style={styles.container}>
-            <TouchableHighlight
+            <ButtonLogin text="Iniciar Sesión" size={WIDTH-60} action={props.actionLogin}/>
+            {/* <TouchableHighlight
             onPress={props.actionLogin}
             underlayColor="white"
           >
             
               <Text style={styles.buttonText}>Iniciar Sesión</Text>
             
-          </TouchableHighlight>
+          </TouchableHighlight> */}
           <TouchableHighlight
           onPress={props.actionForget}
+          underlayColor="transparent"
           >
             <Text style={styles.colorForgetButton} >Olvidaste tu contraseña</Text>
           </TouchableHighlight>

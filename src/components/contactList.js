@@ -16,7 +16,35 @@ export default class ContactList extends Component {
         <ContactItem {...item} showModal={this.props.editModal}></ContactItem>
         )
     }
+    renderFooter = () => {
+        /* if (!this.state.loading) return null; */
+    
+        return (
+          <View
+            style={{
+              paddingVertical: 30,
+              //borderTopWidth: 1,
+              //borderColor: "#CED0CE"
+            }}
+          >
+            {/* <ActivityIndicator animating size="large" /> */}
+          </View>
+        );
+      };
 
+      renderSeparator = () => {
+        return (
+          <View
+            style={{
+              height: 1,
+              //width: "86%",
+              backgroundColor: "#CED0CE",
+              marginLeft: "18%",
+              marginRight: "3%"
+            }}
+          />
+        );
+      };
 
     render(){
         return(
@@ -24,6 +52,8 @@ export default class ContactList extends Component {
                 data={this.props.listContacts}
                 renderItem={this.renderItem}
                 keyExtractor={item => item.id.toString()}
+                ItemSeparatorComponent={this.renderSeparator}
+                ListFooterComponent={this.renderFooter}
             />
         )   
     }

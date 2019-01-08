@@ -155,7 +155,16 @@ export default class AbiertasScreen extends Component{
         }
         
     }
-
+    
+    _listEmptyComponent = () => {
+        return(
+            <View style={{marginTop:"50%"}}>
+                <Text style={{alignSelf:"center",fontSize:16}}>No hay solicitudes abiertas</Text>
+            </View>
+        )
+        
+    }
+    
     render(){
         
         return(
@@ -184,7 +193,7 @@ export default class AbiertasScreen extends Component{
                             data={this.state.dataSource}
                             renderItem={this.renderItem}
                             keyExtractor={item => item.id.toString()}
-                            
+                            ListEmptyComponent={this._listEmptyComponent}
                             />
                         </View>
                         )}

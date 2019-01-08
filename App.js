@@ -5,7 +5,7 @@ import {
     StyleSheet,
 } from 'react-native'
 import SplashScreen from 'react-native-splash-screen';
-
+import FlashMessage from "react-native-flash-message";
 
 import Login from './src/containers/loginScreen'
 import RootStack from './router/RootStack'
@@ -29,7 +29,10 @@ export default class App extends Component {
            
     render(){
         return(
-            <RootStack/>                
+            <View style={{ flex: 1 }}>
+            <RootStack/>
+            <FlashMessage position="top" />
+            </View>                
         );
     }
 }

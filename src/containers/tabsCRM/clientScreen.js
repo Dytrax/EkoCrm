@@ -57,6 +57,7 @@ export default class ClientScreen extends Component{
         const token = await DB.getData("token");
         //console.log(token);
         const answer = await API.getDataBackEnd(token,URL)
+        console.log("answer backend")
         console.log(answer)
         
         if(answer!=false){
@@ -249,6 +250,7 @@ export default class ClientScreen extends Component{
                 goBack={this.goBackModalAction}
                 data={[this.state.countryList,this.state.typeDocument,this.state.contactsList]}
                 modalOff={this.modalOff}
+                stateChange={this.stateChange}
                 />
                 <EditClientModal 
                         show={this.state.showEditModal}

@@ -177,6 +177,9 @@ const  data = [{
             <View style={styles.subcontainer}>
                 
             <View style={styles.body}>
+                <MyDropDown size={80} label={"Pais*"} datos={this.state.country} getData={this.countrySelectedAndGetDepartments}></MyDropDown>
+                <MyDropDown size={130} label={"Departamento*"} datos={this.state.departments} getData={this.departmentSelectedAndGetTown}></MyDropDown>
+                <MyDropDown size={110} label={"Ciudad*"} datos={this.state.towns} getData={this.townSelected}></MyDropDown>
 
                 <InputComponent 
                 texto={"Nombre"} 

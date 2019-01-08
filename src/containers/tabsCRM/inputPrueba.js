@@ -26,9 +26,10 @@ export default class InputPrueba extends Component{
     return(
         
                 <Input
-                    //shake={true}
-                    multiline = {true} 
-                    containerStyle={{width:this.props.width}}
+                    inputStyle={{height:undefined}}
+                    shake={false}
+                    multiline = {false} 
+                    //containerStyle={{width:this.props.width}}
                     placeholder={this.props.texto}
                     errorMessage={this.state.error===true?this.props.mensajeError:null}
                     leftIcon=

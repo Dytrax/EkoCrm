@@ -39,9 +39,10 @@ export default class CreateClientModal extends Component{
             visible={this.props.show}
             animationType="slide"
             onRequestClose={() => {
-            console.log("Modal has been closed.")
+                this.props.goBack()
             //Alert.alert('Modal has been closed.');
-          }}>
+          }}
+          >
                
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>
                 <View style={styles.container}>

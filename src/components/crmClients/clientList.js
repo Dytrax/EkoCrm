@@ -103,6 +103,8 @@ const resetAction = StackActions.reset({
       
        }
 
+
+
     renderItem = ({item}) => {
         console.log(item)
         return(
@@ -138,6 +140,9 @@ const resetAction = StackActions.reset({
         )
     }
 
+    
+    
+
     renderFooter = () => {
         /* if (!this.state.loading) return null; */
     
@@ -162,6 +167,7 @@ const resetAction = StackActions.reset({
                 keyExtractor={item => item.id.toString()}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListFooterComponent={this.renderFooter}
+                
             />
         )
     }

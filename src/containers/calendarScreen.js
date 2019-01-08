@@ -315,7 +315,7 @@ export default class CalendarScreen extends Component{
                     <View style={[styles.headerContainer,{marginBottom:10}]}>
                         <Header
                         //selected={false}
-                        titulo={"Calendario"} 
+                        titulo={"Calendario Actividades"} 
                         name={"menu"} 
                         actionIcon={()=>this.props.navigation.openDrawer()} 
 
@@ -358,7 +358,11 @@ export default class CalendarScreen extends Component{
       //{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}}
       onDayPress(day) {
         console.log(day.dateString,)
-        let activitiesOnClickDay = this.state.objActivities[day.dateString]
+        let activitiesOnClickDay=""
+        if (this.state.objActivities){
+          activitiesOnClickDay = this.state.objActivities[day.dateString]
+        }
+        
         activitiesDayModal = true
         if (!activitiesOnClickDay){
           activitiesOnClickDay = []

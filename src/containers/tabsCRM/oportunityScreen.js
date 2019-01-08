@@ -19,7 +19,9 @@ import EditClientModal from './editClientModal';
 import OpportunityList from '../../components/crmOportunity/oportunityList';
 import OpportunityModal from './createOpportunityModa';
 import EditOpportunityModal from './editOpportunituModal';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
+const URL_ROLES = `${CONFIG.URL_BASE}:${CONFIG.PORT_IMAGE}/${CONFIG.VERSION_API_IMAGE}/roles`
 const URL_CLIENTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/clients`
 const URL_OPPORTUNITIES= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/oportunities`
 const URL_PRODUCTS= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/products`
@@ -45,6 +47,7 @@ export default class OpportunityScreen extends Component{
         super()
         //this.state = this.initialState()
         this.state={
+            loading:false,
             fromCalendar:false,
             crmClientId:"",
             dataOpportunitiesList:[],
@@ -101,11 +104,13 @@ export default class OpportunityScreen extends Component{
 
     async componentDidMount(){
         const token = await DB.getData("token");
-        
+        const roles = await API.getDataBackEnd(token,URL_ROLES)
+        console.log(roles)
         const clients = await API.getDataBackEnd(token,URL_CLIENTS)
         const opportunities = await API.getDataBackEnd(token,URL_OPPORTUNITIES)
         const products = await API.getDataBackEnd(token,URL_PRODUCTS)
-        console.log(products)
+        console.log("clients Original")
+        console.log(clients)
         
         if (opportunities!=false || products!=false || clients!=false){
 
@@ -124,15 +129,22 @@ export default class OpportunityScreen extends Component{
             })
             console.log("dataOpportunitiesList")
             console.log(dataOpportunitiesList)
-            
-            
+            let listRol = roles.roles.map(s=>{
+                return {
+                    value:s.name,
+                    code:s.rolId
+                }
+            })
+            console.log("listRol")
+            console.log(listRol)
             let dataClientList = clients.map(s=>{
                 return {
                     value:s.name,
                     code:s.id
                 }
             })
-            //console.log(dataClientList)
+            console.log("dataClientList")
+            console.log(dataClientList)
             let dataProductsList = products.map(s=>{
                 return{
                     id:s.id,
@@ -148,6 +160,9 @@ export default class OpportunityScreen extends Component{
                 copyDataOpportunitiesList:dataOpportunitiesList,
                 dataClientList:dataClientList,
                 dataProductsList:dataProductsList,
+                copyDataProductList:dataProductsList,
+                listRol:listRol,
+                clients:clients
                 //crm_finish_activities:crm_finish_activities,
                 //crm_inProcess_activities:crm_inProcess_activities,
                 //minDateEditOpportunity
@@ -159,7 +174,9 @@ export default class OpportunityScreen extends Component{
         
     }
 
-
+    reset = () => {
+        this.props.navigation.dispatch(resetAction)
+    }
     stateChange = (stateToChange, value) => {
         
         //this.state[stateToChange] = value;
@@ -209,6 +226,13 @@ export default class OpportunityScreen extends Component{
     }
 
     addOpportunity = async () => {
+        if (!this.state.productsChecked || !this.state.dateSelectedCalendar || 
+            !this.state.description || !this.state.observations || !this.state.title || !this.state.rolId){
+                Alert.alert(
+                    'You need to...'
+                 )
+
+            }
         let bodyJson = {
             crmClientId: this.state.crmClientId,
             dateInit: new Date().toISOString(),
@@ -216,25 +240,60 @@ export default class OpportunityScreen extends Component{
             descriptions:this.state.description,
             observations:this.state.observations,
             products:this.state.productsChecked,
-            title:this.state.title
-
+            title:this.state.title,
+            rolId:this.state.rolId
         }
         console.log(bodyJson)
         const token = await DB.getData("token");
         let answer = await API.PostData(token,URL_OPPORTUNITIES,bodyJson)
+        if (answer[0]===201){
+            this.props.navigation.dispatch(resetAction)
+        }
+        else{
+            this.stateChange("showModalAddOpportunity",false)
+            showMessage({
+                message: "No fue posible crear la oportunidad",
+                description: answer[1].message,
+                type: "danger",
+              });
+            
+        }
         console.log(answer)
         //Falta hacer las validaciones
-        this.props.navigation.dispatch(resetAction)
+       
         
         //this.props.navigation.navigate('Tab1')
         //console.log(answer)
         //this.props.modalOff()
       }
     clientSelected =  (data) =>{
-
-        console.log(data)
+        filtro = this.state.clients.filter(n=>n.name===data.value)
+        if (filtro[0].ekosave == 1){
+            filtroProductList = this.state.dataProductsList.filter(n=>n.id!==1)
+            this.setState({
+                copyDataProductList:filtroProductList
+            })
+            console.log("sisas")
+            console.log(filtroProductList)
+        }
+        else{
+            this.setState({
+                copyDataProductList:this.state.dataProductsList
+            })
+        }
+        //console.log(this.state.clients.filter(n=>n.name===data.value))
+        console.log(data.value)
         console.log(data.code)
         this.stateChange("crmClientId",data.code)
+        
+       
+      }
+    
+    rolSelected =  (data) =>{
+        
+        console.log(data)
+        console.log(data.code)
+        this.stateChange("rolId",data.code)
         
        
       }
@@ -339,6 +398,27 @@ export default class OpportunityScreen extends Component{
       
        }
 
+    unsuccessfulOpportunity = async () => {
+        this.setState({
+            loading:true
+        })
+        
+        
+        
+        let bodyJson = {
+            state:3
+        }
+        const token = await DB.getData("token")
+        
+        let successfulOpportunityPatch = await API.successfulOpportunity(token,URL_OPPORTUNITIES+'/'+ this.state.crmOpportunityId,bodyJson)
+        console.log(successfulOpportunityPatch)
+        this.setState({
+            loading:false
+        })
+        this.props.navigation.dispatch(resetAction)
+        
+    }
+
     successfulOpportunity = async () => {
         console.log(this.state.crmOpportunityId)
         let bodyJson = {
@@ -350,13 +430,13 @@ export default class OpportunityScreen extends Component{
         console.log(successfulOpportunityPatch)
         //this.props.navigation.dispatch(resetAction)
         console.log(successfulOpportunityPatch.status)
-        
-        if (successfulOpportunityPatch.status===412){
+        this.props.navigation.dispatch(resetAction)
+        /* if (successfulOpportunityPatch.status===412){
             this.setState({
                 drop:true
             })
         
-        }
+        } */
     }
     
     back = async () => {
@@ -389,17 +469,37 @@ export default class OpportunityScreen extends Component{
     }
 
     
-
+    optionButton = () =>{
+        
+        Alert.alert(
+            'Calificaría la oportunidad como:',
+            '',
+            [
+              
+              
+              {text: 'Exitosa', onPress: () => this.successfulOpportunity()},
+              {text: 'No Exitosa', onPress: () => this.unsuccessfulOpportunity()},
+              {text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            ],
+            { cancelable: false }
+          )
+        //this.props.navigation.dispatch(resetAction)
+            
+        
+    }
     render(){
         console.log(this.state)
         return(
             
             <View style={styles.container}>
-            
+                
+
                 <OpportunityModal states={this.state} goBack={this.goBackModalAction}
                     stateChange={this.stateChange} clientSelected={this.clientSelected}
+                    rolSelected={this.rolSelected}
                     addOpportunity={this.addOpportunity}
                     initialState={this.initialState}
+                    reset={this.reset}
                     
                 />
 
@@ -408,7 +508,9 @@ export default class OpportunityScreen extends Component{
                     initialState={this.initialState}
                     closeActivity = {this.closeActivity}
                     successfulOpportunity = { this.successfulOpportunity}
+                    unsuccessfulOpportunity = { this.unsuccessfulOpportunity}
                     backButton={this.back}
+                    optionButton={this.optionButton}
                     />
                 
                 <View style={styles.headerContainer}>

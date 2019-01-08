@@ -6,6 +6,7 @@ import {Modal,
      Alert,
     StyleSheet
 } from 'react-native';
+
 import DB from "../../../storeData/storeData"
 import API from "../../../api/Api"
 import styles from "./styleCRM"
@@ -170,7 +171,7 @@ export default class ModalExample extends Component {
           transparent={false}
           visible={this.props.show}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            this.props.back()
           }}>
           <View style={styles.container}>
                

@@ -19,6 +19,9 @@ import RootStackSolicitud from './RootStackSolicitud';
 import SideMenu from '../src/containers/SideMenu';
 import RootStackCrm from './RootStackCrm'
 import RootStackCalendar from "./RootStackCalendar"
+import RootStackProfile from './RootStackProfile';
+
+
 /* const CustomDrawerComponent = (props) => {
   return(
   <View style={{flex:1}}>
@@ -43,6 +46,11 @@ const MyDrawer = createDrawerNavigator({
     screen: RootStackSolicitud,
     
   },
+  Profile: {
+    screen: RootStackProfile,
+    
+  },
+  
 },{
   contentComponent:SideMenu,
   useNativeAnimations:true

@@ -20,7 +20,7 @@ export default class ClosedActivities extends Component{
             </View>
         )
     }
-
+    
     _listEmptyComponent = () => {
         return(
             <View>

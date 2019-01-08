@@ -35,13 +35,22 @@ export default class ActivitiesDayList extends Component{
         )
     }
 
+    
+    _listEmptyComponent = () => {
+        return(
+            <View>
+                <Text style={{alignSelf:"center",fontSize:16}}>No hay actividades </Text>
+            </View>
+        )
+        
+    }
     render(){
         return(
             <FlatList
                 data={this.props.dataOnClickDay}
                 renderItem={this.renderItem}
                 keyExtractor={item => item.id.toString()}
-                
+                ListEmptyComponent={this._listEmptyComponent}
                 //ListFooterComponent={this.renderFooter}
             />
         )

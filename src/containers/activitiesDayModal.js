@@ -14,7 +14,9 @@ export default class ActivitiesDayModal extends Component {
     render(){
         return(
             <Modal visible={this.props.states.activitiesDayModal}
-            animationType="none">
+            animationType="none"
+            onRequestClose={() => { this.props.stateChange("activitiesDayModal",false) } }
+            >
                 
             
 
@@ -24,7 +26,7 @@ export default class ActivitiesDayModal extends Component {
                     <View style={styles.headerContainer}>
                         <Header 
                         
-                        titulo={this.props.states.selected} 
+                        titulo={"Actividades"} 
                         name={"keyboard-backspace"} 
                         actionIcon={()=>{this.props.stateChange("activitiesDayModal",false)
                         

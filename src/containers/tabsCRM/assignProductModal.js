@@ -40,7 +40,7 @@ export default class AssignProductModal extends Component{
             visible={this.props.show}
             animationType="slide"
             onRequestClose={() => {
-            console.log("Modal has been closed.")
+                this.props.stateChange("showModalAssignProduct",false)
             //Alert.alert('Modal has been closed.');
           }}>
                
@@ -69,7 +69,8 @@ export default class AssignProductModal extends Component{
                             })}}
                             /> */}
                         <ProductAssignFlatList
-                            data={this.props.states.dataProductsList}
+                        //copyDataProductList  dataProductsList
+                            data={this.props.states.copyDataProductList}
                             productsChecked={this.props.states.productsChecked}
                             stateChange={this.props.stateChange}
                         />

@@ -17,12 +17,16 @@ import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 export default class CalendarModal extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+    
+    };
     this.onDayPress = this.onDayPress.bind(this);
   }
 
   onDayPress(day) {
+    this.props.stateChange("showModalCalendar", false);
     this.setState({
+      
       selected: day.dateString
       //dateSelected: new Date(day.dateString).toISOString()
     });
@@ -37,13 +41,14 @@ export default class CalendarModal extends Component {
   }
 
   render() {
+    console.log("minDate")
+    console.log(this.props.minDate)
+    /* console.log((("01/01/") + this.props.minDate.substr(this.props.minDate.length-4,this.props.minDate.length))) */
     return (
       <Modal
         visible={this.props.show}
         animationType="slide"
-        onRequestClose={() => {
-          console.log("Modal has been closed.");
-        }}
+        onRequestClose={() => { this.props.stateChange("showModalCalendar", false); } }
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : null}
@@ -65,9 +70,10 @@ export default class CalendarModal extends Component {
               <Calendar
                 onDayPress={this.onDayPress}
                 style={stylesCalendar.calendar}
-                hideExtraDays
-                current={this.state.selected}
-                minDate={this.props.minDate}
+                //hideExtraDays
+                //this.props.minDate.slice(6,10)
+                current={(this.state.selected) ? this.state.selected : ((this.props.minDate === "12/32/2018") ? ("01/01/" + (parseInt(this.props.minDate.substr(this.props.minDate.length-4,this.props.minDate.length))+1)) : this.props.minDate)}
+                minDate={(this.props.minDate === "12/32/2018") ? ("01/01/" + (parseInt(this.props.minDate.substr(this.props.minDate.length-4,this.props.minDate.length))+1)) : this.props.minDate}
                 markedDates={{
                   [this.state.selected]: {
                     selected: true,

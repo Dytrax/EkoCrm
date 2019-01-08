@@ -144,7 +144,7 @@ export default class ModalExample extends Component {
           transparent={false}
           visible={this.props.show}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            this.props.back()
           }}>
           <View style={styles.container}>
                
@@ -161,6 +161,14 @@ export default class ModalExample extends Component {
                     />
                     
                 </View>
+                <View style={{alignSelf:"center",width:"90%"}}>
+                    <MyDropDown size={"100%"} label={"Pais*"} datos={this.props.data} getData={this.countrySelectedAndGetDepartments}></MyDropDown>
+                    <MyDropDown size={"100%"} label={"Departamento*"} datos={this.state.departments} getData={this.departmentSelectedAndGetTown}></MyDropDown>
+                    <MyDropDown size={"100%"} label={"Ciudad*"} datos={this.state.towns} getData={this.townSelected}></MyDropDown>
+
+
+                </View>
+                
                 <InputComponent 
                 texto={"Nombre"} 
                 mensajeError={"Campo Requerido"} 

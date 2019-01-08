@@ -60,13 +60,22 @@ export default class OpportunityList extends Component{
         );
       };
 
+      
+    _listEmptyComponent = () => {
+        return(
+            <View style={{marginTop:"50%"}}>
+                <Text style={{alignSelf:"center",fontSize:16}}>No hay oportunidades creadas</Text>
+            </View>
+        )
+        
+    }
     render(){
         return(
             <FlatList
                 data={this.props.OpportunityList}
                 renderItem={this.renderItem}
                 keyExtractor={item => item.id.toString()}
-                
+                ListEmptyComponent={this._listEmptyComponent}
                 ListFooterComponent={this.renderFooter}
             />
         )

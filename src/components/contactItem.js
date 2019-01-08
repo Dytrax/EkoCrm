@@ -86,6 +86,13 @@ class ContactItem extends Component {
           )
       
        }
+
+
+       
+
+
+
+
     render(){
     return(
         <TouchableOpacity onLongPress={()=>{this.SampleFunction(this.props.name,this.props.id)}} >
@@ -111,7 +118,7 @@ class ContactItem extends Component {
                     
                 </View>
                 <View style={styles.phoneContainer}  >
-                <Icon name="phone" onPress={()=>{this.callNumber(this.props.phone)}} size={20}></Icon>
+                <Icon name="phone" color={"green"} onPress={()=>{this.callNumber(this.props.phone)}} size={22}></Icon>
                     
                 
                 </View>
@@ -129,6 +136,7 @@ const styles = StyleSheet.create({
         
     },
     contact:{
+        margin:5,
         height:60,
         flex:1,
         flexDirection:"row",
@@ -149,7 +157,8 @@ const styles = StyleSheet.create({
     emailContainer:{
         flex:10,
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
+        marginRight:3,
     },
     phoneContainer:{
         flex:10,
@@ -171,8 +180,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     email:{
-        height:20,
-        width:20,
+        height:22,
+        width:22,
         resizeMode:"contain",
     }
 })

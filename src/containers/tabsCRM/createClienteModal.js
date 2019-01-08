@@ -167,7 +167,8 @@ export default class CreateClientModal extends Component{
 
             <Modal
             visible={this.props.show}
-            animationType="fade"
+            animationType='slide'
+            onRequestClose={() => { this.props.goBack() } }
             >  
             <AssignContacts
                 show={this.state.showModal}
@@ -196,7 +197,7 @@ export default class CreateClientModal extends Component{
                             
                         
                         
-                        <View style={{width:"75%",alignSelf:"center",}}>
+                        <View style={{width:"80%",alignSelf:"center",}}>
                         <View style={{marginBottom:20}}>
 
                             

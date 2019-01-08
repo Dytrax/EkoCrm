@@ -7,7 +7,8 @@ import {
     Picker,
     ScrollView,
     Platform,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    TextInput
 } from 'react-native'
 import styles from "./styleCRM"
 import Header from "../../components/headerComponent"
@@ -21,6 +22,9 @@ const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_AP
 const URL_ADD_CLIENTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/clients`
 import Icon2 from "react-native-vector-icons/MaterialIcons";
 import AssignContacts from "./assignClientScreen"
+import { Input } from 'react-native-elements';
+import IconGmail from "../../../assets/gmail.png"
+
 export default class EditClientModal extends Component{
      constructor(props){
         super(props)
@@ -29,6 +33,7 @@ export default class EditClientModal extends Component{
             
             contactChecked:[],
             showModal:false,
+            townsList:[],
             //countryList:props.data[0],
             //departmentName:props.departmentName,
             //townName:props.townName,
@@ -138,6 +143,7 @@ export default class EditClientModal extends Component{
         console.log(towns)
         /* this.props.stateChange("townsList",towns) */
          this.setState({
+            
             townsList:towns,
             townName:""
         }) 
@@ -224,7 +230,8 @@ export default class EditClientModal extends Component{
 
             <Modal
             visible={this.props.show}
-            animationType="fade"
+            animationType='slide'
+            onRequestClose={() => { this.props.goBack() } }
             >  
             <AssignContacts
                 show={this.state.showModal}
@@ -248,12 +255,13 @@ export default class EditClientModal extends Component{
                     </View>
                 
                     
-                    <ScrollView style={[styles.bodyContainer]}>
+                    <ScrollView keyboardShouldPersistTaps="handled"
+                keyboardDismissMode='on-drag' style={[styles.bodyContainer]}>
                         
                             
                         
                         
-                        <View style={{width:"75%",alignSelf:"center",}}>
+                        <View style={{width:"80%",alignSelf:"center",}}>
                         <View style={{marginBottom:20}}>
 
                             
@@ -392,6 +400,27 @@ export default class EditClientModal extends Component{
                                    <Icon2 name={"add-circle"} size={40} onPress={this.assignContacts}/>
                                </View>
                            </View>
+                           {/* <Input
+                                autoGrow = {false}
+                                style={{height:10,maxHeight:1}}
+                                placeholder='INPUT WITH ICON'
+                                leftIcon={{ type: 'font-awesome', name: 'chevron-left' }}
+                                /> */}
+                            
+
+                            {/* <InputComponent 
+                                        width={"100%"}
+                                        texto={"Observación"} 
+                                        mensajeError={"Campo Requerido"} 
+                                        state={"contactObs"}
+                                        stateChange={this.stateChange}
+                                        type={"default"}
+                                        value={this.props.data[3].observations}
+                                        iconType={"Foundation"}
+                                        iconName={"comment"}
+                                        iconSize={25}
+                                        
+                                        /> */}
 
                            
                            <View style={{marginTop:30,marginBottom:30}}>

@@ -3,7 +3,11 @@ import { 
     Modal,
     Text,
     View,
-    StyleSheet
+    StyleSheet,
+    Alert,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView
 } from 'react-native'
 import styles from './styleCRM'
 import Header from '../../components/headerComponent'
@@ -14,12 +18,79 @@ import Icon3 from "react-native-vector-icons/FontAwesome";
 import AssignProductModal from './assignProductModal';
 import CalendarModal from './calendarModal';
 import ButtonCircle from '../../components/buttonCircle'
+
+import DB from "../../../storeData/storeData"
+import API from "../../../api/Api"
+import CONFIG from "../../../config/config"
+import FlashMessage from "react-native-flash-message";
+import { showMessage, hideMessage } from "react-native-flash-message";
+const URL_OPPORTUNITIES= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/oportunities`
 export default class OpportunityModal extends Component {
+
+
+    addOpportunity = async () => {
+        if (!this.props.states.productsChecked || !this.props.states.dateSelectedCalendar || 
+            !this.props.states.description || !this.props.states.observations || !this.props.states.title){
+                Alert.alert(
+                    'Todos los campos deben ser completados'
+                 )
+
+            }
+        else{
+            let bodyJson = {
+                crmClientId: this.props.states.crmClientId,
+                dateInit: new Date().toISOString(),
+                dateInitActivity: this.props.states.dateSelectedCalendar,
+                descriptions:this.props.states.description,
+                observations:this.props.states.observations,
+                products:this.props.states.productsChecked,
+                title:this.props.states.title,
+                rolId:this.props.states.rolId
+    
+            }
+            console.log(bodyJson)
+            const token = await DB.getData("token");
+            let answer = await API.PostData(token,URL_OPPORTUNITIES,bodyJson)
+            if (answer[0]===201){
+                this.props.reset()
+            }
+            else{
+
+                this.dropdown.showMessage({
+                    message: "No fue posible crear la oportunidad ",
+                    description:answer[1].message,
+                    type: "danger",
+                  });
+                /* Alert.alert(
+                    "No fue posible crear la oportunidad " + 
+                    answer[1].message
+                 ) */
+                /* this.props.stateChange("showModalAddOpportunity",false) */
+                /* showMessage({
+                    message: "No fue posible crear la oportunidad",
+                    description: answer[1].message,
+                    type: "danger",
+                  }); */
+                
+            }
+            console.log(answer)
+            //Falta hacer las validaciones
+           
+            
+            //this.props.navigation.navigate('Tab1')
+            //console.log(answer)
+            //this.props.modalOff()
+        }
+        
+      }
+
 
     render(){
         return(
             <Modal visible={this.props.states.showModalAddOpportunity}
-            animationType="fade">
+            animationType="fade"
+            onRequestClose={() => { this.props.stateChange("showModalAddOpportunity",false) } }
+            >
             <AssignProductModal
                 show={this.props.states.showModalAssignProduct}
                 stateChange={this.props.stateChange}
@@ -48,8 +119,12 @@ export default class OpportunityModal extends Component {
                   />
                   
               </View>
-          
-              <View style={[styles.bodyContainer]}>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>  
+            <ScrollView style={[styles.bodyContainer]}
+            keyboardShouldPersistTaps='always'
+                keyboardDismissMode='on-drag'
+            >
+            <View style={[styles.bodyContainer]}>
                 <View style={{width:"90%",alignSelf:"center",}}>
                     
                     <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:22,},styleCreateOpportunity.card]}>
@@ -88,6 +163,11 @@ export default class OpportunityModal extends Component {
                         title={"Cliente"}
                         data={this.props.states.dataClientList}
                         selectedAction={this.props.clientSelected}
+                    />
+                    <MyDropDown size={"100%"}
+                        title={"Selecciona el rol"}
+                        data={this.props.states.listRol}
+                        selectedAction={this.props.rolSelected}
                     />
                     </View>
                     <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
@@ -146,7 +226,7 @@ export default class OpportunityModal extends Component {
 
                     </View>
                     <View >
-                                <ButtonCircle text={"Añadir"} size={"50%"} action={this.props.addOpportunity}></ButtonCircle>
+                                <ButtonCircle text={"Añadir"} size={"50%"} action={this.addOpportunity}></ButtonCircle>
                            </View>
                     
                     
@@ -158,12 +238,14 @@ export default class OpportunityModal extends Component {
 
 
               </View>
-              
+              </ScrollView>
+              </KeyboardAvoidingView>
+              {/* aqui */}
               
           
           
           </View>
-                
+                <FlashMessage ref={ref => this.dropdown = ref} />   
             </Modal>
                    
             
