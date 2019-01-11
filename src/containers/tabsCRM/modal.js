@@ -190,6 +190,8 @@ export default class ModalExample extends Component {
                 </View>
                 <View style={{alignSelf:"center",width:"95%"}}>
 
+                    <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
+
                     <View style={{justifyContent: "center",
                             alignItems:"center",marginTop:20,marginBottom:20}}>
                         <InputComponent 
@@ -275,6 +277,7 @@ export default class ModalExample extends Component {
                                             
                                             />
                     </View>
+                    </View>
                 
                     {/* <MyDropDown size={"100%"} 
                     title={"Pais*"} 
@@ -347,7 +350,9 @@ export default class ModalExample extends Component {
                     <MyDropDown size={130} label={"Departamento*"} datos={this.state.departments} getData={this.departmentSelectedAndGetTown}></MyDropDown>
                     <MyDropDown size={110} label={"Ciudad*"} datos={this.state.towns} getData={this.townSelected}></MyDropDown>
                 </View> */}
-                <ButtonCircle text={"Añadir"} size={100} action={this.addContact}></ButtonCircle>
+                <View style={{marginTop:10,marginBottom:30}}>
+                    <ButtonCircle text={"Añadir"} size={"50%"} action={this.addContact}></ButtonCircle>
+                </View>
                 {/* <View style={styles.subcontainer}>
                 <View style={[styles.bodyContainer]}>
                     
@@ -366,3 +371,17 @@ export default class ModalExample extends Component {
     );
   }
 }
+
+const styleCreateOpportunity = StyleSheet.create({
+    card:{
+        borderRadius: 5,
+        
+        shadowColor: 'rgba(0,0,0, .4)', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 3, //IOS
+        backgroundColor: '#fff', 
+        elevation: 5,
+        paddingLeft:5
+    }
+})

@@ -6,7 +6,7 @@ import {
     FlatList,
     TouchableOpacity
 } from "react-native"
-
+import moment from 'moment'
 export default class OpportunityList extends Component{
     
 
@@ -28,7 +28,9 @@ export default class OpportunityList extends Component{
                 </View>
                 <View  style={styles.info}>
                     <Text style={styles.titleInfo}>Fecha:</Text>
-                    <Text style={styles.textInfo}>{new Date(item.dateInit).toLocaleString()}</Text>
+                    <Text style={styles.textInfo}>{moment(item.dateInit).format('YYYY/MM/DD h:mm a')
+                    //new Date(item.dateInit).toLocaleString()
+                    }</Text>
                 </View>
                 <View  style={styles.info}>
                     <Text style={styles.titleInfo}>Estado:</Text>

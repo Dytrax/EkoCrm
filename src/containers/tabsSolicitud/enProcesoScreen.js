@@ -22,6 +22,7 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Header from "../../components/headerComponent"
+import moment from 'moment'
 export default class EnProcesoScreen extends Component{
     constructor(){
         super()
@@ -126,7 +127,9 @@ export default class EnProcesoScreen extends Component{
                         <Icon2 name="ray-start" size={20}  
                                 style={{marginLeft:3,color:"rgb(54,176,88)"}} 
                                 />
-                        <Text>{new Date(item.dateInit).toLocaleString()}</Text>
+                        <Text>{moment(item.dateInit).format('YYYY/MM/DD h:mm a')
+                            //new Date(item.dateInit).toLocaleString()
+                            }</Text>
                     </View>
                     <Text >{item.title}</Text>
                     

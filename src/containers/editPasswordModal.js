@@ -33,6 +33,7 @@ return (
                         <InputComponent 
                                             
                                             //width={"100%"}
+                                            secureText={true}
                                             texto={"Ingrese la contraseña actual *"} 
                                             mensajeError={"Campo Requerido"} 
                                             state={"actualPassword"}
@@ -49,7 +50,7 @@ return (
                             alignItems:"center",marginTop:20}}>
                         <InputComponent 
                                             passwordValidate={true}
-                                            secureText={false}
+                                            secureText={true}
                                             //width={"100%"}
                                             texto={"Contraseña nueva *"} 
                                             mensajeError=
@@ -69,7 +70,7 @@ return (
                         <InputComponent 
                                             passwordValidate={true}
                                             //width={"100%"}
-                                            secureText={false}
+                                            secureText={true}
                                             texto={"Confirmar contraseña nueva *"} 
                                             validate={true}
                                             pastPassword={props.states.password}

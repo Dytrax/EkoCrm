@@ -560,8 +560,8 @@ export default class EditClientModal extends Component{
                                         /> */}
 
                            
-                           <View style={{marginTop:30,marginBottom:30}}>
-                                <ButtonCircle text={"Añadir"} size={"100%"} action={this.editClient}></ButtonCircle>
+                           <View style={{marginTop:10,marginBottom:30}}>
+                                <ButtonCircle text={"Editar"} size={"50%"} action={this.editClient}></ButtonCircle>
                            </View>
                         </View>
                            

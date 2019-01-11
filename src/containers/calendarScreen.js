@@ -25,7 +25,16 @@ const vacation = {key:'vacation', color: 'red', selectedDotColor: 'blue'};
 const massage = {key:'massage', color: 'blue', selectedDotColor: 'blue'};
 const workout = {key:'workout', color: 'green'};
 import { withNavigation, StackActions,NavigationActions } from "react-navigation";
+import {LocaleConfig} from 'react-native-calendars';
 
+LocaleConfig.locales['es'] = {
+  monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Deciembre'],
+  monthNamesShort: ['Ene.','Feb.','Mar.','Abr.','May.','Jun.','Jul.','Ago','Sept.','Oct.','Nov.','Dec.'],
+  dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+  dayNamesShort: ['Dom.','Lun.','Mar.','Mie.','Jue.','Vie.','Sab.']
+};
+
+LocaleConfig.defaultLocale = 'es';
 const stateName = {
   0:"Desactivado",
   1:"Activo",

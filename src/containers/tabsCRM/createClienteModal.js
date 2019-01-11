@@ -430,7 +430,8 @@ export default class CreateClientModal extends Component{
 
                            
                            <View style={{marginTop:30,marginBottom:30}}>
-                                <ButtonCircle text={"Añadir"} size={"100%"} action={this.addClient}></ButtonCircle>
+                           
+                                <ButtonCircle text={"Añadir"} size={"50%"} action={this.addClient}></ButtonCircle>
                            </View>
                         </View>
                            

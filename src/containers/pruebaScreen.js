@@ -19,6 +19,7 @@ import API from "../../api/Api"
 import DB from "../../storeData/storeData"
 import Header from "../components/headerComponent"
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+import moment from 'moment'
 //import Icon3 from "react-native-vector-icons/MaterialIcons";
 const resetAction = StackActions.reset({
     //routeName: 'SolicitudesCompanyTab',PruebaScreen
@@ -96,7 +97,9 @@ export default class PruebaScreen extends Component{
             <View style={{flex:95}}>
                 <Text style={styles.renderViewStyle}>Yo</Text>
                 <Text style={styles.renderViewStyle}>{item.description}</Text>
-                <Text style={styles.renderViewStyle}>{new Date(item.dateExecution).toLocaleString()}</Text>
+                <Text style={styles.renderViewStyle}>{moment(item.dateExecution).format('YYYY/MM/DD h:mm a')
+                    //new Date(item.dateExecution).toLocaleString()
+                    }</Text>
             </View>
             <View style={{flex:0.5}}>
                         <View  
@@ -229,7 +232,9 @@ export default class PruebaScreen extends Component{
                             <Text>{this.state.dataSource["description"]}</Text>
                             <Text style={{fontWeight:"bold"}}>Archivos Adjuntos</Text>
                             <ArchivesFilesList listArchives={this.state.dataFlatListArchives}/>
-                            <Text style={{alignSelf:"flex-end"}}>{new Date(this.state.dataSource["dateInit"]).toLocaleString()}</Text>
+                            <Text style={{alignSelf:"flex-end"}}>{moment(this.state.dataSource["dateInit"]).format('YYYY/MM/DD h:mm a')
+                                //new Date(this.state.dataSource["dateInit"]).toLocaleString()
+                                }</Text>
                             
                         </View>
                     </View>

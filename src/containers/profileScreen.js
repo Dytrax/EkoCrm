@@ -95,38 +95,52 @@ export default class Profile extends Component {
 
 
     changePassword = async() => {
-        if (this.state.password!=this.state.confirmationPassword){
-            Alert.alert(
-                'Las contraseñas deben coincidir'
-             )
-        }
+        if (!this.state.password || !this.state.confirmationPassword || !this.state.actualPassword  ){
+                Alert.alert(
+                    'Todos los campos deben ser completados'
+                 )
+
+            }
         else{
-            let bodyJson = {
-                confirmPassword: this.state.confirmationPassword,
-                newPassword: this.state.password,
-                oldPassword: this.state.actualPassword 
-                  
+
+            if (this.state.password!=this.state.confirmationPassword){
+                Alert.alert(
+                    'Las contraseñas deben coincidir'
+                 )
             }
-            const token = await DB.getData("token");
-            const id = await DB.getData("id");
-            console.log(id)
-            let changePasswordRequest = await API.changePassword(token, URL_EDIT_NAME_AND_PHONE + id, bodyJson)
-            console.log(changePasswordRequest)
-            if (changePasswordRequest.status==204){
-                showMessage({
-                    message: "OK",
-                    description: "Contraseña cambiada satisfactoriamente",
-                    type: "success",
-                  });
-            }else{
-                showMessage({
-                    message: "No se pudo realizar el cambio",
-                    description: "No se pudo realizar el cambio",
-                    type: "warning",
-                  });
+            else{
+                this.setState({
+                    "editPassword":false
+                })
+                let bodyJson = {
+                    confirmPassword: this.state.confirmationPassword,
+                    newPassword: this.state.password,
+                    oldPassword: this.state.actualPassword 
+                      
+                }
+                const token = await DB.getData("token");
+                const id = await DB.getData("id");
+                console.log(id)
+                let changePasswordRequest = await API.changePassword(token, URL_EDIT_NAME_AND_PHONE + id, bodyJson)
+                console.log(changePasswordRequest)
+                if (changePasswordRequest.status==204){
+                    showMessage({
+                        message: "OK",
+                        description: "Contraseña cambiada satisfactoriamente",
+                        type: "success",
+                      });
+                }else{
+                    showMessage({
+                        message: "No se pudo realizar el cambio",
+                        description: "No se pudo realizar el cambio",
+                        type: "warning",
+                      });
+                }
+                
             }
-            
+
         }
+        
         
     }
     
