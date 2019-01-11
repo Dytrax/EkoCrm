@@ -49,7 +49,9 @@ export default class ClientScreen extends Component{
             departmentName:"",
             documentTypeId:"",
 
-            idContactToEdit:""
+            idContactToEdit:"",
+
+            contactChecked:[]
         }
     }
 
@@ -81,8 +83,8 @@ export default class ClientScreen extends Component{
                     crm_contacts_assign:data.crm_contacts.map(value => value.id)
                 }
             })
-
-            //console.log(dataClientList)
+            console.log("dataClientList")
+            console.log(dataClientList)
             let country =  await API.getDataBackEnd(token,URL_COUNTRIES)
             country = country["countries"].map(s=>{
                 return {
@@ -213,6 +215,7 @@ export default class ClientScreen extends Component{
         console.log("documentTypeId")
         console.log(filtroData[0].documentTypeId)
         this.setState({
+            contactChecked:item.crm_contacts_assign,
             showEditModal:true,
             editContactData:filtroData[0],
             departmentsList:departments,
@@ -253,6 +256,7 @@ export default class ClientScreen extends Component{
                 stateChange={this.stateChange}
                 />
                 <EditClientModal 
+                        states={this.state}
                         show={this.state.showEditModal}
                         goBack={this.goBackModalAction}
                         data={[this.state.countryList,this.state.typeDocument,this.state.contactsList,this.state.editContactData]}

@@ -24,10 +24,18 @@ function HeaderComponent(props){
                             onPress={props.actionIcon}/>
                         </View>
                         
+                        {props.bigTitle===true ? (
+                            <View style={{flex:80,alignItems:"center",justifyContent:"center"}}>
+                                <Text numberOfLines={1} style={{fontWeight:"bold",fontSize:15,color:"white",width:100}}>{props.titulo}</Text>
+                            </View>
+                        ) : (
+                            <View style={{flex:80,alignItems:"center",justifyContent:"center"}}>
+                                <Text style={{fontWeight:"bold",fontSize:15,color:"white"}}>{props.titulo}</Text>
+                            </View>
+                        )  
                         
-                        <View style={{flex:80,alignItems:"center",justifyContent:"center"}}>
-                            <Text style={{fontWeight:"bold",fontSize:15,color:"white"}}>{props.titulo}</Text>
-                        </View>
+                        }
+                        
                         {props.showSearch===true  ? (
                             
                             <View style={{flex:10,alignItems:"flex-end",justifyContent:"center"}}>

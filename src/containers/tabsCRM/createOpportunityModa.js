@@ -131,7 +131,7 @@ export default class OpportunityModal extends Component {
                     <View >
                                 <InputComponent 
                                         width={"100%"}
-                                        texto={"Título"} 
+                                        texto={"Título *"} 
                                         mensajeError={"Campo Requerido"} 
                                         state={"title"}
                                         stateChange={this.props.stateChange}
@@ -148,7 +148,7 @@ export default class OpportunityModal extends Component {
                     <View style={{marginTop:22,}}>
                                 <InputComponent 
                                         width={"100%"}
-                                        texto={"Observaciones"} 
+                                        texto={"Observaciones *"} 
                                         mensajeError={"Campo Requerido"} 
                                         state={"observations"}
                                         stateChange={this.props.stateChange}
@@ -160,12 +160,12 @@ export default class OpportunityModal extends Component {
                                         />
                     </View>
                     <MyDropDown size={"100%"}
-                        title={"Cliente"}
+                        title={"Cliente *"}
                         data={this.props.states.dataClientList}
                         selectedAction={this.props.clientSelected}
                     />
                     <MyDropDown size={"100%"}
-                        title={"Selecciona el rol"}
+                        title={"Selecciona el rol *"}
                         data={this.props.states.listRol}
                         selectedAction={this.props.rolSelected}
                     />
@@ -208,7 +208,7 @@ export default class OpportunityModal extends Component {
                         <View >
                                 <InputComponent 
                                         width={"100%"}
-                                        texto={"Descripción actividad"} 
+                                        texto={"Descripción actividad *"} 
                                         mensajeError={"Campo Requerido"} 
                                         state={"description"}
                                         stateChange={this.props.stateChange}

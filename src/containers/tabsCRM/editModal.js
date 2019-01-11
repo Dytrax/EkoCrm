@@ -11,7 +11,8 @@ import DB from "../../../storeData/storeData"
 import API from "../../../api/Api"
 import styles from "./styleCRM"
 import Header from "../../components/headerComponent"
-import InputComponent from '../../components/InputComponent';
+//import InputComponent from '../../components/InputComponent';
+import InputComponent from "../../components/inputComponentV2"
 import MyDropDown from '../../components/dropDown';
 import CONFIG from "../../../config/config"
 import ButtonCircle from '../../components/buttonCircle';
@@ -118,14 +119,14 @@ export default class ModalExample extends Component {
     console.log(this.state)
       
     let bodyJson = {
-        address:this.state.contactDir,
-        email:this.state.contactEmail,
+        address:this.props.states.contactDir,
+        email:this.props.states.contactEmail,
         latitude:0,
         longitude:0,
-        name:this.state.contactName,
-        observations:this.state.contactObs,
-        phone:this.state.contactPhone,
-        townId:townId
+        name:this.props.states.contactName,
+        observations:this.props.states.contactObs,
+        phone:this.props.states.contactPhone,
+        //townId:townId
     }
     
     const token = await DB.getData("token");
@@ -188,7 +189,92 @@ export default class ModalExample extends Component {
                     />
                     
                 </View>
-                <InputComponent 
+                <View style={{justifyContent: "center",
+                            alignItems:"center",marginTop:20,marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Nombre *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactName"}
+                                            stateChange={this.props.stateChange}
+                                            type={"default"}
+                                            value={this.props.states.contactName}
+                                            iconType={"material-icons"}
+                                            iconName={"person"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20,}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Dirección *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactDir"}
+                                            stateChange={this.props.stateChange}
+                                            type={"default"}
+                                            value={this.props.states.contactDir}
+                                            iconType={"material-icons"}
+                                            iconName={"add-location"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Correo *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactEmail"}
+                                            stateChange={this.props.stateChange}
+                                            type={"email-address"}
+                                            value={this.props.states.contactEmail}
+                                            iconType={"material-icons"}
+                                            iconName={"email"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Telefono *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactPhone"}
+                                            stateChange={this.props.stateChange}
+                                            type={"phone-pad"}
+                                            value={this.props.states.contactPhone}
+                                            iconType={"material-icons"}
+                                            iconName={"phone"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Observación"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactObs"}
+                                            stateChange={this.props.stateChange}
+                                            type={"default"}
+                                            value={this.props.states.contactObs}
+                                            iconType={"material-icons"}
+                                            iconName={"short-text"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                {/* <InputComponent 
                 texto={"Nombre"} 
                 mensajeError={"Campo Requerido"} 
                 state={"contactName"}
@@ -196,8 +282,8 @@ export default class ModalExample extends Component {
                 type={"default"}
                 value={this.props.dataForm.name}
                 
-                />
-                <InputComponent 
+                /> */}
+                {/* <InputComponent 
                 texto={"Dirección"} 
                 mensajeError={"Campo Requerido"} 
                 state={"contactDir"}
@@ -228,12 +314,12 @@ export default class ModalExample extends Component {
                 stateChange={this.stateChange}
                 type={"default"}
                 value={this.props.dataForm.observations}
-                />
-                <View style={{flexDirection:"row",justifyContent:"center"}}>
+                /> */}
+                {/* <View style={{flexDirection:"row",justifyContent:"center"}}>
                     <MyDropDown size={80} label={"Pais*"} datos={this.props.data} getData={this.countrySelectedAndGetDepartments} ></MyDropDown>
                     <MyDropDown size={130} label={"Departamento*"} datos={this.state.departments} getData={this.departmentSelectedAndGetTown}></MyDropDown>
                     <MyDropDown size={110} label={"Ciudad*"} datos={this.state.towns} getData={this.townSelected}></MyDropDown>
-                </View>
+                </View> */}
                 <ButtonCircle text={"Editar"} size={100} action={this.addContact}></ButtonCircle>
                 {/* <View style={styles.subcontainer}>
                 <View style={[styles.bodyContainer]}>

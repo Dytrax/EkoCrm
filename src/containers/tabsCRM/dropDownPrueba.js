@@ -25,6 +25,7 @@ export default class DropDownPrueba extends Component {
     return (
         
             <Dropdown
+                
                 value={this.props.value}            
                 selectedIndex={this.state.index}
                 selectedItem={this.state.selectedItem}

@@ -88,12 +88,12 @@ return (
                     
                 <View style={{flexDirection:"row",marginTop:20}}>
                     <View style={{flex:1,alignItems:"center"}}>
-                        <Icon name="check" size={40} color="green" onPress={()=> props.changePassword()}/>
+                        <Cancel name="cancel" size={40} color="red" onPress={()=> props.stateChange("editPassword",false)}/>
+                        
                     </View>
                     <View style={{flex:1,alignItems:"center"}}>
-                        <Cancel name="cancel" size={40} color="red" onPress={()=> props.stateChange("editPassword",false)} 
-
-                        />
+                        <Icon name="check" size={40} color="green" onPress={()=> props.changePassword()}/>
+                        
                     </View>
 
                 </View>

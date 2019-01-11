@@ -112,15 +112,19 @@ export default class OpportunityScreen extends Component{
         console.log("clients Original")
         console.log(clients)
         
+        console.log("opportunities")
+        console.log(opportunities)
         if (opportunities!=false || products!=false || clients!=false){
 
             
             let dataOpportunitiesList = opportunities.map(data=>{
+                
                 return{
                     id:data.id,
                     title:data.title,
                     dateInit:data.dateInit,
                     crm_products:data.crm_products.length,
+                    
                     client:clients.filter(n=>n.id===data.crmClientId)[0].name,
                     opportunityState:stateName[data.state],
                     crm_activities:data.crm_activities

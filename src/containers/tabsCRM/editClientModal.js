@@ -117,6 +117,7 @@ export default class EditClientModal extends Component{
             departmentsList:departments,
             departmentName:""
         }) 
+        console.log("Probando editar")
         //console.log("this.state.departments")
         //console.log(this.state.departments)
       }
@@ -170,10 +171,12 @@ export default class EditClientModal extends Component{
       }
 
       contactsAssign = (data) => {
+        console.log("cliente asignado")
         console.log(data)
-        this.setState({
+        this.props.stateChange("contactChecked",data)
+        /* this.setState({
             contactChecked:data
-        })
+        }) */
       }
 
         assignContacts = () => {
@@ -236,7 +239,8 @@ export default class EditClientModal extends Component{
             <AssignContacts
                 show={this.state.showModal}
                 goBack={this.goBackModalAction}
-                data={[this.props.data[2],this.state.contactChecked]}
+                data={[this.props.data[2],this.props.states.contactChecked//this.state.contactChecked
+                ]}
                 chageState={this.contactsAssign}
             />
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>
@@ -261,8 +265,8 @@ export default class EditClientModal extends Component{
                             
                         
                         
-                        <View style={{width:"80%",alignSelf:"center",}}>
-                        <View style={{marginBottom:20}}>
+                        <View style={{width:"95%",alignSelf:"center",}}>
+                            {/* <View style={{marginBottom:20}}>
 
                             
                                 <MyDropDown size={"100%"}
@@ -294,11 +298,58 @@ export default class EditClientModal extends Component{
                                         selectedAction={this.typeDocumentSelected}
                                         value={this.props.userDocumentId}
                                     />
+                            </View> */}
+                            <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
+                            <View style={{justifyContent: "center",
+                            alignItems:"center",marginTop:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Nombre"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactName"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={this.props.data[3].name}
+                                            iconType={"font-awesome"}
+                                            iconName={"industry"}
+                                            iconSize={20}
+                                            
+                                            />
                             </View>
+
+                            <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            
+                                <MyDropDown size={"90%"}
+                                            title={"Tipo de documento *"}
+                                            data={this.props.data[1]}
+                                            selectedAction={this.typeDocumentSelected}
+                                            value={this.props.userDocumentId}
+                                        />
+                                <View style={{marginBottom:15}}/>
+                            
+                            
+                            <InputComponent 
+                                                
+                                            width={"100%"}
+                                            texto={"No Documento *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactNumberDocument"}
+                                            stateChange={this.stateChange}
+                                            type={"phone-pad"}
+                                            value={this.props.data[3].document_number}
+                                            iconType={"font-awesome"}
+                                            iconName={"id-card"}
+                                            iconSize={25}
+                                                
+                                                />
+                        
+                        </View>
                             
 
                             
-                            <View style={{marginBottom:20}}>
+                            {/* <View style={{marginBottom:20}}>
                                 <InputComponent 
                                         width={"100%"}
                                         texto={"No Documento"} 
@@ -311,9 +362,9 @@ export default class EditClientModal extends Component{
                                         iconName={"id-card"}
                                         iconSize={25}
                                         />
-                            </View>
+                            </View> */}
                             
-                        <View style={{marginBottom:20}}>
+                        {/* <View style={{marginBottom:20}}>
                         <InputComponent 
                                     width={"100%"}
                                     texto={"Nombre"} 
@@ -327,10 +378,80 @@ export default class EditClientModal extends Component{
                                     iconSize={20}
                                     
                                     />
-                                    </View>
+                                    </View> */}
+                                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Dirección *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactDir"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={this.props.data[3].address}
+                                            iconType={"material-icons"}
+                                            iconName={"add-location"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Email *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactEmail"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={this.props.data[3].email}
+                                            iconType={"MaterialIcons"}
+                                            iconName={"email"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Telefono *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactPhone"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={this.props.data[3].phone}
+                                            iconType={"MaterialIcons"}
+                                            iconName={"phone"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Observación *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactObs"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={this.props.data[3].observations}
+                                            iconType={"Foundation"}
+                                            iconName={"comment"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        </View>
+                        {/* /////////// */}
                             
                             
-                           <View style={{marginBottom:20}}>
+                           {/* <View style={{marginBottom:20}}>
                                 <InputComponent 
                                         width={"100%"}
                                         texto={"Dirección"} 
@@ -344,8 +465,8 @@ export default class EditClientModal extends Component{
                                         iconSize={25}
                                         
                                         />
-                           </View>
-                           <View style={{marginBottom:20}}>
+                           </View> */}
+                           {/* <View style={{marginBottom:20}}>
                                 <InputComponent 
                                         width={"100%"}
                                         texto={"Email"} 
@@ -384,14 +505,30 @@ export default class EditClientModal extends Component{
                                         stateChange={this.stateChange}
                                         type={"default"}
                                         value={this.props.data[3].observations}
-                                        iconType={"Foundation"}
-                                        iconName={"comment"}
+                                        iconType={"material-icons"}
+                                        iconName={"short-text"}
                                         iconSize={25}
                                         
                                         />
-                           </View>
+                           </View> */}
 
-                           <View style={{width:"75%",flexDirection:"row",marginTop:30,justifyContent:"center",alignItems:"center"}}>
+
+                           <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
+                            
+                            <View style={{flexDirection:"row",}}>
+                                    <View style={{marginRight:40,paddingTop:10}}>
+                                        <Text>Asignar Contactos</Text>
+                                    </View>
+                                    <View style={{justifyContent:"flex-end"}}>
+                                        <Icon2 name={"add-circle"} color={"#a3c51a"} size={40} onPress={()=>{this.assignContacts()}}/>
+                                    </View>
+                                    <View style={{alignSelf:"center",paddingLeft:30}}>
+                                        <Text style={{fontSize:22}}>{this.props.states.contactChecked.length}</Text>
+                                    </View>
+                            </View>
+                        </View>
+
+                           {/* <View style={{width:"75%",flexDirection:"row",marginTop:30,justifyContent:"center",alignItems:"center"}}>
                                
                                <View style={{marginRight:40}}>
                                    <Text>Asignar Contactos</Text>
@@ -399,7 +536,7 @@ export default class EditClientModal extends Component{
                                <View style={{justifyContent:"flex-end"}}>
                                    <Icon2 name={"add-circle"} size={40} onPress={this.assignContacts}/>
                                </View>
-                           </View>
+                           </View> */}
                            {/* <Input
                                 autoGrow = {false}
                                 style={{height:10,maxHeight:1}}
@@ -449,3 +586,17 @@ export default class EditClientModal extends Component{
         )
     }
 }
+
+const styleCreateOpportunity = StyleSheet.create({
+    card:{
+        borderRadius: 5,
+        
+        shadowColor: 'rgba(0,0,0, .4)', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 3, //IOS
+        backgroundColor: '#fff', 
+        elevation: 5,
+        paddingLeft:5
+    }
+})

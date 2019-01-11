@@ -10,13 +10,15 @@ import DB from "../../../storeData/storeData"
 import API from "../../../api/Api"
 import styles from "./styleCRM"
 import Header from "../../components/headerComponent"
-import InputComponent from '../../components/InputComponent';
-import MyDropDown from '../../components/dropDown';
+import InputComponent from "../../components/inputComponentV2"
+//import MyDropDown from '../../components/dropDown';
+import MyDropDown from './dropDownPrueba'
 import CONFIG from "../../../config/config"
 import ButtonCircle from '../../components/buttonCircle';
 import {withNavigation,StackActions,NavigationActions} from "react-navigation"
 const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries/`
 const URL_ADD_CONTACTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/contacts`
+import { Dropdown } from 'react-native-material-dropdown';
 export default class ModalExample extends Component {
 /*     <TouchableHighlight
                 onPress={this.props.modalOff}>
@@ -31,20 +33,22 @@ export default class ModalExample extends Component {
     super(props);
     
     this.state = {
-      contactName:"",
-      contactDir:"",
-      contactEmail:"",
-      contactPhone:"",
-      contactObs:"",
+      //contactName:"",
+      //contactDir:"",
+      //contactEmail:"",
+      //contactPhone:"",
+      //contactObs:"",
       country:"",
-      departments:[],
-      towns:[],
+      //departments:[],
+      //towns:[],
       townId:0,
-      error:false
+      error:false,
+      townName:"ALCALA",
+      //departmentName:""
     };
   }
   
-  countrySelectedAndGetDepartments = async (data) =>{
+  /* countrySelectedAndGetDepartments = async (data) =>{
     console.log("Country Selected")
     console.log(data)
     console.log(data.code)
@@ -65,8 +69,9 @@ export default class ModalExample extends Component {
     console.log("Respuesta after filter")
     console.log(this.state.departments)
   }
-
-  departmentSelectedAndGetTown = async (data) =>{
+ */
+  /* departmentSelectedAndGetTown = async (data) =>{
+    
     console.log("Department Selected")
     console.log(data)
     let code = data.code
@@ -84,13 +89,16 @@ export default class ModalExample extends Component {
             id:s.id
         }
     })
+
     
      this.setState({
-        towns:towns
+        towns:towns,
+        //townName:""
+
     }) 
     //console.log(towns)
     
-  }
+  } */
 
   townSelected = (data) => {
         
@@ -110,7 +118,7 @@ export default class ModalExample extends Component {
         name:this.state.contactName,
         observations:this.state.contactObs,
         phone:this.state.contactPhone,
-        townId:this.state.townId,
+        //townId:this.state.townId,
     }
     
     const token = await DB.getData("token");
@@ -134,6 +142,25 @@ export default class ModalExample extends Component {
     console.log("this.state.stateChange")
     console.log(this.state)
   };
+
+  /* componentWillReceiveProps(nextProps) {
+    console.log("hskknkasnksnksa")
+    if (nextProps.departmentName !== this.state.departmentName) {
+        this.setState({ departmentName: nextProps.departmentName});
+      }
+
+    
+        
+  } */
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.departmentName!==this.props.departmentName){
+      //Perform some operation
+      this.props.stateChange("departmentName",nextProps.departmentName)
+      //this.setState({someState: someValue });
+      //this.classMethod();
+    }
+  }
 
   render() {
     
@@ -161,15 +188,121 @@ export default class ModalExample extends Component {
                     />
                     
                 </View>
-                <View style={{alignSelf:"center",width:"90%"}}>
-                    <MyDropDown size={"100%"} label={"Pais*"} datos={this.props.data} getData={this.countrySelectedAndGetDepartments}></MyDropDown>
-                    <MyDropDown size={"100%"} label={"Departamento*"} datos={this.state.departments} getData={this.departmentSelectedAndGetTown}></MyDropDown>
-                    <MyDropDown size={"100%"} label={"Ciudad*"} datos={this.state.towns} getData={this.townSelected}></MyDropDown>
+                <View style={{alignSelf:"center",width:"95%"}}>
+
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginTop:20,marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Nombre *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactName"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={this.state.contactName}
+                                            iconType={"material-icons"}
+                                            iconName={"person"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20,}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Dirección *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactDir"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={this.state.contactDir}
+                                            iconType={"material-icons"}
+                                            iconName={"add-location"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Correo *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactEmail"}
+                                            stateChange={this.stateChange}
+                                            type={"email-address"}
+                                            value={this.state.contactEmail}
+                                            iconType={"material-icons"}
+                                            iconName={"email"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Telefono *"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactPhone"}
+                                            stateChange={this.stateChange}
+                                            type={"phone-pad"}
+                                            value={this.state.contactPhone}
+                                            iconType={"material-icons"}
+                                            iconName={"phone"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                    <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                        <InputComponent 
+                                            
+                                            //width={"100%"}
+                                            texto={"Observación"} 
+                                            mensajeError={"Campo Requerido "} 
+                                            state={"contactObs"}
+                                            stateChange={this.stateChange}
+                                            type={"phone-pad"}
+                                            value={this.state.contactObs}
+                                            iconType={"material-icons"}
+                                            iconName={"short-text"}
+                                            iconSize={25}
+                                            
+                                            />
+                    </View>
+                
+                    {/* <MyDropDown size={"100%"} 
+                    title={"Pais*"} 
+                    data={this.props.data} 
+                    selectedAction={this.props.countrySelectedAndGetDepartments}
+                    ></MyDropDown>
+                    
+                    
+
+
+                    <MyDropDown size={"100%"} 
+                    title={"Departamento*"} 
+                    data={this.props.states.departments} 
+                    selectedAction={this.props.departmentSelectedAndGetTown}
+                    value={this.props.departmentName}
+                    ></MyDropDown>
+
+                    <MyDropDown 
+                    size={"100%"} 
+                    title={"Ciudad*"} 
+                    data={this.props.states.towns} 
+                    selectedAction={this.townSelected}
+                    value={this.state.townName}></MyDropDown> */}
 
 
                 </View>
                 
-                <InputComponent 
+                {/* <InputComponent 
                 texto={"Nombre"} 
                 mensajeError={"Campo Requerido"} 
                 state={"contactName"}
@@ -208,12 +341,12 @@ export default class ModalExample extends Component {
                 stateChange={this.stateChange}
                 type={"default"}
                 value={""}
-                />
-                <View style={{flexDirection:"row",justifyContent:"center"}}>
+                /> */}
+                {/* <View style={{flexDirection:"row",justifyContent:"center"}}>
                     <MyDropDown size={80} label={"Pais*"} datos={this.props.data} getData={this.countrySelectedAndGetDepartments}></MyDropDown>
                     <MyDropDown size={130} label={"Departamento*"} datos={this.state.departments} getData={this.departmentSelectedAndGetTown}></MyDropDown>
                     <MyDropDown size={110} label={"Ciudad*"} datos={this.state.towns} getData={this.townSelected}></MyDropDown>
-                </View>
+                </View> */}
                 <ButtonCircle text={"Añadir"} size={100} action={this.addContact}></ButtonCircle>
                 {/* <View style={styles.subcontainer}>
                 <View style={[styles.bodyContainer]}>

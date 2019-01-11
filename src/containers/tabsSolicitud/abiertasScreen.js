@@ -177,7 +177,10 @@ export default class AbiertasScreen extends Component{
                     name={"keyboard-backspace"}  
                     actionIcon={()=>{this.props.navigation.goBack(null)}} 
                     state={this.state.searchBar}
-                    actionSearchBar={this.actionBar}/>
+                    actionSearchBar={this.actionBar}
+                    bigTitle = {true}
+
+                    />
                     
             </View>
            

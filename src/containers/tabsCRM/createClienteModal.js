@@ -149,7 +149,7 @@ export default class CreateClientModal extends Component{
                 name:this.state.contactName,
                 observations:this.state.contactObs,
                 phone:this.state.contactPhone,
-                townId:this.state.townId,
+                //townId:this.state.townId,
             }
             
             const token = await DB.getData("token");
@@ -197,52 +197,133 @@ export default class CreateClientModal extends Component{
                             
                         
                         
-                        <View style={{width:"80%",alignSelf:"center",}}>
-                        <View style={{marginBottom:20}}>
+                        <View style={{width:"95%",alignSelf:"center",}}>
 
-                            
-                                <MyDropDown size={"100%"}
-                                    title={"Pais"}
-                                    data={this.props.data[0]}
-                                    selectedAction={this.countrySelectedAndGetDepartments}
-                                />
-                                <MyDropDown size={"100%"}
-                                    title={"Departamento"}
-                                    data={this.state.departmentsList}
-                                    selectedAction={this.departmentSelectedAndGetTown}
-                                />
-                                
-                                <MyDropDown size={"100%"}
-                                    title={"Ciudad"}
-                                    data={this.state.townsList}
-                                    selectedAction={this.townSelected}
-                                />
-                                
-                                <MyDropDown size={"100%"}
-                                        title={"Tipo de documento"}
-                                        data={this.props.data[1]}
-                                        selectedAction={this.typeDocumentSelected}
-                                    />
-                            </View>
-                            
+                        <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
 
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginTop:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Nombre"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactName"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={""}
+                                            iconType={"font-awesome"}
+                                            iconName={"industry"}
+                                            iconSize={20}
+                                            
+                                            />
+                        </View>
+
+
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
                             
-                            <View style={{marginBottom:20}}>
-                                <InputComponent 
-                                        width={"100%"}
-                                        texto={"No Documento"} 
-                                        mensajeError={"Campo Requerido"} 
-                                        state={"contactNumberDocument"}
-                                        stateChange={this.stateChange}
-                                        type={"default"}
-                                        value={""}
-                                        iconType={"font-awesome"}
-                                        iconName={"id-card"}
-                                        iconSize={25}
+                                <MyDropDown size={"90%"}
+                                            title={"Tipo de documento *"}
+                                            data={this.props.data[1]}
+                                            selectedAction={this.typeDocumentSelected}
                                         />
-                            </View>
+                                <View style={{marginBottom:15}}/>
                             
-                        <View style={{marginBottom:20}}>
+                            
+                            <InputComponent 
+                                                
+                                            width={"100%"}
+                                            texto={"No Documento *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactNumberDocument"}
+                                            stateChange={this.stateChange}
+                                            type={"phone-pad"}
+                                            value={""}
+                                            iconType={"font-awesome"}
+                                            iconName={"id-card"}
+                                            iconSize={25}
+                                                
+                                                />
+                        
+                        </View>
+
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Dirección *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactDir"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={""}
+                                            iconType={"material-icons"}
+                                            iconName={"add-location"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Email *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactEmail"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={""}
+                                            iconType={"MaterialIcons"}
+                                            iconName={"email"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Telefono *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactPhone"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={""}
+                                            iconType={"MaterialIcons"}
+                                            iconName={"phone"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        <View style={{justifyContent: "center",
+                            alignItems:"center",marginBottom:20}}>
+                            <InputComponent 
+                                            
+                                            width={"100%"}
+                                            texto={"Observación *"} 
+                                            mensajeError={"Campo Requerido"} 
+                                            state={"contactObs"}
+                                            stateChange={this.stateChange}
+                                            type={"default"}
+                                            value={""}
+                                            iconType={"Foundation"}
+                                            iconName={"comment"}
+                                            iconSize={25}
+                                            
+                                            />
+                        </View>
+                        </View>
+                        
+                        
+
+                            
+                            
+                            
+                        {/* <View style={{marginBottom:20}}>
                         <InputComponent 
                                     width={"100%"}
                                     texto={"Nombre"} 
@@ -256,10 +337,10 @@ export default class CreateClientModal extends Component{
                                     iconSize={20}
                                     
                                     />
-                                    </View>
+                                    </View> */}
                             
                             
-                           <View style={{marginBottom:20}}>
+                           {/* <View style={{marginBottom:20}}>
                                 <InputComponent 
                                         width={"100%"}
                                         texto={"Dirección"} 
@@ -273,8 +354,8 @@ export default class CreateClientModal extends Component{
                                         iconSize={25}
                                         
                                         />
-                           </View>
-                           <View style={{marginBottom:20}}>
+                           </View> */}
+                           {/* <View style={{marginBottom:20}}>
                                 <InputComponent 
                                         width={"100%"}
                                         texto={"Email"} 
@@ -288,8 +369,8 @@ export default class CreateClientModal extends Component{
                                         iconSize={25}
                                         
                                         />
-                           </View>
-                           <View style={{marginBottom:20}}>
+                           </View> */}
+                           {/* <View style={{marginBottom:20}}>
                                 <InputComponent 
                                         width={"100%"}
                                         texto={"Telefono"} 
@@ -303,8 +384,8 @@ export default class CreateClientModal extends Component{
                                         iconSize={25}
                                         
                                         />
-                           </View>
-                           <View >
+                           </View> */}
+                           {/* <View >
                                 <InputComponent 
                                         width={"100%"}
                                         texto={"Observación"} 
@@ -318,9 +399,26 @@ export default class CreateClientModal extends Component{
                                         iconSize={25}
                                         
                                         />
-                           </View>
+                           </View> */}
 
-                           <View style={{width:"75%",flexDirection:"row",marginTop:30,justifyContent:"center",alignItems:"center"}}>
+                           <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
+                            
+                            <View style={{flexDirection:"row",}}>
+                                    <View style={{marginRight:40,paddingTop:10}}>
+                                        <Text>Asignar Contactos</Text>
+                                    </View>
+                                    <View style={{justifyContent:"flex-end"}}>
+                                        <Icon2 name={"add-circle"} color={"#a3c51a"} size={40} onPress={()=>{this.assignContacts()}}/>
+                                    </View>
+                                    <View style={{alignSelf:"center",paddingLeft:30}}>
+                                        <Text style={{fontSize:22}}>{this.state.contactChecked.length}</Text>
+                                    </View>
+                            </View>
+                        </View>
+
+                       
+
+                           {/* <View style={{width:"75%",flexDirection:"row",marginTop:30,justifyContent:"center",alignItems:"center"}}>
                                
                                <View style={{marginRight:40}}>
                                    <Text>Asignar Contactos</Text>
@@ -328,7 +426,7 @@ export default class CreateClientModal extends Component{
                                <View style={{justifyContent:"flex-end"}}>
                                    <Icon2 name={"add-circle"} size={40} onPress={this.assignContacts}/>
                                </View>
-                           </View>
+                           </View> */}
 
                            
                            <View style={{marginTop:30,marginBottom:30}}>
@@ -357,3 +455,17 @@ export default class CreateClientModal extends Component{
         )
     }
 }
+
+const styleCreateOpportunity = StyleSheet.create({
+    card:{
+        borderRadius: 5,
+        
+        shadowColor: 'rgba(0,0,0, .4)', // IOS
+        shadowOffset: { height: 1, width: 1 }, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 3, //IOS
+        backgroundColor: '#fff', 
+        elevation: 5,
+        paddingLeft:5
+    }
+})

@@ -16,6 +16,8 @@ import CONFIG from "../../../config/config"
 import EditModal from "./editModal"
 import Modal from "./modal"
 import { Overlay } from 'react-native-elements';
+
+const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries/`
 const URL = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/contacts`
 const URL_COUNTRIES = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries`
 const list = [
@@ -81,13 +83,15 @@ let country="";
             idContactToEdit:"",
             dataEditContact:[],
             country:"",
+
+
+            ///ADD CONTACT
+            departmentName:""
             
         }
     }
 
-     componentWillMount(){
-        
-    }
+     
     async componentDidMount(){
         let mensaje = await DB.getData("Mensaje");
         console.log("Mensaje")
@@ -138,7 +142,8 @@ let country="";
             })
              this.setState({
                 loadingData:false,
-                dataSource:openRequest
+                dataSource:openRequest,
+                copyDataSource:openRequest
             }) 
             console.log("openRequest")
             console.log(openRequest)
@@ -147,12 +152,25 @@ let country="";
         }
         console.log(answer);
     }
+
+    stateChange = (stateToChange, value) => {
+        
+        //this.state[stateToChange] = value;
+
+        var  tmp = {}
+        tmp[stateToChange] = value
+        this.setState(tmp)
+        
+        //console.log("this.state.stateChange")
+        //console.log(this.state)
+      };
+
     actionBar = (text) =>{
         let barText = text
         let datos = this.state.copyDataSource.filter(
             
             s=>{
-                return s.companyName.toUpperCase().search(text.toUpperCase()) != -1
+                return s.name.toUpperCase().search(text.toUpperCase()) != -1
             }
             
         )
@@ -189,6 +207,11 @@ let country="";
         this.setState({
             showEditModal:true,
             idContactToEdit:id,
+            contactName:filtroData[0].name,
+            contactDir:filtroData[0].address,
+            contactEmail:filtroData[0].email,
+            contactPhone:filtroData[0].phone,
+            contactObs:filtroData[0].observations,
             dataEditContact:filtroData[0]
         })
     }
@@ -206,20 +229,96 @@ let country="";
             showEditModal:false
         })
     }
+
+
+
+
+
+
+    //Add Contact Logic
+    //////////////////
+    countrySelectedAndGetDepartments = async (data) =>{
+        this.setState({
+            departmentName:""
+        }) 
+        console.log("Country Selected")
+        console.log(data)
+        console.log(data.code)
+        console.log(URL_PICKERS+data.code)
+        let code = data.code
+        const token = await DB.getData("token");
+        let departments =  await API.getDataBackEnd(token,URL_PICKERS+code+"/departments")
+        departments=departments.map(s=>{
+            return {
+                value:s.name,
+                code:s.code
+            }
+        })
+    
+        this.setState({
+            departments:departments,
+            departmentName:""
+        }) 
+        console.log("Respuesta after filter")
+        console.log(this.state.departments)
+      }
+
+      departmentSelectedAndGetTown = async (data) =>{
+        
+        console.log("Department Selected")
+        console.log(data.value)
+        let code = data.code
+        console.log(code)
+        //console.log(URL_PICKERS+"departments/"+code+"/towns")
+        const token = await DB.getData("token");
+        
+        let towns =  await API.getDataBackEnd(token,URL_PICKERS+"departments/"+code+"/towns")
+        console.log("towns")
+        console.log(towns)
+        towns = towns.map(s=>{
+            return{
+                value:s.name,
+                code:s.code,
+                id:s.id
+            }
+        })
+    
+        
+         this.setState({
+            departmentName:data.value,
+            towns:towns,
+            //townName:""
+    
+        }) 
+        //console.log(towns)
+        
+      }
+
+
     render(){
         return(
             <View style={styles.container}>
-                <Modal show={this.state.showModal} 
+                <Modal 
+                countrySelectedAndGetDepartments = {this.countrySelectedAndGetDepartments}
+                departmentSelectedAndGetTown = {this.departmentSelectedAndGetTown}
+                states = {this.state}
+                show={this.state.showModal} 
                 modalOff={this.modalOff_} 
                 data={this.state.country} 
-                back={this.backModalAction}/>
+                back={this.backModalAction}
+                departmentName={this.state.departmentName}
+                stateChange={this.stateChange}
+                />
+                
                 <EditModal 
+                states={this.state}
                 show={this.state.showEditModal}
                 back={this.backModalAction}
                 dataForm={this.state.dataEditContact}
                 data={this.state.country} 
                 modalOff={this.modalOff_} 
                 idContactToEdit={this.state.idContactToEdit}
+                stateChange={this.stateChange}
                 />
                 
                 <View style={styles.headerContainer}>
