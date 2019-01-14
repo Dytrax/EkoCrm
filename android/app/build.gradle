@@ -94,11 +94,11 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    aaptOptions.cruncherEnabled = false
-    aaptOptions.useNewCruncher = false
+    //aaptOptions.cruncherEnabled = false
+    //aaptOptions.useNewCruncher = false
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-     subprojects {
+     /* subprojects {
   project.configurations.all {
       afterEvaluate {project ->
         if (project.hasProperty("android")) {
@@ -109,7 +109,7 @@ android {
         }
     }
   }
-}
+} */
     defaultConfig {
         applicationId "com.proyectoprueba"
         minSdkVersion rootProject.ext.minSdkVersion
