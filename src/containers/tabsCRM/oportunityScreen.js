@@ -271,8 +271,10 @@ export default class OpportunityScreen extends Component{
         //this.props.modalOff()
       }
     clientSelected =  (data) =>{
+        console.log(data)
         filtro = this.state.clients.filter(n=>n.name===data.value)
-        if (filtro[0].ekosave == 1){
+        console.log(filtro)
+        if (filtro[0].isEkosave == 1){
             filtroProductList = this.state.dataProductsList.filter(n=>n.id!==1)
             this.setState({
                 copyDataProductList:filtroProductList

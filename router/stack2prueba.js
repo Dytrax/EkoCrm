@@ -72,7 +72,7 @@ const stack3 = createStackNavigator({
           tabBarLabel:'Abiertas',
             tabBarOptions: {
                 showLabel: true, // hide labels
-                activeTintColor: "rgb(54,176,88)", // active icon color
+                activeTintColor: "rgb(226,65,55)", // active icon color
                 inactiveTintColor: '#586589',  // inactive icon color
                 style: {
                     //backgroundColor: '#171F33' // TabBar background
@@ -152,7 +152,7 @@ const stack3 = createStackNavigator({
             tabBarLabel:'Cerradas',
             tabBarOptions: {
                 showLabel: true, // hide labels
-                activeTintColor: "rgb(226,65,55)", // active icon color
+                activeTintColor: "rgb(54,176,88)", // active icon color
                 inactiveTintColor: '#586589',  // inactive icon color
                 style: {
                     //backgroundColor: '#171F33' // TabBar background

@@ -24,7 +24,7 @@ function body(props){
                   
                 }}
               > 
-                <Icon name="email" size={16} color="rgb(184,184,184)"  />
+                <Icon name="email" size={18} color="rgb(184,184,184)"  />
                 {/* <Image source={emailIcon} style={styles.icon} /> */}
               </View>
                 <TextInput
@@ -44,7 +44,7 @@ function body(props){
                   height:40,
                 }}
               >
-                <Icon name="lock" size={16} color="rgb(184,184,184)" />
+                <Icon name="lock" size={18} color="rgb(184,184,184)" />
               </View>
   
               <TextInput
@@ -74,12 +74,15 @@ const styles =  StyleSheet.create({
         
     },
     txtInput: {
+      
         paddingLeft:8,
         width:300,
         height:40,
         borderBottomColor: "rgb(184,184,184)",
         borderBottomWidth: 1,
-        marginBottom:10
+        marginBottom:10,
+        fontSize:17,
+        
         //backgroundColor:"black"
     },
 })

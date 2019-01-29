@@ -269,7 +269,7 @@ export default class ModalExample extends Component {
                                             mensajeError={"Campo Requerido "} 
                                             state={"contactObs"}
                                             stateChange={this.stateChange}
-                                            type={"phone-pad"}
+                                            type={"default"}
                                             value={this.state.contactObs}
                                             iconType={"material-icons"}
                                             iconName={"short-text"}

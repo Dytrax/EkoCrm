@@ -62,7 +62,7 @@ export default class PruebaScreen extends Component{
         this.setState({
             token:token,
             pqrId:data["id"],
-            dataFlatList:data["pqr_tracings"],
+            dataFlatList:data["pqr_tracings"].reverse(),
             dataFlatListArchives:data["pqr_archives"],
             dataSource:data,
             titleProblem:data["title"],
@@ -96,7 +96,7 @@ export default class PruebaScreen extends Component{
             
             <View style={{flex:95}}>
                 <Text style={styles.renderViewStyle}>Yo</Text>
-                <Text style={styles.renderViewStyle}>{item.description}</Text>
+                <Text style={[styles.renderViewStyle,{fontSize:15}]}>{item.description}</Text>
                 <Text style={styles.renderViewStyle}>{moment(item.dateExecution).format('YYYY/MM/DD h:mm a')
                     //new Date(item.dateExecution).toLocaleString()
                     }</Text>
@@ -228,9 +228,9 @@ export default class PruebaScreen extends Component{
                                 }}/>
                             </View>
                         <View style={{flex:93,marginLeft:6}} >
-                            <Text>{`Super Admin # ${this.state.dataSource["userClientId"]}`}</Text>
-                            <Text>{this.state.dataSource["description"]}</Text>
-                            <Text style={{fontWeight:"bold"}}>Archivos Adjuntos</Text>
+                            <Text style={{fontSize:16}}>{`Super Admin # ${this.state.dataSource["userClientId"]}`}</Text>
+                            <Text style={{fontSize:15}}>{this.state.dataSource["description"]}</Text>
+                            <Text style={{fontWeight:"bold",fontSize:16}}>Archivos Adjuntos</Text>
                             <ArchivesFilesList listArchives={this.state.dataFlatListArchives}/>
                             <Text style={{alignSelf:"flex-end"}}>{moment(this.state.dataSource["dateInit"]).format('YYYY/MM/DD h:mm a')
                                 //new Date(this.state.dataSource["dateInit"]).toLocaleString()
@@ -240,7 +240,7 @@ export default class PruebaScreen extends Component{
                     </View>
                         <FlatList
                         ref={(ref) => { this.flatListRef = ref; }}
-                        data={this.state.dataFlatList.reverse()}
+                        data={this.state.dataFlatList}
                         renderItem={this.renderItem}
                         //ListHeaderComponent={this.renderHeader}
                         keyExtractor={item => item.id.toString()}

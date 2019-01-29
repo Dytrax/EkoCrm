@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Dimensions,
     Platform,
-    
+    TouchableWithoutFeedback
     
 } from 'react-native'
 import { withNavigation } from 'react-navigation';
@@ -18,15 +18,50 @@ const HEIGHT = Dimensions.get("window").height;
 function HeaderComponent(props){
     return(
                  <View style={styles.header}>
-                        <View style={{flex:10,justifyContent:"center"}}>
-                            <Icon2 name={props.name} size={30}  
-                            style={{marginLeft:10,color:"white",}} 
-                            onPress={props.actionIcon}/>
-                        </View>
+                    
+                                <TouchableWithoutFeedback 
+                                hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}
+                                onPress={props.actionIcon}   
+                                
+                                >   
+                                        <View style={{width:40,alignItems:"center",justifyContent:"center"}}>
+                                            <Icon2 name={props.name} size={30}  
+                                                style={{color:"white",}} 
+                                                
+                                                />
+
+                                        </View>
+                                        
+
+                                    
+                                        
+                                    
+                                    
+                                </TouchableWithoutFeedback>
+                                
+                            
+                        {/* <View style={{flex:10,alignItems:"center",justifyContent:"center",backgroundColor:"yellow"}}>
+                            <TouchableWithoutFeedback 
+                            hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}
+                            onPress={props.actionIcon}    
+                            >   
+                                <View>
+                                    <Icon2 name={props.name} size={30}  
+                                        style={{marginLeft:10,color:"white",}} 
+                                        
+                                        />
+
+                                </View>
+                                    
+                                
+                                
+                            </TouchableWithoutFeedback>
+                            
+                        </View> */}
                         
                         {props.bigTitle===true ? (
                             <View style={{flex:80,alignItems:"center",justifyContent:"center"}}>
-                                <Text numberOfLines={1} style={{fontWeight:"bold",fontSize:15,color:"white",width:100}}>{props.titulo}</Text>
+                                <Text numberOfLines={1} style={{fontWeight:"bold",fontSize:15,color:"white",width:160}}>{props.titulo}</Text>
                             </View>
                         ) : (
                             <View style={{flex:80,alignItems:"center",justifyContent:"center"}}>
@@ -92,7 +127,7 @@ const styles =  StyleSheet.create({
         backgroundColor:"#a3c51a",
         borderTopColor:"transparent",
         borderBottomColor:"transparent",
-        width:WIDTH-250}
+        width:110}
 })
 
 export default HeaderComponent; 

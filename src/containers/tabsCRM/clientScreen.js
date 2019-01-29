@@ -61,31 +61,8 @@ export default class ClientScreen extends Component{
         const answer = await API.getDataBackEnd(token,URL)
         console.log("answer backend")
         console.log(answer)
-        
-        if(answer!=false){
-            
-            let dataClientList = answer.map(data=>{
-                return{
-                    id:data.id,
-                    name:data.name,
-                    phone:data.phone,
-                    email:data.email,
-                    townId:data.town.id,
-                    townName:data.town.name,
-                    countryName:data.town.department.country.name,
-                    countryCode:data.town.department.country.code,
-                    departmentName:data.town.department.name,
-                    departmentCode:data.town.department.code,
-                    documentTypeId:parseInt(data.documentTypeId),
-                    document_number:data.document_number,
-                    observations:data.observations,
-                    address:data.address,
-                    crm_contacts_assign:data.crm_contacts.map(value => value.id)
-                }
-            })
-            console.log("dataClientList")
-            console.log(dataClientList)
-            let country =  await API.getDataBackEnd(token,URL_COUNTRIES)
+
+        let country =  await API.getDataBackEnd(token,URL_COUNTRIES)
             country = country["countries"].map(s=>{
                 return {
                     value:s.name,
@@ -110,6 +87,31 @@ export default class ClientScreen extends Component{
                     email:s.email
                 }
             })
+        
+        if(answer!=false){
+            
+            let dataClientList = answer.map(data=>{
+                return{
+                    id:data.id,
+                    name:data.name,
+                    phone:data.phone,
+                    email:data.email,
+                    townId:data.town.id,
+                    townName:data.town.name,
+                    countryName:data.town.department.country.name,
+                    countryCode:data.town.department.country.code,
+                    departmentName:data.town.department.name,
+                    departmentCode:data.town.department.code,
+                    documentTypeId:parseInt(data.documentTypeId),
+                    document_number:data.document_number,
+                    observations:data.observations,
+                    address:data.address,
+                    crm_contacts_assign:data.crm_contacts.map(value => value.id)
+                }
+            })
+            console.log("dataClientList")
+            console.log(dataClientList)
+            
 
             //console.log("contacts")
             //console.log(contacts)
@@ -121,6 +123,12 @@ export default class ClientScreen extends Component{
                 countryList:country,
                 typeDocument:documents,
                 contactsList:contacts
+            })
+        }else{
+            this.setState({
+                contactsList:contacts,
+                typeDocument:documents,
+                loadingData:false
             })
         }
         

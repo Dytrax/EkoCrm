@@ -26,7 +26,7 @@ const massage = {key:'massage', color: 'blue', selectedDotColor: 'blue'};
 const workout = {key:'workout', color: 'green'};
 import { withNavigation, StackActions,NavigationActions } from "react-navigation";
 import {LocaleConfig} from 'react-native-calendars';
-
+import FloatButton from '../components/floatButton'
 LocaleConfig.locales['es'] = {
   monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Deciembre'],
   monthNamesShort: ['Ene.','Feb.','Mar.','Abr.','May.','Jun.','Jul.','Ago','Sept.','Oct.','Nov.','Dec.'],
@@ -109,12 +109,18 @@ export default class CalendarScreen extends Component{
 
                     //[data.crm_activities.dateInit]:{},
                     op.crm_activities.map(data=>{
+                      data.title = op.title
+                      console.log("data")
+                      console.log(data)
+                      console.log(objActivities)
                         if (objActivities.hasOwnProperty(data.dateInit.slice(0,10))){
                           objActivities[data.dateInit.slice(0,10)].push(data)
+                          
                         }else{
                             objActivities[data.dateInit.slice(0,10)] = []
                             objActivities[data.dateInit.slice(0,10)].push(data)
-                        } 
+                        }
+                      console.log(objActivities)
 
                         if (objCalendar.hasOwnProperty(data.dateInit.slice(0,10))){
                           if(data.state===0){
@@ -298,6 +304,9 @@ export default class CalendarScreen extends Component{
     goToOpportunityOfDayScreen= ()=>{
       this.props.navigation.navigate("OpportunityOfDayScreen")
     }
+    reset = () => {
+      this.props.navigation.dispatch(resetAction)
+    }
     
       render() {
         console.log(this.state)
@@ -356,6 +365,7 @@ export default class CalendarScreen extends Component{
                         {/* <ActivitiesDayList dataOnClickDay={this.state.activitiesOnClickDay}/> */}
                         
             </View>
+            {/* <FloatButton add={this.reset}/> */}
             </View>
         );
       }

@@ -274,7 +274,7 @@ export default class CreateClientModal extends Component{
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactEmail"}
                                             stateChange={this.stateChange}
-                                            type={"default"}
+                                            type={"email-address"}
                                             value={""}
                                             iconType={"MaterialIcons"}
                                             iconName={"email"}
@@ -291,7 +291,7 @@ export default class CreateClientModal extends Component{
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactPhone"}
                                             stateChange={this.stateChange}
-                                            type={"default"}
+                                            type={"phone-pad"}
                                             value={""}
                                             iconType={"MaterialIcons"}
                                             iconName={"phone"}

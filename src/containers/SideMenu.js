@@ -12,7 +12,8 @@ import Profile from "react-native-vector-icons/FontAwesome";
 import DB from "../../storeData/storeData"
 import CONFIG from "../../config/config"
 import colors from "../../config/colors"
-import LeadisIcon from "../../assets/Logo_Vprincipal.png"
+import LeadisIcon from "../../assets/powered-leadis-gris.png"
+import Fondo from "../../assets/industria2.jpg"
 const URL_IMAGEN = `${CONFIG.URL_BASE}:${CONFIG.PORT_IMAGE}/${CONFIG.VERSION_API_IMAGE}/configuration-image/`
 class SideMenu extends Component {
   constructor(){
@@ -79,8 +80,9 @@ class SideMenu extends Component {
         {uri : 'http://hdwpro.com/wp-content/uploads/2017/01/Nice-Green-Background.jpg'}} */
   render () {
     return (
-      <View style={styles.container}>
-      <View style={colors.primaryColor}>
+      <View style={[styles.container,colors.primaryColor]}>
+      <ImageBackground source={Fondo} style={styles.container}>
+      <View style={[colors.primaryColor]}>
       <View  //source={{uri : 'https://www.iconsdb.com/icons/preview/white/square-xxl.png'}}
           style={{height:80,width:80,
           //resizeMode:"contain",
@@ -167,9 +169,13 @@ class SideMenu extends Component {
           
       
         
-        <ScrollView>
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===0 && (styles.onTabCalendar,colors.lightColor)]} onPress={()=>{this.controlTabNavigator('Calendar',0)}}>
-                <Icon name="calendar-check" size={18}  
+        <ScrollView style={[colors.primaryColor,{borderColor:"white",borderTopWidth:0.5,paddingTop:15}]}>
+
+            
+
+
+            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===0 && (styles.onTabCalendar,colors.greyColor)]} onPress={()=>{this.controlTabNavigator('Calendar',0)}}>
+                <Icon name="calendar-check" size={20}  
                 style={[styles.offIcon, this.state.eyeSlash===0 && styles.onIcon]}/>
     
                 <TouchableHighlight onPress={()=>{this.controlTabNavigator('Calendar',0)}} underlayColor="white"
@@ -182,8 +188,8 @@ class SideMenu extends Component {
                 
             </View>
             
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===1 && (styles.onTabCalendar,colors.lightColor)]}>
-            <IconCrm name="folder-account" size={18} 
+            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===1 && (styles.onTabCalendar,colors.greyColor)]}>
+            <IconCrm name="folder-account" size={20} 
             style={[styles.offIcon, this.state.eyeSlash===1 && styles.onIcon]} />
     
                 <TouchableHighlight onPress={()=>{this.controlTabNavigator('Crm',1)}} underlayColor="white"
@@ -195,8 +201,8 @@ class SideMenu extends Component {
                 </TouchableHighlight>
               
             </View>
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===2 && (styles.onTabCalendar,colors.lightColor)]}>
-            <IconRequest name="question-answer" size={18} 
+            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===2 && (styles.onTabCalendar,colors.greyColor)]}>
+            <IconRequest name="question-answer" size={20} 
             style={[styles.offIcon, this.state.eyeSlash===2 && styles.onIcon]} />
             <TouchableHighlight onPress={()=>{this.controlTabNavigator('SolicitudScreen',2)}} underlayColor="white"
                 style={{flex:1}}>
@@ -209,15 +215,15 @@ class SideMenu extends Component {
 
             
             </View>
-            {/* <Profile name="user" size={18} 
-            style={[styles.offIcon, this.state.eyeSlash===3 && styles.onIcon]} /> */}
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===3 && (styles.onTabCalendar,colors.lightColor)]}>
-            <Profile name="user" size={18} 
-            style={[styles.offIcon, this.state.eyeSlash===3 && styles.onIcon]} />
+            
+
+            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===3 && (styles.onTabCalendar,colors.greyColor)]}>
+            <Profile name="user" size={20} 
+            style={[styles.offIcon, this.state.eyeSlash===3 && styles.onIcon,[{marginLeft:13}]]} />
             <TouchableHighlight onPress={()=>{this.controlTabNavigator('Profile',3)}} underlayColor="white"
                 style={{flex:1}}>
 
-                <Text style={[styles.offPressFont, this.state.eyeSlash===3 && styles.onPressFont]} >
+                <Text style={[styles.offPressFont, this.state.eyeSlash===3 && styles.onPressFont,[{marginLeft:4}]]} >
                 Perfil
                 </Text>
                       
@@ -226,8 +232,8 @@ class SideMenu extends Component {
             
             </View>
 
-            <View style={[styles.offTabCalendar, this.state.eyeSlash===4 && (styles.onTabCalendar,colors.lightColor)]}>
-            <IconExit name="sign-out-alt" size={18} 
+            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===4 && (styles.onTabCalendar,colors.greyColor)]}>
+            <IconExit name="sign-out-alt" size={20} 
             style={[styles.offIcon, this.state.eyeSlash===4 && styles.onIcon]} />
             <TouchableHighlight onPress={()=>{this.logOut()}} underlayColor="white"
                 style={{flex:1}}>
@@ -244,10 +250,14 @@ class SideMenu extends Component {
             
           
         </ScrollView>
-        <Image source={LeadisIcon} style={styles.LeadisIcon}/>
+        <View style={[colors.primaryColor,]}>
+          <Image source={LeadisIcon} style={[styles.LeadisIcon]}/>
+        </View>
+        
         {/* <View style={styles.footerContainer}>
             <Image source={LeadisIcon} style={styles.LeadisIcon}/>
         </View> */}
+        </ImageBackground>
       </View>
     );
   }
@@ -282,12 +292,16 @@ const styles = StyleSheet.create({
         
       },
       offPressFont:{
+        fontSize:15,
+        alignSelf:"flex-start",
         paddingVertical: 10,
         paddingHorizontal: 5,
         color:"rgb(184,184,184)",
         fontWeight:'bold'
       },
       onPressFont:{
+        fontSize:15,
+        alignSelf:"flex-start",
         paddingVertical: 10,
         paddingHorizontal: 5,
         color:"rgb(245,245,246)",

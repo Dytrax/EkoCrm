@@ -9,7 +9,8 @@ import {
     Image,
     Linking,
     ActivityIndicator,
-    Alert
+    Alert,
+    TouchableWithoutFeedback
 } from "react-native";
 import call from 'react-native-phone-call'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -19,6 +20,7 @@ import API from "../../../api/Api"
 import DB from "../../../storeData/storeData"
 const URL_DELETE_CLIENT= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/clients`
 import { withNavigation,StackActions,NavigationActions } from 'react-navigation';
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const resetAction = StackActions.reset({
     index: 0,
@@ -59,13 +61,18 @@ const resetAction = StackActions.reset({
       deleteClient = async (id) =>{
         const token = await DB.getData("token");
         let answer = await API.DeleteContact(token,URL_DELETE_CLIENT+"/"+id)
-        console.log("answer")
+        console.log("answer delete client")
         console.log(answer)
-        if (answer.status==205){
+        if (answer.status==204){
             this.props.navigation.dispatch(resetAction)
         }else{  
-            DB.store("Mensaje","true")
-            this.props.navigation.dispatch(resetAction)
+            showMessage({
+                message: "Cliente con oportunidad activa",
+                description: answer._bodyInit.slice(12, answer._bodyInit.length-2),
+                type: "info",
+              });
+            //DB.store("Mensaje","true")
+            //this.props.navigation.dispatch(resetAction)
         }
         
         
@@ -106,6 +113,7 @@ const resetAction = StackActions.reset({
 
 
     renderItem = ({item}) => {
+        console.log("item")
         console.log(item)
         return(
             <TouchableOpacity onLongPress={()=>{this.clientAction(item)}} >
@@ -122,7 +130,32 @@ const resetAction = StackActions.reset({
                         <Text>{item.name}</Text>
                         <Text>{item.townName}</Text>  
                     </View>
-                    <View style={styles.emailContainer}>
+                        <View style={styles.emailContainer}>
+                    <TouchableHighlight 
+                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                    underlayColor="red" onPress={() => Linking.openURL(`mailto:${item.email}`)} >
+                        
+                            <Image title="support@example.com"  source={emailIcon} style={styles.email}/>
+                        
+                        
+                    
+                    </TouchableHighlight>
+                        
+                        
+                    </View>
+                    <View style={styles.phoneContainer}  >
+                        <TouchableWithoutFeedback
+                        hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                        onPress={()=>{this.callNumber(item.phone)}}
+                        >   
+                            <View>
+                                <Icon name="phone" color={"green"}  size={24}></Icon>
+                            </View>
+                            
+                        </TouchableWithoutFeedback>
+                    
+                    </View>
+                   {/*  <View style={styles.emailContainer}>
                     <TouchableHighlight underlayColor="red" onPress={() => Linking.openURL(`mailto:${item.email}`)} >
                         <Image title="support@example.com"  source={emailIcon} style={styles.email}>
                     </Image>
@@ -134,7 +167,7 @@ const resetAction = StackActions.reset({
                     <Icon name="phone" color={"green"} onPress={()=>{this.callNumber(item.phone)}} size={22}></Icon>
                         
                     
-                    </View>
+                    </View> */}
                 </View>
             </TouchableOpacity>
         )
@@ -159,6 +192,16 @@ const resetAction = StackActions.reset({
         );
       };
 
+      
+      _listEmptyComponent = () => {
+          return(
+              <View style={{marginTop:"50%"}}>
+                  <Text style={{alignSelf:"center",fontSize:16}}>No hay clientes creados</Text>
+              </View>
+          )
+          
+      }
+
     render(){
         return(
             <FlatList
@@ -167,7 +210,7 @@ const resetAction = StackActions.reset({
                 keyExtractor={item => item.id.toString()}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListFooterComponent={this.renderFooter}
-                
+                ListEmptyComponent={this._listEmptyComponent}
             />
         )
     }
@@ -198,15 +241,19 @@ const styles = StyleSheet.create({
         //backgroundColor:"yellow"
     },
     emailContainer:{
-        flex:10,
+        //backgroundColor:"yellow",
+        flex:16,
         justifyContent:"center",
         alignItems:"center",
-        marginRight:3,
+        marginRight:5,
     },
     phoneContainer:{
-        flex:10,
+        //backgroundColor:"yellow",
+        flex:16,
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
+        marginRight:10,
+
     },
     circleContainer:{
         
@@ -223,8 +270,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     email:{
-        height:22,
-        width:22,
+        height:24,
+        width:24,
         resizeMode:"contain",
     }
 })

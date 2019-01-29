@@ -230,6 +230,8 @@ class Api {
 
 
   dataFilter(data){
+    console.log("data")
+    console.log(data)
     let openRequest = data.map(s=>{
       return {
           //Filtering the information and forming the Json if the token still alive

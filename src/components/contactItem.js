@@ -8,7 +8,8 @@ import {
     Image,
     TouchableHighlight,
     TouchableOpacity,
-    Alert
+    Alert,
+    TouchableWithoutFeedback
 } from "react-native"
 import call from 'react-native-phone-call'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -41,7 +42,7 @@ class ContactItem extends Component {
     deleteContact = async (id) =>{
         const token = await DB.getData("token");
         let answer = await Api.DeleteContact(token,URL_DELETE_CONTACT+"/"+id)
-        console.log("answer")
+        console.log("answer delete contact")
         console.log(answer)
         if (answer.status==205){
             this.props.navigation.dispatch(resetAction)
@@ -110,16 +111,28 @@ class ContactItem extends Component {
                     <Text>{this.props.townName}</Text>  
                 </View>
                 <View style={styles.emailContainer}>
-                <TouchableHighlight underlayColor="red" onPress={() => Linking.openURL(`mailto:${this.props.email}`)} >
-                    <Image title="support@example.com"  source={emailIcon} style={styles.email}>
-                </Image>
+                <TouchableHighlight 
+                hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                underlayColor="red" onPress={() => Linking.openURL(`mailto:${this.props.email}`)} >
+                    
+                        <Image title="support@example.com"  source={emailIcon} style={styles.email}/>
+                    
+                    
+                
                 </TouchableHighlight>
                     
                     
                 </View>
                 <View style={styles.phoneContainer}  >
-                <Icon name="phone" color={"green"} onPress={()=>{this.callNumber(this.props.phone)}} size={22}></Icon>
-                    
+                    <TouchableWithoutFeedback
+                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                    onPress={()=>{this.callNumber(this.props.phone)}}
+                    >   
+                        <View>
+                            <Icon name="phone" color={"green"}  size={24}></Icon>
+                        </View>
+                        
+                    </TouchableWithoutFeedback>
                 
                 </View>
             </View>
@@ -155,15 +168,19 @@ const styles = StyleSheet.create({
         //backgroundColor:"yellow"
     },
     emailContainer:{
-        flex:10,
+        //backgroundColor:"yellow",
+        flex:16,
         justifyContent:"center",
         alignItems:"center",
-        marginRight:3,
+        marginRight:5,
     },
     phoneContainer:{
-        flex:10,
+        //backgroundColor:"yellow",
+        flex:16,
         justifyContent:"center",
-        alignItems:"center"
+        alignItems:"center",
+        marginRight:10,
+
     },
     circleContainer:{
         
@@ -180,8 +197,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     email:{
-        height:22,
-        width:22,
+        height:24,
+        width:24,
         resizeMode:"contain",
     }
 })

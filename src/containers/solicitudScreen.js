@@ -114,7 +114,7 @@ export default class SolicitudScreen extends Component {
                     <View style={{flex:1,flexDirection:"row"}}>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
                             <Icon2 name="folder-open" size={20}  
-                            style={{marginLeft:3,color:"rgb(54,176,88)"}} 
+                            style={{marginLeft:3,color:"rgb(226,65,55)"}} 
                             />
                         </View>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
@@ -136,7 +136,7 @@ export default class SolicitudScreen extends Component {
                     <View style={{flex:1,flexDirection:"row"}}>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>
                             <Icon2 name="folder" size={20}  
-                                    style={{flex:1,marginLeft:3,color:"rgb(226,65,55)"}} 
+                                    style={{flex:1,marginLeft:3,color:"rgb(54,176,88)"}} 
                                     />
                         </View>
                         <View style={{flex:1,alignItems:"center",justifyContent:"center"}}>

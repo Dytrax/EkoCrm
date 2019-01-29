@@ -193,13 +193,12 @@ export default class EditClientModal extends Component{
         }
         
         editClient = async () => {
-            
-
+           
             let bodyJson = {
                 
 
                 address:this.state.contactDir,
-                contacts:this.state.contactChecked,
+                contacts:this.props.states.contactChecked,//this.state.contactChecked,
                 documentTypeId:this.state.documentTypeId,
                 document_number:this.state.contactNumberDocument,
                 email:this.state.contactEmail,
@@ -226,7 +225,7 @@ export default class EditClientModal extends Component{
 
           
     render(){
-        console.log("aquin--------andres")
+        //console.log("aquin--------andres")
         console.log(this.props)
         
         return(
@@ -405,7 +404,7 @@ export default class EditClientModal extends Component{
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactEmail"}
                                             stateChange={this.stateChange}
-                                            type={"default"}
+                                            type={"email-address"}
                                             value={this.props.data[3].email}
                                             iconType={"MaterialIcons"}
                                             iconName={"email"}
@@ -422,7 +421,7 @@ export default class EditClientModal extends Component{
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactPhone"}
                                             stateChange={this.stateChange}
-                                            type={"default"}
+                                            type={"phone-pad"}
                                             value={this.props.data[3].phone}
                                             iconType={"MaterialIcons"}
                                             iconName={"phone"}

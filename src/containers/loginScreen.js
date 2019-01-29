@@ -27,13 +27,19 @@ import DB from "../../storeData/storeData";
 import DropdownAlert from 'react-native-dropdownalert';
 import Loader from "../components/loader"
 //connect ECONNREFUSED 23.96.102.56:3306
+import { NavigationActions, StackActions } from 'react-navigation';
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'Drawer' })],
+});
 
 export default class LoginScreen extends Component {
   async componentWillMount(){
     //Verify If the token still living, if its true login user automatically
      const token = await DB.getData("token");
     if (token){
-      this.props.navigation.navigate("Drawer");
+      this.props.navigation.dispatch(resetAction);
+      //this.props.navigation.navigate("Drawer");
     }if (!token){
       this.props.navigation.navigate("Home");
     }  
@@ -89,7 +95,8 @@ export default class LoginScreen extends Component {
       this.setState({
         loading: false,
       });
-      this.props.navigation.navigate("Drawer");
+      this.props.navigation.dispatch(resetAction);
+      //this.props.navigation.navigate("Drawer");
     } else {
       //answer status!=200 Cant Login
       //answer[0] status, answer[1] message from backend

@@ -7,8 +7,14 @@ import {
     Dimensions,
     TouchableOpacity,
     Platform,
-    ActivityIndicator
+    ActivityIndicator,
+    TouchableWithoutFeedback
 } from 'react-native';
+import {
+    NavigationEvents,
+    StackActions,
+    NavigationActions
+  } from 'react-navigation';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
@@ -16,7 +22,13 @@ import Header from "../../components/headerComponent"
 import DB from "../../../storeData/storeData"
 import API from "../../../api/Api"
 import moment from 'moment'
-
+import ChatSolicitud from './chatSolicitud'
+const resetAction = StackActions.reset({
+    //routeName: 'SolicitudesCompanyTab',PruebaScreen
+    index: 0,
+    //key:null,
+    actions: [NavigationActions.navigate({ routeName: 'Tab1'})],
+  });
 export default class AbiertasScreen extends Component{
     constructor(){
         super()
@@ -27,6 +39,14 @@ export default class AbiertasScreen extends Component{
             textSearchBar:"",
             copyDataSource: [],
             loadingData: true,
+            //Nuevo...Abajo
+            showChat:false,
+            itemSelected:"",
+            dataFlatList:"",
+            pantallaPrevia:"",
+            pqrId:"",
+            token:"",
+            dataFlatListArchives:[]
         }
         
     }
@@ -49,7 +69,9 @@ export default class AbiertasScreen extends Component{
                 dataSource:filtroData,
                 companyName:companyName,
                 copyDataSource: filtroData,
-                loadingData:false
+                loadingData:false,
+                //Nuevo ...Abajo
+                token:token
             })
             console.log("this.state.companyName")
             console.log(this.state.companyName)
@@ -76,11 +98,20 @@ export default class AbiertasScreen extends Component{
         //DB.store("pantalla", "pqrsCompanyAbiertas");
         console.log("item")
         console.log(item)
-        this.props.navigation.navigate('PruebaScreen', {
+        this.setState({
+            showChat:true,
+            titleProblem:item["title"],
+            itemSelected:item,
+            dataFlatListArchives:item["pqr_archives"],
+            dataFlatList:item["pqr_tracings"],
+            pantallaPrevia:"pqrsCompanyEnProceso",
+            pqrId:item["id"],
+        })
+        /* this.props.navigation.navigate('PruebaScreen', {
             pantalla: "pqrsCompanyAbiertas",
             itemChat:item.id,
             dataSource:item
-        });    
+        }); */    
         
         
     }
@@ -90,37 +121,27 @@ export default class AbiertasScreen extends Component{
         console.log("item.dateInit " + item.dateInit)
          return(
          
-         
-            <TouchableOpacity style={{
-            borderRadius: 4,
-            marginBottom:2,
-            marginTop:5,
-            marginLeft:5,
-            marginRight:5,
-            shadowColor: 'rgba(0,0,0, .4)', // IOS
-            shadowOffset: { height: 1, width: 1 }, // IOS
-            shadowOpacity: 1, // IOS
-            shadowRadius: 3, //IOS
-            backgroundColor: '#fff', 
-            elevation: 5
-            
-            
-            }} onPress={()=>this.onItemClick(item)}>
-                <View style={{justifyContent:"center",alignItems:"center"}}>
-                    <View style={{flexDirection:"row"}}>
+            <TouchableWithoutFeedback onPress={()=>this.onItemClick(item)}>
+                <View style={stylesList.container}>
+                    <View style={stylesList.iconContainer}>
                         <Icon2 name="ray-start" size={20}  
-                                style={{marginLeft:3,color:"rgb(54,176,88)"}} 
-                                />
-                        <Text>{moment(item.dateInit).format('YYYY/MM/DD h:mm a')
-                            //new Date(item.dateInit).toLocaleString()
-                        
-                        }</Text>
+                                    style={{marginLeft:3,color:"rgb(226,65,55)"}} 
+                                    />
                     </View>
-                    <Text >{item.title}</Text>
-                    
+                    <View  style={stylesList.titleContainer}>
+                        <Text style={stylesList.title}>{item.title}</Text>
+                        <Text style={stylesList.message} numberOfLines={2}>{item.description}</Text>
+                    </View>
+                    <View style={stylesList.dateContainer}>
+                        <Text>{moment(item.dateInit).format('YYYY/MM/DD h:mm a')
+                                //new Date(item.dateInit).toLocaleString()
+                                }</Text>
+                    </View>
+
                 </View>
                 
-            </TouchableOpacity>
+            </TouchableWithoutFeedback> 
+            
          
             
 
@@ -168,12 +189,33 @@ export default class AbiertasScreen extends Component{
         )
         
     }
+
+    stateChange = (stateToChange, value) => {
+        
+        //this.state[stateToChange] = value;
+
+        var  tmp = {}
+        tmp[stateToChange] = value
+        this.setState(tmp)
+        
+        //console.log("this.state.stateChange")
+        //console.log(this.state)
+      }; 
+
+      reset = () => {
+        this.props.navigation.dispatch(resetAction);
+      }
     
     render(){
         
         return(
             
             <View style={styles.container}>
+                <ChatSolicitud
+                states={this.state}
+                stateChange={this.stateChange}
+                reset={this.reset}
+            />
             <View style={styles.headerContainer}>
                     <Header 
                     showSearch={true}
@@ -182,7 +224,7 @@ export default class AbiertasScreen extends Component{
                     actionIcon={()=>{this.props.navigation.goBack(null)}} 
                     state={this.state.searchBar}
                     actionSearchBar={this.actionBar}
-                    bigTitle = {true}
+                    //bigTitle = {true}
 
                     />
                     
@@ -237,4 +279,52 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent:"center"
     }
+})
+
+const stylesList = StyleSheet.create({
+    container:{
+        margin:5,
+        height:60,
+        flex:1,
+        flexDirection:"row",
+        
+        borderRadius: 4,
+            
+            shadowColor: 'rgba(0,0,0, .4)', // IOS
+            shadowOffset: { height: 1, width: 1 }, // IOS
+            shadowOpacity: 1, // IOS
+            shadowRadius: 3, //IOS
+            backgroundColor: '#fff', 
+            elevation: 5,
+            padding:5
+    },
+    iconContainer:{
+        flex:10,
+        justifyContent:"center",
+        alignItems:"center",
+        //backgroundColor:"red"
+    },
+    titleContainer:{
+        flex:70,
+        justifyContent:"center",
+        alignItems:"flex-start",
+        //backgroundColor:"yellow"
+    },
+    dateContainer:{
+        flex:20,
+        justifyContent:"center",
+        alignItems:"flex-end",
+    },
+    title:{
+        fontWeight:"bold",
+        fontSize:14
+    },
+    date:{
+        fontSize:12,
+        
+    },
+    message:{
+        width:200
+    }
+    
 })

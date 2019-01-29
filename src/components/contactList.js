@@ -46,6 +46,17 @@ export default class ContactList extends Component {
         );
       };
 
+      
+      
+      _listEmptyComponent = () => {
+          return(
+              <View style={{marginTop:"50%"}}>
+                  <Text style={{alignSelf:"center",fontSize:16}}>No hay contactos creados</Text>
+              </View>
+          )
+          
+      }
+      
     render(){
         return(
             <FlatList   
@@ -54,6 +65,7 @@ export default class ContactList extends Component {
                 keyExtractor={item => item.id.toString()}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListFooterComponent={this.renderFooter}
+                ListEmptyComponent={this._listEmptyComponent}
             />
         )   
     }

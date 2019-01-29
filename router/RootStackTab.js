@@ -65,7 +65,7 @@ const stack3 = createStackNavigator({
 const TabsCrm = createBottomTabNavigator({
     Contactos:{ screen: stack1,
                 navigationOptions: {
-                    /* tabBarOnPress: ({ navigation, defaultHandler }) => {
+                    tabBarOnPress: ({ navigation, defaultHandler }) => {
                         defaultHandler();
               
                         const resetAction = StackActions.reset({
@@ -73,7 +73,7 @@ const TabsCrm = createBottomTabNavigator({
                           actions: [NavigationActions.navigate({ routeName: 'Tab1' })],
                         });
                         navigation.dispatch(resetAction);
-                      }, */
+                      },
                     tabBarLabel:'Contactos',
                     tabBarOptions: {
                         showLabel: true, // hide labels
@@ -103,6 +103,15 @@ const TabsCrm = createBottomTabNavigator({
             },
     Clientes:{ screen: stack2,
         navigationOptions: {
+            tabBarOnPress: ({ navigation, defaultHandler }) => {
+                defaultHandler();
+      
+                const resetAction = StackActions.reset({
+                  index: 0,
+                  actions: [NavigationActions.navigate({ routeName: 'Tab2' })],
+                });
+                navigation.dispatch(resetAction);
+              },
             tabBarLabel:'Clientes',
             tabBarOptions: {
                 showLabel: true, // hide labels
@@ -131,7 +140,15 @@ const TabsCrm = createBottomTabNavigator({
     },
     Oportunidades:{ screen: stack3,
         navigationOptions: {
-            
+            tabBarOnPress: ({ navigation, defaultHandler }) => {
+                defaultHandler();
+      
+                const resetAction = StackActions.reset({
+                  index: 0,
+                  actions: [NavigationActions.navigate({ routeName: 'Tab3' })],
+                });
+                navigation.dispatch(resetAction);
+              },
             tabBarLabel:'Oportunidades',
             tabBarOptions: {
                 

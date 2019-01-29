@@ -6,6 +6,7 @@ import {
     FlatList,
     Linking
 } from "react-native"
+import IconEye from "react-native-vector-icons/FontAwesome5";
 import CONFIG from "../../config/config"
 const URL_DOWNLOAD_FILES =`${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/pqr/pqrs/uploads/` 
 import API from "../../api/Api"
@@ -29,8 +30,10 @@ export default class PQRlist extends Component{
     
     renderItem = ({item}) => {
         return(
-        <View>
-            <Text onPress={()=>this.onItemClick(item)}>{item.fileName}</Text>
+        <View style={{flexDirection:"row",alignItems:"center"}}>
+            <Text onPress={()=>this.onItemClick(item)} style={{fontSize:17}}>{item.fileName}</Text>
+            <IconEye onPress={()=>this.onItemClick(item)} name="eye" size={20} style={{color:"#F88807",marginLeft:10,alignSelf:"center"}}/>
+            
         </View>
         )
     }

@@ -145,11 +145,17 @@ let country="";
                 dataSource:openRequest,
                 copyDataSource:openRequest
             }) 
+            console.log("Passeee")
             console.log("openRequest")
             console.log(openRequest)
         }else{
+            this.setState({
+                loadingData:false,
+                
+            })
 
         }
+        
         console.log(answer);
     }
 
@@ -197,6 +203,7 @@ let country="";
         }) */
     }
     goToEdit = (id) => {
+        console.log("hola")
         console.log("id Selected")
         console.log(id)
         console.log("this.state.dataSource")
