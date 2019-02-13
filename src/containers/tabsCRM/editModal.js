@@ -173,6 +173,7 @@ export default class ModalExample extends Component {
           visible={this.props.show}
           onRequestClose={() => {
             this.props.back()
+            this.props.initialState()
           }}>
           <View style={styles.container}>
                
@@ -182,7 +183,8 @@ export default class ModalExample extends Component {
                     selected={false}
                     titulo={"Editar Contacto"} 
                     name={"keyboard-backspace"} 
-                    actionIcon={()=>{this.props.back()}} 
+                    actionIcon={()=>{this.props.back()
+                        this.props.initialState()}} 
                     //state={this.state.searchBar}
                     //actionSearchBar={this.actionBar}
                         

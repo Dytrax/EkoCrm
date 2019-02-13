@@ -102,7 +102,7 @@ const resetAction = StackActions.reset({
             item.name,
             [
               {text: 'Editar', onPress: () => this.props.editClient(item)},
-              {text: 'Eliminar', onPress: ()=> this.askAgain(item.id)},
+              /* {text: 'Eliminar', onPress: ()=> this.askAgain(item.id)}, */
               {text: 'Cancelar', onPress: () => console.log('OK Pressed'), style: 'cancel'},
             ],
             { cancelable: false }
@@ -128,7 +128,7 @@ const resetAction = StackActions.reset({
                     </View>
                     <View style={styles.nameContainer}>
                         <Text>{item.name}</Text>
-                        <Text>{item.townName}</Text>  
+                        {/* <Text>{item.townName}</Text> */}  
                     </View>
                         <View style={styles.emailContainer}>
                     <TouchableHighlight 
@@ -211,6 +211,7 @@ const resetAction = StackActions.reset({
                 ItemSeparatorComponent={this.renderSeparator}
                 ListFooterComponent={this.renderFooter}
                 ListEmptyComponent={this._listEmptyComponent}
+                keyboardShouldPersistTaps="always"
             />
         )
     }

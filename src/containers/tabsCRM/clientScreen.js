@@ -51,14 +51,52 @@ export default class ClientScreen extends Component{
 
             idContactToEdit:"",
 
-            contactChecked:[]
+            
+
+            //AddClient
+            contactChecked:[],
+            documentId:"",
+            contactNumberDocument:"",
+            contactName:"",
+            contactDir:"",
+            contactEmail:"",
+            contactPhone:"",
+            contactObs:"",
+            searchBarContacts:false
         }
+    }
+    removeDuplicates = ( arr, prop ) => {
+        var obj = {};
+        for ( var i = 0, len = arr.length; i < len; i++ ){
+          if(!obj[arr[i][prop]]) obj[arr[i][prop]] = arr[i];
+        }
+        var newArr = [];
+        for ( var key in obj ) newArr.push(obj[key]);
+        return newArr;
+      }
+
+    initialState = () => {
+        
+        this.setState({
+            contactChecked:[],
+            documentId:"",
+            contactNumberDocument:"",
+            contactName:"",
+            contactDir:"",
+            contactEmail:"",
+            contactPhone:"",
+            contactObs:"",
+           
+           
+            
+        })
     }
 
     async componentDidMount(){
         const token = await DB.getData("token");
         //console.log(token);
-        const answer = await API.getDataBackEnd(token,URL)
+        let answer = await API.getDataBackEnd(token,URL)
+        answer = this.removeDuplicates(answer,'id')
         console.log("answer backend")
         console.log(answer)
 
@@ -86,7 +124,17 @@ export default class ClientScreen extends Component{
                     name:s.name,
                     email:s.email
                 }
-            })
+            }).sort((a,b)=> {
+                if (a.name > b.name) {
+                  return 1;
+                }
+                if (a.name < b.name) {
+                  return -1;
+                }
+                // a must be equal to b
+                return 0;
+              } )
+            console.log(contacts)
         
         if(answer!=false){
             
@@ -108,12 +156,21 @@ export default class ClientScreen extends Component{
                     address:data.address,
                     crm_contacts_assign:data.crm_contacts.map(value => value.id)
                 }
-            })
+            }).sort((a,b)=> {
+                if (a.name > b.name) {
+                  return 1;
+                }
+                if (a.name < b.name) {
+                  return -1;
+                }
+                // a must be equal to b
+                return 0;
+              } )
             console.log("dataClientList")
             console.log(dataClientList)
-            
-
-            //console.log("contacts")
+            //let l = dataClientList.sort()
+            //l = dataClientList.sort(dynamicSort("name"))
+            //console.log("ORDENADO",l)
             //console.log(contacts)
             this.setState({
                 
@@ -122,7 +179,8 @@ export default class ClientScreen extends Component{
                 copyDataClientList:dataClientList,
                 countryList:country,
                 typeDocument:documents,
-                contactsList:contacts
+                contactsList:contacts,
+                copyDataContactsList:contacts,
             })
         }else{
             this.setState({
@@ -133,6 +191,8 @@ export default class ClientScreen extends Component{
         }
         
     }
+
+    
 
 
     stateChange = (stateToChange, value) => {
@@ -173,6 +233,32 @@ export default class ClientScreen extends Component{
         
     }
 
+    searchContactList = (text) =>{
+        let barText = text
+
+        
+        let datos = this.state.copyDataContactsList.filter(
+            
+            s=>{
+                return s.name.toUpperCase().search(text.toUpperCase()) != -1
+            }
+            
+        )
+        
+        if (barText.length>0){
+            this.setState({
+                searchBarContacts:true,
+                contactsList:datos
+            })
+        }else{
+            this.setState({
+                searchBarContacts:false,
+                contactsList:datos
+            })
+        }
+        
+    }
+
     addClient = () => {
         this.setState({
             showModal:true
@@ -187,8 +273,8 @@ export default class ClientScreen extends Component{
     }
 
     editClient = async (item) => {
-        console.log("item Selected")
-        console.log(item)
+        //console.log("item Selected")
+        //console.log(item)
         
         let filtroData = this.state.dataClientList.filter(n=>n.id===item.id)
         console.log(filtroData)
@@ -257,6 +343,9 @@ export default class ClientScreen extends Component{
             <View style={styles.container}>
                 
                 <CreateClientModal 
+                searchContactList={this.searchContactList}
+                initialState= {this.initialState}
+                states={this.state}
                 show={this.state.showModal}
                 goBack={this.goBackModalAction}
                 data={[this.state.countryList,this.state.typeDocument,this.state.contactsList]}
@@ -264,6 +353,8 @@ export default class ClientScreen extends Component{
                 stateChange={this.stateChange}
                 />
                 <EditClientModal 
+                        searchContactList={this.searchContactList}
+                        initialState= {this.initialState}
                         states={this.state}
                         show={this.state.showEditModal}
                         goBack={this.goBackModalAction}

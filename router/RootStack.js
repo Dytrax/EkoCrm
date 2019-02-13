@@ -3,6 +3,7 @@ import LoginScreen from "../src/containers/loginScreen";
 import SecondScreen from "../src/containers/secondScreen";
 import MyDrawer from "./RootStackDrawer";
 import ForgetPasswordScreen from "../src/containers/forgetPasswordScreen";
+import DrawerV2 from "./drawerNavigatorV2"
 const RootStack = createStackNavigator(
   {
     Home: {

@@ -108,7 +108,7 @@ class ContactItem extends Component {
                 </View>
                 <View style={styles.nameContainer}>
                     <Text>{this.props.name}</Text>
-                    <Text>{this.props.townName}</Text>  
+                    {/* <Text>{this.props.townName}</Text>  */} 
                 </View>
                 <View style={styles.emailContainer}>
                 <TouchableHighlight 

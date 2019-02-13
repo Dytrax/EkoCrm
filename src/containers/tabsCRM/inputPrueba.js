@@ -26,6 +26,8 @@ export default class InputPrueba extends Component{
     return(
         
                 <Input
+                    
+                    returnKeyType={"next"}
                     inputStyle={{height:undefined}}
                     shake={false}
                     multiline = {false} 

@@ -64,15 +64,14 @@ export default class LoginScreen extends Component {
       loading:true
     })
     //answer is the answer of the try/catch authentication
-    //answer[0] status, answer[1] Json data
+   
     let answer = await API.loginAuthentication(
-      this.state.email,//this.state.email,ejecutivo2@leadis.co
-      this.state.password//this.state.passwordHola@321
+      "carlos.gs.andres@gmail.com",//this.state.email,//this.state.email,ejecutivo2@leadis.co
+      "Hola@321"//this.state.password//this.state.passwordHola@321
     );
+    console.log("Backend Answer")
     console.log(answer)
-    //console.log(answer[1].user.companyId)
-    console.log("jejejee")
-    //answer status=200 Can Login
+    
     if (answer[0] === 200) {
       
       this.setState({
@@ -85,7 +84,17 @@ export default class LoginScreen extends Component {
       await DB.store("name", answer[1].user.name);
       await DB.store("phone", answer[1].user.phone);
       await DB.store("id", answer[1].user.id.toString());
-      
+      await DB.store("modules", JSON.stringify(answer[1].user.modules));
+      let modules = JSON.stringify(answer[1].user.modules)
+      console.log("Modules")
+      console.log( modules)
+      var obj = JSON.parse(modules)
+      console.log("Var")
+      console.log(obj)
+      console.log("module.crm")
+      console.log(obj.crm["permission"])
+      var verify = this.verifyPermission(obj.crm,"eliminar_contactos")
+      console.log(verify)
       //RN Navigation action
       /* setTimeout(() => {
         this.setState({
@@ -114,13 +123,19 @@ export default class LoginScreen extends Component {
     }
   };
   //this.onLoginPressed.bind(this)
-
+  verifyPermission = (module, permission) => {
+    if (module["permission"].includes(permission)){
+        return true;
+    }
+    else{
+      return false;
+    }
+  }
   //Function to change the states values
   stateChange = (stateToChange, value) => {
-    console.log(stateToChange);
-    console.log(value);
     this.state[stateToChange] = value;
   };
+
    goToForget = ()=>{
     this.props.navigation.navigate("Forget")
   } 

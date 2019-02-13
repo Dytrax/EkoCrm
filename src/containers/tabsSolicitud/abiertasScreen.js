@@ -133,9 +133,13 @@ export default class AbiertasScreen extends Component{
                         <Text style={stylesList.message} numberOfLines={2}>{item.description}</Text>
                     </View>
                     <View style={stylesList.dateContainer}>
-                        <Text>{moment(item.dateInit).format('YYYY/MM/DD h:mm a')
+                        <Text style={stylesList.date}>{moment(item.dateInit).format('YYYY/MM/DD')
                                 //new Date(item.dateInit).toLocaleString()
                                 }</Text>
+                        <Text style={stylesList.date}>{moment(item.dateInit).format('h:mm a')
+                                //new Date(item.dateInit).toLocaleString()
+                                }</Text>
+                                
                     </View>
 
                 </View>

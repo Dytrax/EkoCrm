@@ -15,7 +15,9 @@ import Header from '../../components/headerComponent'
 import ArchivesFilesList from "../pqr_archives_list"
 import API from "../../../api/Api"
 import DB from "../../../storeData/storeData"
+import FlashMessage from "react-native-flash-message";
 
+import { showMessage, hideMessage } from "react-native-flash-message";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from 'moment'
 const WIDTH = Dimensions.get("window").width;
@@ -89,6 +91,11 @@ export default class ChatSolicitud extends Component {
         console.log(answer[1])
         if (answer[0]===201){
             this.props.reset()
+            showMessage({
+                message: "Enviado",
+                description: "Enviado Correctamente",
+                type: "success",
+              });
             //this.props.reset()
             //this.props.navigation.dispatch(resetAction);
             
@@ -99,6 +106,13 @@ export default class ChatSolicitud extends Component {
             //if token fail go to Login='Home'
             this.props.navigation.navigate('Home')
             
+        }else{
+            this.props.reset()
+            showMessage({
+                message: "Error",
+                description: "No fue posible enviar el mensaje",
+                type: "warning",
+              });
         }
     }
     closeAlert = () => {
@@ -255,7 +269,7 @@ export default class ChatSolicitud extends Component {
                 </KeyboardAvoidingView>
                 
             </View>
-            
+            <FlashMessage ref={ref => this.dropdown = ref} />  
                
             </Modal>
                    

@@ -50,11 +50,13 @@ export default class CreateClientModal extends Component{
                 
                     <View style={styles.headerContainer}>
                         <Header 
+                        showSearch={true}
                         selected={false}
                         titulo={"Asignar Contactos"} 
                         name={"keyboard-backspace"} 
                         actionIcon={()=>{this.props.goBack()}} 
-
+                        state={this.props.searchBarContacts}
+                        actionSearchBar={this.props.searchContactList}
                         />
                         
                     </View>

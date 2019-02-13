@@ -117,53 +117,7 @@ class SideMenu extends Component {
           <Text numberOfLines={1} style={{marginBottom:10,color:"rgb(255,255,255)",fontWeight:"normal" ,fontSize:15, width:200}}>{this.state.email}</Text>
           </View>
       </View>
-        {/* <View style={{height:200}}>
-        <View  
-            style={[{width: '100%', height: '100%',flexDirection:"row",},colors.primaryColor]}
-            
-            
-          >
-          
-          <View  //source={{uri : 'https://www.iconsdb.com/icons/preview/white/square-xxl.png'}}
-          style={{height:80,width:80,
-          //resizeMode:"contain",
-          backgroundColor:"rgb(255,255,255)",
-          alignSelf:'flex-start',
-          borderRadius:40,
-          marginTop:60,
-          marginLeft:20,
-          marginBottom:5,
-          position:"absolute",
-          
-          }}
-
-          />
-          <Image  source={{uri:this.state.imageCompany}}
-          style={{height:80,width:80,
-          resizeMode:"contain",
-          alignSelf:'flex-start',
-          borderRadius:40,
-          marginTop:60,
-          marginLeft:20,
-          marginBottom:5,
-          overflow: "hidden",
-            
-          }}
-
-          />
-          <View style={{marginTop:70}}>
-          <Text style={{color:"rgb(255,255,255)",marginLeft:5,fontWeight: "bold",fontSize:17}}>EkoEnergia</Text>
-          <Text style={{color:"rgb(255,255,255)",marginLeft:5,fontWeight: "bold",fontSize:15}}>Ejecutivo de cuenta</Text>
-          <Text numberOfLines={1} style={{color:"rgb(255,255,255)",marginLeft:5,fontWeight: "bold",fontSize:15, width:150}}>{this.state.email}</Text>
-          </View>
-          
-          
-          
-
-
-        </View>
         
-        </View> */}
         
         
           

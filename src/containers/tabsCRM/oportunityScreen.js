@@ -19,6 +19,7 @@ import EditClientModal from './editClientModal';
 import OpportunityList from '../../components/crmOportunity/oportunityList';
 import OpportunityModal from './createOpportunityModa';
 import EditOpportunityModal from './editOpportunituModal';
+
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 const URL_ROLES = `${CONFIG.URL_BASE}:${CONFIG.PORT_IMAGE}/${CONFIG.VERSION_API_IMAGE}/roles`
@@ -73,13 +74,14 @@ export default class OpportunityScreen extends Component{
             itemToEdit:"",
             description_next_activity:"",
             copyminDate:"",
-            drop:false
-            
+            drop:false,
+            //----SelectClient
+            showModalSelectClient:false,
+            clientNameSelected:"Aún no asigna un cliente"
         }
     }
     initialState = () => {
-        console.log("Aqui se incia su mamaa")
-        console.log(this.state)
+        
         this.setState({
             productsChecked:[],
             crmClientId:"",
@@ -94,8 +96,9 @@ export default class OpportunityScreen extends Component{
             showModalEditOpportunity:false,
             itemToEdit:"",
             description_next_activity:"",
-            copyminDate:""
-            
+            copyminDate:"",
+
+            clientNameSelected:"Aún no asigna un cliente"
         })
     }
 
@@ -105,15 +108,15 @@ export default class OpportunityScreen extends Component{
     async componentDidMount(){
         const token = await DB.getData("token");
         const roles = await API.getDataBackEnd(token,URL_ROLES)
-        console.log(roles)
+        //console.log(roles)
         const clients = await API.getDataBackEnd(token,URL_CLIENTS)
         const opportunities = await API.getDataBackEnd(token,URL_OPPORTUNITIES)
         const products = await API.getDataBackEnd(token,URL_PRODUCTS)
         console.log("clients Original")
         console.log(clients)
         
-        console.log("opportunities")
-        console.log(opportunities)
+        //console.log("opportunities")
+        //console.log(opportunities)
         if (opportunities!=false || products!=false || clients!=false){
 
             
@@ -138,15 +141,33 @@ export default class OpportunityScreen extends Component{
                     value:s.name,
                     code:s.rolId
                 }
-            })
+            }).sort((a,b)=> {
+                if (a.value > b.value) {
+                  return 1;
+                }
+                if (a.value < b.value) {
+                  return -1;
+                }
+                // a must be equal to b
+                return 0;
+              } )
             console.log("listRol")
             console.log(listRol)
             let dataClientList = clients.map(s=>{
                 return {
-                    value:s.name,
-                    code:s.id
+                    id:s.id,
+                    name:s.name
                 }
-            })
+            }).sort((a,b)=> {
+                if (a.name > b.name) {
+                  return 1;
+                }
+                if (a.name < b.name) {
+                  return -1;
+                }
+                // a must be equal to b
+                return 0;
+              } )
             console.log("dataClientList")
             console.log(dataClientList)
             let dataProductsList = products.map(s=>{
@@ -154,7 +175,16 @@ export default class OpportunityScreen extends Component{
                     id:s.id,
                     name:s.name
                 }
-            })
+            }).sort((a,b)=> {
+                if (a.name > b.name) {
+                  return 1;
+                }
+                if (a.name < b.name) {
+                  return -1;
+                }
+                // a must be equal to b
+                return 0;
+              } )
             console.log("dataProductsList")
             console.log(dataProductsList)
 
@@ -163,6 +193,7 @@ export default class OpportunityScreen extends Component{
                 dataOpportunitiesList:dataOpportunitiesList,
                 copyDataOpportunitiesList:dataOpportunitiesList,
                 dataClientList:dataClientList,
+                copyDataClientList:dataClientList,
                 dataProductsList:dataProductsList,
                 copyDataProductList:dataProductsList,
                 listRol:listRol,
@@ -209,6 +240,26 @@ export default class OpportunityScreen extends Component{
             this.setState({
                 searchBar:false,
                 dataOpportunitiesList:datos
+            })
+        }
+        
+    }
+    searchClient = (text) =>{
+        let barText = text
+        let datos = this.state.copyDataClientList.filter(
+            s=>{
+                return s.name.toUpperCase().search(text.toUpperCase()) != -1
+            }
+        )
+        if (barText.length>0){
+            this.setState({
+                searchBar:true,
+                dataClientList:datos
+            })
+        }else{
+            this.setState({
+                searchBar:false,
+                dataClientList:datos
             })
         }
         
@@ -270,7 +321,27 @@ export default class OpportunityScreen extends Component{
         //console.log(answer)
         //this.props.modalOff()
       }
-    clientSelected =  (data) =>{
+      clientSelected = (data) =>{
+        this.stateChange("showModalSelectClient",false)
+        this.stateChange("clientNameSelected",data.name)
+        
+        filtro = this.state.clients.filter(n=>n.name===data.name)
+        console.log(filtro)
+        if (filtro[0].isEkosave == 1){
+            filtroProductList = this.state.dataProductsList.filter(n=>n.id!==1)
+            this.setState({
+                copyDataProductList:filtroProductList
+            })
+            console.log(filtroProductList)
+        }
+        else{
+            this.setState({
+                copyDataProductList:this.state.dataProductsList
+            })
+        }
+        this.stateChange("crmClientId",data.id)
+      }
+    /* clientSelected =  (data) =>{
         console.log(data)
         filtro = this.state.clients.filter(n=>n.name===data.value)
         console.log(filtro)
@@ -293,7 +364,7 @@ export default class OpportunityScreen extends Component{
         this.stateChange("crmClientId",data.code)
         
        
-      }
+      } */
     
     rolSelected =  (data) =>{
         
@@ -506,6 +577,7 @@ export default class OpportunityScreen extends Component{
                     addOpportunity={this.addOpportunity}
                     initialState={this.initialState}
                     reset={this.reset}
+                    searchClient={this.searchClient}
                     
                 />
 
@@ -538,7 +610,7 @@ export default class OpportunityScreen extends Component{
                         
                         <View style={[styles.body,styles.indicator]}>
                             <ActivityIndicator size="large" color="#ff0050" />
-                            <FloatButton add={this.goAddOpportunity}/>
+                            {/* <FloatButton add={this.goAddOpportunity}/> */}
                         </View>
                         ) : (
                         

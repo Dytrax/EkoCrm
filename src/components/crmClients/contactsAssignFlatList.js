@@ -57,7 +57,7 @@ export default class ContactAssignFlatList extends Component{
                 renderItem={this.renderItem}
                 extraData={this.state}
                 keyExtractor={item => item.id.toString()}
-                
+                keyboardShouldPersistTaps="always"
             />
         )
     }

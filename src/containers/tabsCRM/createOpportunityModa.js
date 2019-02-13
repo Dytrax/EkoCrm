@@ -23,6 +23,7 @@ import DB from "../../../storeData/storeData"
 import API from "../../../api/Api"
 import CONFIG from "../../../config/config"
 import FlashMessage from "react-native-flash-message";
+import SelectClientModal from "./selectClientModal"
 import { showMessage, hideMessage } from "react-native-flash-message";
 const URL_OPPORTUNITIES= `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/oportunities`
 export default class OpportunityModal extends Component {
@@ -91,6 +92,13 @@ export default class OpportunityModal extends Component {
             animationType="fade"
             onRequestClose={() => { this.props.stateChange("showModalAddOpportunity",false) } }
             >
+            <SelectClientModal 
+                selectedAction={this.props.clientSelected}
+                states = {this.props.states}
+                show={this.props.states.showModalSelectClient}
+                stateChange={this.props.stateChange}
+                searchClient={this.props.searchClient}
+            />
             <AssignProductModal
                 show={this.props.states.showModalAssignProduct}
                 stateChange={this.props.stateChange}
@@ -159,11 +167,26 @@ export default class OpportunityModal extends Component {
                                         iconSize={25}
                                         />
                     </View>
-                    <MyDropDown size={"100%"}
+                    <View style={{flex:1,flexDirection:"row",marginTop:20,justifyContent:"center",alignItems:"center"}}>
+                                <View style={{flexDirection:"column",flex:2}}>
+                                    <Text>Asignar </Text>
+                                    <Text>cliente:</Text>
+                                </View>
+                                <View style={{flex:2}} >
+                                    <Icon2 name={"add-circle"} color={"#a3c51a"} size={40} onPress={()=>{this.props.stateChange("showModalSelectClient",true)}}/>
+                                </View>
+                                <View style={{marginLeft:10,flex:6}}>
+                                    <Text>{this.props.states.clientNameSelected}</Text>
+                                </View>
+                                
+                                
+                        </View>
+
+                    {/* <MyDropDown size={"100%"}
                         title={"Cliente *"}
                         data={this.props.states.dataClientList}
                         selectedAction={this.props.clientSelected}
-                    />
+                    /> */}
                     <MyDropDown size={"100%"}
                         title={"Selecciona el rol *"}
                         data={this.props.states.listRol}

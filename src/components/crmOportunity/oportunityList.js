@@ -79,6 +79,7 @@ export default class OpportunityList extends Component{
                 keyExtractor={item => item.id.toString()}
                 ListEmptyComponent={this._listEmptyComponent}
                 ListFooterComponent={this.renderFooter}
+                keyboardShouldPersistTaps="always"
             />
         )
     }

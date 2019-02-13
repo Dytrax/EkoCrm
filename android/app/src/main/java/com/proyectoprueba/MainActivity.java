@@ -1,4 +1,4 @@
-package com.proyectoprueba;
+package com.leadis.ekosave;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;

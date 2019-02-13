@@ -48,7 +48,10 @@ const resetAction = StackActions.reset({
 });
 
 export default class CalendarScreen extends Component{
-     
+     static navigationOptions = ({ navigation }) => {
+       let drawerLabel = 'Calendario';
+       return {drawerLabel}
+     }
       constructor(props) {
         super(props);
         this.state = {
@@ -94,7 +97,9 @@ export default class CalendarScreen extends Component{
       async componentDidMount(){
         console.log("REINICIADO")
         const token = await DB.getData("token");
-        
+        let modules = await DB.getData("modules")
+        console.log(JSON.parse(modules))
+
         const opportunities = await API.getDataBackEnd(token,URL_OPPORTUNITIES)
         console.log("opportunities")
         console.log(opportunities)

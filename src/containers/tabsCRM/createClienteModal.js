@@ -7,7 +7,8 @@ import {
     Picker,
     ScrollView,
     Platform,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native'
 import styles from "./styleCRM"
 import Header from "../../components/headerComponent"
@@ -111,17 +112,19 @@ export default class CreateClientModal extends Component{
       }
 
       typeDocumentSelected = (data) => {
-            this.setState({
+        this.props.stateChange("documentId",data.code)
+            /* this.setState({
                 documentId:data.code
             })
-          console.log(data.code)
+          console.log(data.code) */
       }
 
       contactsAssign = (data) => {
         console.log(data)
-        this.setState({
+        this.props.stateChange("contactChecked",data)
+        /* this.setState({
             contactChecked:data
-        })
+        }) */
       }
 
         assignContacts = () => {
@@ -138,29 +141,43 @@ export default class CreateClientModal extends Component{
         }
         
         addClient = async () => {
-            let bodyJson = {
-                address:this.state.contactDir,
-                contacts:this.state.contactChecked,
-                documentTypeId:this.state.documentId,
-                document_number:this.state.contactNumberDocument,
-                email:this.state.contactEmail,
-                latitude:0,
-                longitude:0,
-                name:this.state.contactName,
-                observations:this.state.contactObs,
-                phone:this.state.contactPhone,
-                //townId:this.state.townId,
+            if (!this.props.states.contactDir || !this.props.states.contactChecked || 
+                !this.props.states.documentId || !this.props.states.contactNumberDocument ||
+                !this.props.states.contactEmail || !this.props.states.contactName || !this.props.states.contactObs ||
+                !this.props.states.contactPhone){
+                    Alert.alert(
+                        'Todos los campos deben ser completados'
+                     )
+    
+                }
+            else{
+
+                let bodyJson = {
+                    address:this.props.states.contactDir,
+                    contacts:this.props.states.contactChecked,
+                    documentTypeId:this.props.states.documentId,
+                    document_number:this.props.states.contactNumberDocument,
+                    email:this.props.states.contactEmail,
+                    latitude:0,
+                    longitude:0,
+                    name:this.props.states.contactName,
+                    observations:this.props.states.contactObs,
+                    phone:this.props.states.contactPhone,
+                    //townId:this.state.townId,
+                }
+                
+                const token = await DB.getData("token");
+                let answer = await API.PostData(token,URL_ADD_CLIENTS,bodyJson)
+                console.log(answer)
+                //Falta hacer las validaciones
+                //this.props.navigation.dispatch(resetAction)
+                
+                //this.props.navigation.navigate('Tab1')
+                console.log(answer)
+                this.props.modalOff()
+
             }
             
-            const token = await DB.getData("token");
-            let answer = await API.PostData(token,URL_ADD_CLIENTS,bodyJson)
-            console.log(answer)
-            //Falta hacer las validaciones
-            //this.props.navigation.dispatch(resetAction)
-            
-            //this.props.navigation.navigate('Tab1')
-            console.log(answer)
-            this.props.modalOff()
           }
     render(){
         return(
@@ -168,15 +185,18 @@ export default class CreateClientModal extends Component{
             <Modal
             visible={this.props.show}
             animationType='slide'
-            onRequestClose={() => { this.props.goBack() } }
+            onRequestClose={() => { this.props.goBack()
+                this.props.initialState() } }
             >  
             <AssignContacts
+                searchBarContacts={this.props.states.searchBarContacts}
+                searchContactList={this.props.searchContactList}
                 show={this.state.showModal}
                 goBack={this.goBackModalAction}
-                data={[this.props.data[2],this.state.contactChecked]}
+                data={[this.props.data[2],this.props.states.contactChecked]}
                 chageState={this.contactsAssign}
             />
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>
+            <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>
                 <View style={styles.container}>
               
                 
@@ -185,14 +205,15 @@ export default class CreateClientModal extends Component{
                         selected={false}
                         titulo={"Añadir Cliente"} 
                         name={"keyboard-backspace"} 
-                        actionIcon={()=>{this.props.goBack()}} 
+                        actionIcon={()=>{this.props.goBack()
+                        this.props.initialState()}} 
 
                         />
                         
                     </View>
                 
                     
-                    <ScrollView style={[styles.bodyContainer]}>
+                    <ScrollView keyboardShouldPersistTaps={"always"} style={[styles.bodyContainer]}>
                         
                             
                         
@@ -209,7 +230,7 @@ export default class CreateClientModal extends Component{
                                             texto={"Nombre"} 
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactName"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"default"}
                                             value={""}
                                             iconType={"font-awesome"}
@@ -237,7 +258,7 @@ export default class CreateClientModal extends Component{
                                             texto={"No Documento *"} 
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactNumberDocument"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"phone-pad"}
                                             value={""}
                                             iconType={"font-awesome"}
@@ -256,7 +277,7 @@ export default class CreateClientModal extends Component{
                                             texto={"Dirección *"} 
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactDir"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"default"}
                                             value={""}
                                             iconType={"material-icons"}
@@ -273,12 +294,13 @@ export default class CreateClientModal extends Component{
                                             texto={"Email *"} 
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactEmail"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"email-address"}
                                             value={""}
                                             iconType={"MaterialIcons"}
                                             iconName={"email"}
                                             iconSize={25}
+                                            
                                             
                                             />
                         </View>
@@ -290,12 +312,13 @@ export default class CreateClientModal extends Component{
                                             texto={"Telefono *"} 
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactPhone"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"phone-pad"}
                                             value={""}
                                             iconType={"MaterialIcons"}
                                             iconName={"phone"}
                                             iconSize={25}
+                                            
                                             
                                             />
                         </View>
@@ -307,7 +330,7 @@ export default class CreateClientModal extends Component{
                                             texto={"Observación *"} 
                                             mensajeError={"Campo Requerido"} 
                                             state={"contactObs"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"default"}
                                             value={""}
                                             iconType={"Foundation"}
@@ -318,88 +341,7 @@ export default class CreateClientModal extends Component{
                         </View>
                         </View>
                         
-                        
-
-                            
-                            
-                            
-                        {/* <View style={{marginBottom:20}}>
-                        <InputComponent 
-                                    width={"100%"}
-                                    texto={"Nombre"} 
-                                    mensajeError={"Campo Requerido"} 
-                                    state={"contactName"}
-                                    stateChange={this.stateChange}
-                                    type={"default"}
-                                    value={""}
-                                    iconType={"font-awesome"}
-                                    iconName={"industry"}
-                                    iconSize={20}
-                                    
-                                    />
-                                    </View> */}
-                            
-                            
-                           {/* <View style={{marginBottom:20}}>
-                                <InputComponent 
-                                        width={"100%"}
-                                        texto={"Dirección"} 
-                                        mensajeError={"Campo Requerido"} 
-                                        state={"contactDir"}
-                                        stateChange={this.stateChange}
-                                        type={"default"}
-                                        value={""}
-                                        iconType={"material-icons"}
-                                        iconName={"add-location"}
-                                        iconSize={25}
-                                        
-                                        />
-                           </View> */}
-                           {/* <View style={{marginBottom:20}}>
-                                <InputComponent 
-                                        width={"100%"}
-                                        texto={"Email"} 
-                                        mensajeError={"Campo Requerido"} 
-                                        state={"contactEmail"}
-                                        stateChange={this.stateChange}
-                                        type={"default"}
-                                        value={""}
-                                        iconType={"MaterialIcons"}
-                                        iconName={"email"}
-                                        iconSize={25}
-                                        
-                                        />
-                           </View> */}
-                           {/* <View style={{marginBottom:20}}>
-                                <InputComponent 
-                                        width={"100%"}
-                                        texto={"Telefono"} 
-                                        mensajeError={"Campo Requerido"} 
-                                        state={"contactPhone"}
-                                        stateChange={this.stateChange}
-                                        type={"default"}
-                                        value={""}
-                                        iconType={"MaterialIcons"}
-                                        iconName={"phone"}
-                                        iconSize={25}
-                                        
-                                        />
-                           </View> */}
-                           {/* <View >
-                                <InputComponent 
-                                        width={"100%"}
-                                        texto={"Observación"} 
-                                        mensajeError={"Campo Requerido"} 
-                                        state={"contactObs"}
-                                        stateChange={this.stateChange}
-                                        type={"default"}
-                                        value={""}
-                                        iconType={"Foundation"}
-                                        iconName={"comment"}
-                                        iconSize={25}
-                                        
-                                        />
-                           </View> */}
+                    
 
                            <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
                             
@@ -411,22 +353,12 @@ export default class CreateClientModal extends Component{
                                         <Icon2 name={"add-circle"} color={"#a3c51a"} size={40} onPress={()=>{this.assignContacts()}}/>
                                     </View>
                                     <View style={{alignSelf:"center",paddingLeft:30}}>
-                                        <Text style={{fontSize:22}}>{this.state.contactChecked.length}</Text>
+                                        <Text style={{fontSize:22}}>{this.props.states.contactChecked.length}</Text>
                                     </View>
                             </View>
                         </View>
 
                        
-
-                           {/* <View style={{width:"75%",flexDirection:"row",marginTop:30,justifyContent:"center",alignItems:"center"}}>
-                               
-                               <View style={{marginRight:40}}>
-                                   <Text>Asignar Contactos</Text>
-                               </View>
-                               <View style={{justifyContent:"flex-end"}}>
-                                   <Icon2 name={"add-circle"} size={40} onPress={this.assignContacts}/>
-                               </View>
-                           </View> */}
 
                            
                            <View style={{marginTop:30,marginBottom:30}}>

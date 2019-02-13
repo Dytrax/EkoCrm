@@ -86,8 +86,12 @@ let country="";
 
 
             ///ADD CONTACT
-            departmentName:""
-            
+            departmentName:"",
+            contactName:"",
+            contactDir:"",
+            contactEmail:"",
+            contactPhone:"",
+            contactObs:"",
         }
     }
 
@@ -139,7 +143,16 @@ let country="";
                     departmentCode:s.town.department.code,
                     countryCode:s.town.department.country.code
                 }
-            })
+            }).sort((a,b)=> {
+                if (a.name > b.name) {
+                  return 1;
+                }
+                if (a.name < b.name) {
+                  return -1;
+                }
+                // a must be equal to b
+                return 0;
+              } )
              this.setState({
                 loadingData:false,
                 dataSource:openRequest,
@@ -157,6 +170,21 @@ let country="";
         }
         
         console.log(answer);
+    }
+
+    initialState = () => {
+        
+        this.setState({
+            departmentName:"",
+            contactName:"",
+            contactDir:"",
+            contactEmail:"",
+            contactPhone:"",
+            contactObs:"",
+           
+           
+            
+        })
     }
 
     stateChange = (stateToChange, value) => {
@@ -306,6 +334,7 @@ let country="";
         return(
             <View style={styles.container}>
                 <Modal 
+                initialState  = {this.initialState}
                 countrySelectedAndGetDepartments = {this.countrySelectedAndGetDepartments}
                 departmentSelectedAndGetTown = {this.departmentSelectedAndGetTown}
                 states = {this.state}
@@ -318,6 +347,7 @@ let country="";
                 />
                 
                 <EditModal 
+                initialState = {this.initialState}
                 states={this.state}
                 show={this.state.showEditModal}
                 back={this.backModalAction}

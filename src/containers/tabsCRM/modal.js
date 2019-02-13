@@ -4,7 +4,10 @@ import {Modal,
      TouchableHighlight, 
      View, 
      Alert,
-    StyleSheet
+    StyleSheet,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import DB from "../../../storeData/storeData"
 import API from "../../../api/Api"
@@ -111,13 +114,13 @@ export default class ModalExample extends Component {
 
   addContact = async () => {
     let bodyJson = {
-        address:this.state.contactDir,
-        email:this.state.contactEmail,
+        address:this.props.states.contactDir,
+        email:this.props.states.contactEmail,
         latitude:0,
         longitude:0,
-        name:this.state.contactName,
-        observations:this.state.contactObs,
-        phone:this.state.contactPhone,
+        name:this.props.states.contactName,
+        observations:this.props.states.contactObs,
+        phone:this.props.states.contactPhone,
         //townId:this.state.townId,
     }
     
@@ -172,7 +175,9 @@ export default class ModalExample extends Component {
           visible={this.props.show}
           onRequestClose={() => {
             this.props.back()
+            this.props.initialState()
           }}>
+          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>
           <View style={styles.container}>
                
                 <View style={styles.headerContainer}>
@@ -181,13 +186,15 @@ export default class ModalExample extends Component {
                     selected={false}
                     titulo={"Añadir contacto"} 
                     name={"keyboard-backspace"} 
-                    actionIcon={()=>{this.props.back()}} 
+                    actionIcon={()=>{this.props.back()
+                    this.props.initialState()}} 
                     //state={this.state.searchBar}
                     //actionSearchBar={this.actionBar}
                         
                     />
                     
                 </View>
+                <ScrollView style={[styles.bodyContainer]}>
                 <View style={{alignSelf:"center",width:"95%"}}>
 
                     <View style={[{borderWidth:1,borderColor:"#a3c51a",padding:10,marginTop:20,},styleCreateOpportunity.card]}>
@@ -200,9 +207,9 @@ export default class ModalExample extends Component {
                                             texto={"Nombre *"} 
                                             mensajeError={"Campo Requerido "} 
                                             state={"contactName"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"default"}
-                                            value={this.state.contactName}
+                                            value={this.props.states.contactName}
                                             iconType={"material-icons"}
                                             iconName={"person"}
                                             iconSize={25}
@@ -217,9 +224,9 @@ export default class ModalExample extends Component {
                                             texto={"Dirección *"} 
                                             mensajeError={"Campo Requerido "} 
                                             state={"contactDir"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"default"}
-                                            value={this.state.contactDir}
+                                            value={this.props.states.contactDir}
                                             iconType={"material-icons"}
                                             iconName={"add-location"}
                                             iconSize={25}
@@ -234,9 +241,9 @@ export default class ModalExample extends Component {
                                             texto={"Correo *"} 
                                             mensajeError={"Campo Requerido "} 
                                             state={"contactEmail"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"email-address"}
-                                            value={this.state.contactEmail}
+                                            value={this.props.states.contactEmail}
                                             iconType={"material-icons"}
                                             iconName={"email"}
                                             iconSize={25}
@@ -251,9 +258,9 @@ export default class ModalExample extends Component {
                                             texto={"Telefono *"} 
                                             mensajeError={"Campo Requerido "} 
                                             state={"contactPhone"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"phone-pad"}
-                                            value={this.state.contactPhone}
+                                            value={this.props.states.contactPhone}
                                             iconType={"material-icons"}
                                             iconName={"phone"}
                                             iconSize={25}
@@ -268,9 +275,9 @@ export default class ModalExample extends Component {
                                             texto={"Observación"} 
                                             mensajeError={"Campo Requerido "} 
                                             state={"contactObs"}
-                                            stateChange={this.stateChange}
+                                            stateChange={this.props.stateChange}
                                             type={"default"}
-                                            value={this.state.contactObs}
+                                            value={this.props.states.contactObs}
                                             iconType={"material-icons"}
                                             iconName={"short-text"}
                                             iconSize={25}
@@ -301,9 +308,12 @@ export default class ModalExample extends Component {
                     data={this.props.states.towns} 
                     selectedAction={this.townSelected}
                     value={this.state.townName}></MyDropDown> */}
-
+                    <View style={{marginTop:10,marginBottom:30}}>
+                    <ButtonCircle text={"Añadir"} size={"50%"} action={this.addContact}></ButtonCircle>
+                    </View>
 
                 </View>
+                
                 
                 {/* <InputComponent 
                 texto={"Nombre"} 
@@ -350,9 +360,8 @@ export default class ModalExample extends Component {
                     <MyDropDown size={130} label={"Departamento*"} datos={this.state.departments} getData={this.departmentSelectedAndGetTown}></MyDropDown>
                     <MyDropDown size={110} label={"Ciudad*"} datos={this.state.towns} getData={this.townSelected}></MyDropDown>
                 </View> */}
-                <View style={{marginTop:10,marginBottom:30}}>
-                    <ButtonCircle text={"Añadir"} size={"50%"} action={this.addContact}></ButtonCircle>
-                </View>
+                
+                </ScrollView>
                 {/* <View style={styles.subcontainer}>
                 <View style={[styles.bodyContainer]}>
                     
@@ -362,7 +371,7 @@ export default class ModalExample extends Component {
                 </View> */}
                 
             </View>
-          
+            </KeyboardAvoidingView>
           
         </Modal>
 

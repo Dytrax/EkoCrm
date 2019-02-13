@@ -8,7 +8,7 @@ import {
 import ContactItem from "../components/contactItem"
 
 export default class ContactList extends Component {
-
+º
     renderItem = ({item}) => {
         //console.log("item")
         //console.log(item)
@@ -66,6 +66,7 @@ export default class ContactList extends Component {
                 ItemSeparatorComponent={this.renderSeparator}
                 ListFooterComponent={this.renderFooter}
                 ListEmptyComponent={this._listEmptyComponent}
+                keyboardShouldPersistTaps="always"
             />
         )   
     }

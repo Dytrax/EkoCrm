@@ -53,8 +53,8 @@ export default class EditClientModal extends Component{
     } 
 
     componentWillReceiveProps(nextProps) {
-        console.log("OLLEEEEEEE")
-        console.log(nextProps)
+        //console.log("OLLEEEEEEE")
+        //console.log(nextProps)
         if (nextProps.townsList !== this.state.townsList) {
           this.setState({ 
               townsList: nextProps.townsList
@@ -226,23 +226,26 @@ export default class EditClientModal extends Component{
           
     render(){
         //console.log("aquin--------andres")
-        console.log(this.props)
+        //console.log(this.props)
         
         return(
 
             <Modal
             visible={this.props.show}
             animationType='slide'
-            onRequestClose={() => { this.props.goBack() } }
+            onRequestClose={() => { this.props.goBack()
+                this.props.initialState() } }
             >  
             <AssignContacts
+                searchBarContacts={this.props.states.searchBarContacts}
+                searchContactList={this.props.searchContactList}
                 show={this.state.showModal}
                 goBack={this.goBackModalAction}
                 data={[this.props.data[2],this.props.states.contactChecked//this.state.contactChecked
                 ]}
                 chageState={this.contactsAssign}
             />
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>
+            <KeyboardAvoidingView  behavior={Platform.OS === 'ios' ? "padding" : null} style={styles.bodyContainer}>
                 <View style={styles.container}>
               
                 
@@ -251,7 +254,9 @@ export default class EditClientModal extends Component{
                         selected={false}
                         titulo={"Editar Cliente"} 
                         name={"keyboard-backspace"} 
-                        actionIcon={()=>{this.props.goBack()}} 
+                        actionIcon={()=>{this.props.goBack()
+                            this.props.initialState()
+                        }} 
                        
                         />
                         
