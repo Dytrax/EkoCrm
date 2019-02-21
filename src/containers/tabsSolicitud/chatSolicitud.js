@@ -21,6 +21,15 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import moment from 'moment'
 const WIDTH = Dimensions.get("window").width;
+
+const perfiles = {
+    7: "SuperAdministrador",
+    5: "Ejecutivo",
+    6: "Administrador",
+    10: "Soporte",
+    9: "Usuario de Registro",
+    8: "Administrador"
+}
 export default class ChatSolicitud extends Component {
 
     constructor(props){
@@ -178,7 +187,7 @@ export default class ChatSolicitud extends Component {
                                 }}/>
                             </View>
                         <View style={{flex:93,marginLeft:6}} >
-                            <Text style={{fontSize:16}}>{`Super Admin # ${this.props.states.itemSelected["userClientId"]}`}</Text>
+                            <Text style={{fontSize:16}}>{`${perfiles[this.props.states.profileId]} # ${this.props.states.itemSelected["userClientId"]}`}</Text>
                             <Text style={{fontSize:15}}>{this.props.states.itemSelected["description"]}</Text>
                             {
                                 this.props.states.dataFlatListArchives.length===0?null:
@@ -207,7 +216,7 @@ export default class ChatSolicitud extends Component {
                         />
 
                 </View>
-                {this.props.states.pantallaPrevia === "pqrsCompanyCerradas" ? (
+                {this.props.states.pantallaPrevia === "pqrsCompanyCerradas" || this.props.states.companyId === "1" ? (
                     null
                 ) : (
                     <View style={[styles.footerContainer,{maxHeight:70,height: Math.max(45, this.state.height+10),}]}>
@@ -283,6 +292,8 @@ const styles = StyleSheet.create({
         flex:1
         //width:WIDTH,
         //height:HEIGHT
+
+        
     },
     subcontainer:{
         flex:1

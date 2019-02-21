@@ -8,11 +8,13 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.55",
+    "firebase": "^5.8.2",
     "moment": "^2.23.0",
     "native-base": "^2.8.1",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-calendars": "^1.21.0",
+    "react-native-device-info": "^0.26.3",
     "react-native-dropdownalert": "^3.7.0",
     "react-native-elements": "^1.0.0-beta7",
     "react-native-flash-message": "^0.1.10",

@@ -4,8 +4,16 @@ import {
     Text,
     StyleSheet,
     Dimensions,
-    ScrollView
+    ScrollView, 
+    Alert, 
+    Platform,
+    Linking
 } from 'react-native'
+
+const firebase = require("firebase");
+// Required for side-effects
+require("firebase/firestore");
+import DeviceInfo from 'react-native-device-info';
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -69,7 +77,8 @@ export default class CalendarScreen extends Component{
           itemToEdit:"",
           description_next_activity:"",
           copyminDate:"",
-          showModalCalendar:false
+          showModalCalendar:false,
+          AppVersion:""
         };
         this.onDayPress = this.onDayPress.bind(this);
       }
@@ -95,6 +104,73 @@ export default class CalendarScreen extends Component{
         }
       }
       async componentDidMount(){
+        console.log("Hola")
+        if (Platform.OS === 'android'){
+          const version = DeviceInfo.getVersion();
+          this.setState({
+            AppVersion: version
+          })
+          console.log("Android V",version)
+          var versionFirebase = firebase.firestore().collection('EkoSave').doc('Version').get()
+              .then(function(doc) {
+                  if (doc.exists) {
+                      
+                      
+                      if (doc.data()["Android"]>version){
+                          console.log(true)
+                          Alert.alert(
+                              'Actualización disponible',
+                              "Actualiza la aplicación y disfruta de la versión mejorada",
+                              [
+                                {text: 'Actualizar', onPress: () => Linking.openURL('https://play.google.com/store/apps/details?id=com.leadis.ekosave')},
+                                {text: 'Cancelar', onPress: () => console.log('OK Pressed'), style: 'cancel'},
+                              ],
+                              { cancelable: false }
+                            )
+                      }
+                  } else {
+                      // doc.data() will be undefined in this case
+                      console.log("No such document!");
+                  }
+              }).catch(function(error) {
+                  console.log("Error getting document:", error);
+              });
+          }else{
+              const version = DeviceInfo.getVersion();
+              console.log("IOS V",version)
+              var versionFirebase = firebase.firestore().collection('EkoSave').doc('Version').get()
+              .then(function(doc) {
+                  if (doc.exists) {
+                      console.log("Document data:", doc.data());
+                      console.log(doc.data()["IOS"])
+                      if (doc.data()["IOS"]>version){
+                          console.log(true)
+                          Alert.alert(
+                              'Actualización disponible',
+                              "Actualiza la aplicación y disfruta de la versión mejorada",
+                              [
+                                {text: 'Actualizar', onPress: () => console.log('Actualizando...')},
+                                {text: 'Cancelar', onPress: () => console.log('OK Pressed'), style: 'cancel'},
+                              ],
+                              { cancelable: false }
+                            )
+                      }
+                  } else {
+                      // doc.data() will be undefined in this case
+                      console.log("No such document!");
+                  }
+              }).catch(function(error) {
+                  console.log("Error getting document:", error);
+              });
+          }
+
+
+
+
+
+
+
+
         console.log("REINICIADO")
         const token = await DB.getData("token");
         let modules = await DB.getData("modules")
@@ -371,6 +447,7 @@ export default class CalendarScreen extends Component{
                         
             </View>
             {/* <FloatButton add={this.reset}/> */}
+            
             </View>
         );
       }

@@ -8,7 +8,7 @@ import {
 import ContactItem from "../components/contactItem"
 
 export default class ContactList extends Component {
-º
+
     renderItem = ({item}) => {
         //console.log("item")
         //console.log(item)

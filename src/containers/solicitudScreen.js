@@ -81,7 +81,7 @@ export default class SolicitudScreen extends Component {
     }
 
     renderItem = ({item}) => {
-        console.log({item})
+        
          return(
             <TouchableOpacity style={{flexDirection:"row",
             borderRadius: 4,

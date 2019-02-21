@@ -113,8 +113,7 @@ const resetAction = StackActions.reset({
 
 
     renderItem = ({item}) => {
-        console.log("item")
-        console.log(item)
+
         return(
             <TouchableOpacity onLongPress={()=>{this.clientAction(item)}} >
             

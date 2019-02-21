@@ -46,13 +46,16 @@ export default class AbiertasScreen extends Component{
             pantallaPrevia:"",
             pqrId:"",
             token:"",
-            dataFlatListArchives:[]
+            dataFlatListArchives:[],
+            companyId:"",
+            profileId:""
         }
         
     }
      async componentWillMount(){
         const token = await DB.getData("token");
         const itemId = await DB.getData("itemId");
+        const companyId =  await DB.getData("companyId");
         console.log("item selected: " + itemId )
         answer = await API.getRequest(token);
         if (answer[0]==200){
@@ -71,7 +74,8 @@ export default class AbiertasScreen extends Component{
                 copyDataSource: filtroData,
                 loadingData:false,
                 //Nuevo ...Abajo
-                token:token
+                token:token,
+                companyId:companyId
             })
             console.log("this.state.companyName")
             console.log(this.state.companyName)
@@ -106,6 +110,7 @@ export default class AbiertasScreen extends Component{
             dataFlatList:item["pqr_tracings"],
             pantallaPrevia:"pqrsCompanyEnProceso",
             pqrId:item["id"],
+            profileId:item["profileId"]
         })
         /* this.props.navigation.navigate('PruebaScreen', {
             pantalla: "pqrsCompanyAbiertas",
@@ -117,8 +122,8 @@ export default class AbiertasScreen extends Component{
     }
 
     renderItem = ({item}) => {
-        //console.log({item})
-        console.log("item.dateInit " + item.dateInit)
+        
+        
          return(
          
             <TouchableWithoutFeedback onPress={()=>this.onItemClick(item)}>

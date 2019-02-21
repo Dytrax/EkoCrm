@@ -46,7 +46,8 @@ export default class CerradasScreen extends Component{
             pantallaPrevia:"",
             pqrId:"",
             token:"",
-            dataFlatListArchives:[]
+            dataFlatListArchives:[],
+            profileId:""
         }
         
     }
@@ -110,12 +111,13 @@ export default class CerradasScreen extends Component{
             dataFlatList:item["pqr_tracings"],
             pantallaPrevia:"pqrsCompanyCerradas",
             pqrId:item["id"],
+            profileId:item["profileId"]
         })
         
     }
 
     renderItem = ({item}) => {
-        //console.log({item})
+        
          return(
             <TouchableWithoutFeedback onPress={()=>this.onItemClick(item)}>
             <View style={stylesList.container}>

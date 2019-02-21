@@ -47,7 +47,9 @@ export default class EnProcesoScreen extends Component{
             pantallaPrevia:"",
             pqrId:"",
             token:"",
-            dataFlatListArchives:[]
+            dataFlatListArchives:[],
+            companyId:"",
+            profileId:""
         }
         
     }
@@ -55,6 +57,7 @@ export default class EnProcesoScreen extends Component{
         //
         const token = await DB.getData("token");
         const itemId = await DB.getData("itemId");
+        const companyId =  await DB.getData("companyId");
         console.log("item selected: " + itemId )
         answer = await API.getRequest(token);
         if (answer[0]==200){
@@ -73,7 +76,8 @@ export default class EnProcesoScreen extends Component{
                 copyDataSource: filtroData,
                 loadingData:false,
                 //Nuevo ...Abajo
-                token:token
+                token:token,
+                companyId:companyId
                 
             })
             console.log("this.state.companyName")
@@ -120,6 +124,7 @@ export default class EnProcesoScreen extends Component{
             dataFlatList:item["pqr_tracings"],
             pantallaPrevia:"pqrsCompanyAbiertas",
             pqrId:item["id"],
+            profileId:item["profileId"]
         })
         /* token:token,
             pqrId:data["id"],
@@ -151,7 +156,7 @@ export default class EnProcesoScreen extends Component{
       };
  
     renderItem = ({item}) => {
-        //console.log({item})
+        
          return(
          
             <TouchableWithoutFeedback onPress={()=>this.onItemClick(item)}>
