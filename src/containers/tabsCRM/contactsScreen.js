@@ -4,8 +4,8 @@ import {
     Text,
     StyleSheet,
     ActivityIndicator,
-    ScrollView
-    
+    ScrollView,
+    Button
 } from 'react-native';
 import styles from "./styleCRM.js"
 import Header from "../../components/headerComponent"
@@ -105,26 +105,9 @@ let country="";
         //Getting "La Información de Solicitudes" from the BackendApi
         const answer = await API.getDataBackEnd(token,URL)
         
-         country =  await API.getDataBackEnd(token,URL_COUNTRIES)
-        let _country = country
         
-        console.log(_country)
-        _country = _country["countries"].map(s=>{
-            return {
-                value:s.name,
-                code:s.code
-            }
-        })
-        console.log("_country")
-        console.log(_country)
-        //this.state.var=_country
-         this.setState({
-            
-            country:_country,
-            
-        }) 
-        console.log("country")
-        console.log(country)
+        
+        
         console.log("answer")
         console.log(answer)
         if(answer!=false){
@@ -138,10 +121,6 @@ let country="";
                     email:s.email,    
                     phone:s.phone,
                     observations:s.observations,
-                    townName:s.town.name,
-                    townId:s.town.id,
-                    departmentCode:s.town.department.code,
-                    countryCode:s.town.department.country.code
                 }
             }).sort((a,b)=> {
                 if (a.name > b.name) {
@@ -222,15 +201,22 @@ let country="";
         }
         
     }
-    goToAdd = () =>{
-        this.setState({
-            showModal:true
-        })
-        /* this.props.navigation.navigate('AddContact',{
-            country:country
-        }) */
+    
+    addContactV2 = () =>{
+        this.props.navigation.navigate('CreateContact')
     }
-    goToEdit = (id) => {
+
+    editContactV2 = (id) => {
+        let filtroData = this.state.dataSource.filter(n=>n.id===id)
+        data = {
+            idContactToEdit:id,
+            dataEditContact:filtroData[0]
+        }
+        this.props.navigation.navigate('EditContact', {
+            data: data
+          });
+    }
+    /* goToEdit = (id) => {
         console.log("hola")
         console.log("id Selected")
         console.log(id)
@@ -249,7 +235,7 @@ let country="";
             contactObs:filtroData[0].observations,
             dataEditContact:filtroData[0]
         })
-    }
+    } */
     modalOff_ = () => {
         this.setState({
             showModal:false,
@@ -333,7 +319,7 @@ let country="";
     render(){
         return(
             <View style={styles.container}>
-                <Modal 
+                {/* <Modal 
                 initialState  = {this.initialState}
                 countrySelectedAndGetDepartments = {this.countrySelectedAndGetDepartments}
                 departmentSelectedAndGetTown = {this.departmentSelectedAndGetTown}
@@ -344,9 +330,9 @@ let country="";
                 back={this.backModalAction}
                 departmentName={this.state.departmentName}
                 stateChange={this.stateChange}
-                />
+                /> */}
                 
-                <EditModal 
+                {/* <EditModal 
                 initialState = {this.initialState}
                 states={this.state}
                 show={this.state.showEditModal}
@@ -356,7 +342,7 @@ let country="";
                 modalOff={this.modalOff_} 
                 idContactToEdit={this.state.idContactToEdit}
                 stateChange={this.stateChange}
-                />
+                /> */}
                 
                 <View style={styles.headerContainer}>
                     <Header 
@@ -370,6 +356,7 @@ let country="";
                     
                 </View>
                 
+                
                 <View style={styles.subcontainer}>
                 <View style={[styles.bodyContainer]}>
                     {this.state.loadingData ? (
@@ -381,19 +368,11 @@ let country="";
                         
                         <View style={styles.body}>    
                         
-                            <ContactList listContacts={this.state.dataSource} editModal={this.goToEdit}/>
+                            <ContactList listContacts={this.state.dataSource} editModal={this.editContactV2}/>
                             
-                            <FloatButton add={this.goToAdd}/>
-                            {/* <Overlay isVisible={this.state.isVisible} 
-                            onBackdropPress={() => this.setState({isVisible: false})}
-                            width={100}
-                            height={300}
-                            >   
-                                <ScrollView>
-                                    <Text>Hello from Ov</Text>
-                                </ScrollView>
-                                
-                            </Overlay> */}
+                            <FloatButton add={this.addContactV2}/>
+                            
+                           
                             
                         </View>
                         

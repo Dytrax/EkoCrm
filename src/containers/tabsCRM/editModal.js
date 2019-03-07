@@ -168,7 +168,7 @@ export default class ModalExample extends Component {
     return (
         
         <Modal
-          animationType="slide"
+          animationType="none"
           transparent={false}
           visible={this.props.show}
           onRequestClose={() => {

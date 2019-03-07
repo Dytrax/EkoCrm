@@ -184,7 +184,7 @@ export default class CreateClientModal extends Component{
 
             <Modal
             visible={this.props.show}
-            animationType='slide'
+            animationType="slide"
             onRequestClose={() => { this.props.goBack()
                 this.props.initialState() } }
             >  

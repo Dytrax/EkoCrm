@@ -23,27 +23,14 @@ const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_AP
 const URL_ADD_CONTACTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/contacts`
 import { Dropdown } from 'react-native-material-dropdown';
 export default class ModalExample extends Component {
-/*     <TouchableHighlight
-                onPress={this.props.modalOff}>
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
-  */
 
-  /* componentDidMount(){
-    console.log(this.props.data)
-  } */
   constructor(props) {
     super(props);
     
     this.state = {
-      //contactName:"",
-      //contactDir:"",
-      //contactEmail:"",
-      //contactPhone:"",
-      //contactObs:"",
+  
       country:"",
-      //departments:[],
-      //towns:[],
+
       townId:0,
       error:false,
       townName:"ALCALA",
@@ -51,58 +38,7 @@ export default class ModalExample extends Component {
     };
   }
   
-  /* countrySelectedAndGetDepartments = async (data) =>{
-    console.log("Country Selected")
-    console.log(data)
-    console.log(data.code)
-    console.log(URL_PICKERS+data.code)
-    let code = data.code
-    const token = await DB.getData("token");
-    let departments =  await API.getDataBackEnd(token,URL_PICKERS+code+"/departments")
-    departments=departments.map(s=>{
-        return {
-            value:s.name,
-            code:s.code
-        }
-    })
-
-    this.setState({
-        departments:departments
-    }) 
-    console.log("Respuesta after filter")
-    console.log(this.state.departments)
-  }
- */
-  /* departmentSelectedAndGetTown = async (data) =>{
-    
-    console.log("Department Selected")
-    console.log(data)
-    let code = data.code
-    console.log(code)
-    //console.log(URL_PICKERS+"departments/"+code+"/towns")
-    const token = await DB.getData("token");
-    
-    let towns =  await API.getDataBackEnd(token,URL_PICKERS+"departments/"+code+"/towns")
-    console.log("towns")
-    console.log(towns)
-    towns = towns.map(s=>{
-        return{
-            value:s.name,
-            code:s.code,
-            id:s.id
-        }
-    })
-
-    
-     this.setState({
-        towns:towns,
-        //townName:""
-
-    }) 
-    //console.log(towns)
-    
-  } */
-
+ 
   townSelected = (data) => {
         
     console.log("Town Selected")

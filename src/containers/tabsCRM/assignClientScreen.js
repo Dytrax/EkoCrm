@@ -20,27 +20,16 @@ export default class CreateClientModal extends Component{
             checked:false
         }
     } 
-    /* stateChange = (stateToChange, value) => {
-        console.log(this.state.var)
-        //console.log(this.state.contactName)
-        console.log(stateToChange);
-        //console.log(this.state)
-        //console.log(value);
-        this.state[stateToChange] = !value;
-       
-        console.log("this.state.stateChange")
-        console.log(this.state)
-      }; */
-
+    
     render(){
         return(
 
             <Modal
             visible={this.props.show}
-            animationType="slide"
+            animationType="none"
             onRequestClose={() => {
                 this.props.goBack()
-            //Alert.alert('Modal has been closed.');
+           
           }}
           >
                

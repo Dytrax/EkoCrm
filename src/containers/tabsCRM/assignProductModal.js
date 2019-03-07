@@ -38,7 +38,7 @@ export default class AssignProductModal extends Component{
 
             <Modal
             visible={this.props.show}
-            animationType="slide"
+            animationType="none"
             onRequestClose={() => {
                 this.props.stateChange("showModalAssignProduct",false)
             //Alert.alert('Modal has been closed.');

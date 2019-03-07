@@ -35,7 +35,7 @@ export default class SelectClientModal extends Component{
 
             <Modal
             visible={this.props.show}
-            animationType="slide"
+            animationType="none"
             onRequestClose={() => {
                 this.props.stateChange("showModalSelectClient",false)
             

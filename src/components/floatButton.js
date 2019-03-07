@@ -4,7 +4,8 @@ import {
     View,
     Text,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native'
 import Icon2 from "react-native-vector-icons/FontAwesome5"
 import color from '../../config/colors'

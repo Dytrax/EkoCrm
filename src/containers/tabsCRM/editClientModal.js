@@ -232,7 +232,7 @@ export default class EditClientModal extends Component{
 
             <Modal
             visible={this.props.show}
-            animationType='slide'
+            animationType="none"
             onRequestClose={() => { this.props.goBack()
                 this.props.initialState() } }
             >  

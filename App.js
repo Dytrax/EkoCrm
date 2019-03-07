@@ -34,11 +34,15 @@ export default class App extends Component {
                 storageBucket: "ekosave-e5079.appspot.com",
                 messagingSenderId: "207426050363"
             };
-            firebase.initializeApp(config);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(config);
+                 //inicializando o firestore
+                const firestore = require("firebase/firestore");
+                db = firebase.firestore();
+            }
+            
           
-            //inicializando o firestore
-            const firestore = require("firebase/firestore");
-            db = firebase.firestore();
+           
             
     }
     

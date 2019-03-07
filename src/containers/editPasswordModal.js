@@ -22,8 +22,11 @@ const EditPassword = props => {
 return (
     <Modal
         transparent={true}
-        animationType={'none'}
-        visible={loading}>
+        animationType="none"
+        visible={loading}
+        onRequestClose={() => { props.stateChange("editPassword",false)} }
+        >
+        
         <View style={styles.modalBackground}>
 
             <View style={{backgroundColor:"white",borderRadius: 10,padding:10}}>

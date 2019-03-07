@@ -319,7 +319,7 @@ class Api {
       }else{
         return false
       }
-      return [rest.status,resjson];
+      //return [rest.status,resjson];
     } catch (errors) {
       console.log("catch errors: " + errors.Text());
 

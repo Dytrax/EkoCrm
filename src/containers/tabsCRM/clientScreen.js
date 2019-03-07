@@ -3,7 +3,8 @@ import {
     View,
     Text,
     StyleSheet,
-    ActivityIndicator
+    ActivityIndicator,
+    Button
 } from 'react-native';
 import styles from "./styleCRM"
 import Header from "../../components/headerComponent"
@@ -12,14 +13,15 @@ import API from "../../../api/Api"
 import CONFIG from "../../../config/config"
 import ClientList from '../../components/crmClients/clientList';
 import FloatButton from '../../components/floatButton';
-import CreateClientModal from './createClienteModal';
 import { withNavigation, StackActions,NavigationActions } from "react-navigation";
-import EditClientModal from './editClientModal';
+
 const URL = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/clients`
 const URL_DOCUMENTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/documents`
 const URL_CONTACTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/crm/contacts/`
-const URL_COUNTRIES = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries`
-const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries/`
+const URL_TYPE_CLIENTS = `${CONFIG.URL_BASE}:${CONFIG.PORT_IMAGE}/${CONFIG.VERSION_API_IMAGE}/companies/types_clients`
+//const URL_COUNTRIES = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries`
+//const URL_PICKERS = `${CONFIG.URL_BASE}:${CONFIG.PORT_LOGIN}/${CONFIG.VERSION_API_IMAGE}/countries/`
+
 const resetAction = StackActions.reset({
     index: 0,
     actions: [NavigationActions.navigate({ routeName: 'Tab2' })],
@@ -38,15 +40,11 @@ export default class ClientScreen extends Component{
             searchBar:false,
             showModal:false,
             showEditModal:false,
-            countryList:[],
-            departmentsList:[],
-            townsList:[],
+            
             typeDocument:[],
             contactsList:[],
             userDocumentId:"",
-            townId:"",
-            townName:"",
-            departmentName:"",
+    
             documentTypeId:"",
 
             idContactToEdit:"",
@@ -62,7 +60,8 @@ export default class ClientScreen extends Component{
             contactEmail:"",
             contactPhone:"",
             contactObs:"",
-            searchBarContacts:false
+            searchBarContacts:false,
+            type_clients:""
         }
     }
     removeDuplicates = ( arr, prop ) => {
@@ -86,28 +85,42 @@ export default class ClientScreen extends Component{
             contactEmail:"",
             contactPhone:"",
             contactObs:"",
-           
+            
            
             
         })
     }
 
+    
+
     async componentDidMount(){
         const token = await DB.getData("token");
         //console.log(token);
         let answer = await API.getDataBackEnd(token,URL)
-        answer = this.removeDuplicates(answer,'id')
+        /* answer = this.removeDuplicates(answer,'id') */
         console.log("answer backend")
         console.log(answer)
 
-        let country =  await API.getDataBackEnd(token,URL_COUNTRIES)
+        /* let country =  await API.getDataBackEnd(token,URL_COUNTRIES)
             country = country["countries"].map(s=>{
                 return {
                     value:s.name,
                     code:s.code
                 }
-            })
+            }) */
             //console.log(country)
+
+            let type_clients = await API.getDataBackEnd(token,URL_TYPE_CLIENTS)
+            console.log("type_clients")
+            console.log(type_clients.types)
+            type_clients = type_clients.types.map(s=>{
+                return {
+                    value:s.name,
+                    code:s.id
+                }
+            })
+            console.log("type_clients")
+            console.log(type_clients)
             let documents = await API.getDataBackEnd(token,URL_DOCUMENTS)
             documents = documents.map(s=>{
                 return {
@@ -134,7 +147,7 @@ export default class ClientScreen extends Component{
                 // a must be equal to b
                 return 0;
               } )
-            console.log(contacts)
+            
         
         if(answer!=false){
             
@@ -144,12 +157,15 @@ export default class ClientScreen extends Component{
                     name:data.name,
                     phone:data.phone,
                     email:data.email,
-                    townId:data.town.id,
-                    townName:data.town.name,
-                    countryName:data.town.department.country.name,
-                    countryCode:data.town.department.country.code,
-                    departmentName:data.town.department.name,
-                    departmentCode:data.town.department.code,
+                    //townId:data.town.id,
+                    //townName:data.town.name,
+                    //countryName:data.town.department.country.name,
+                    //countryCode:data.town.department.country.code,
+                    //departmentName:data.town.department.name,
+                    //departmentCode:data.town.department.code,
+                    ciuu:data.ciuu,
+                    description:data.description,
+                    type:data.type,
                     documentTypeId:parseInt(data.documentTypeId),
                     document_number:data.document_number,
                     observations:data.observations,
@@ -168,19 +184,17 @@ export default class ClientScreen extends Component{
               } )
             console.log("dataClientList")
             console.log(dataClientList)
-            //let l = dataClientList.sort()
-            //l = dataClientList.sort(dynamicSort("name"))
-            //console.log("ORDENADO",l)
-            //console.log(contacts)
+
             this.setState({
                 
                 loadingData:false,
                 dataClientList:dataClientList,
                 copyDataClientList:dataClientList,
-                countryList:country,
+                //countryList:country,
                 typeDocument:documents,
                 contactsList:contacts,
                 copyDataContactsList:contacts,
+                type_clients:type_clients
             })
         }else{
             this.setState({
@@ -196,11 +210,7 @@ export default class ClientScreen extends Component{
 
 
     stateChange = (stateToChange, value) => {
-        //console.log(this.state.var)
-        //console.log(this.state.contactName)
-        //console.log(stateToChange);
-        //console.log(this.state)
-        //console.log(value);
+
         this.state[stateToChange] = value;
        
         console.log("this.state.stateChange")
@@ -225,6 +235,7 @@ export default class ClientScreen extends Component{
                 dataClientList:datos
             })
         }else{
+
             this.setState({
                 searchBar:false,
                 dataClientList:datos
@@ -272,7 +283,7 @@ export default class ClientScreen extends Component{
         })
     }
 
-    editClient = async (item) => {
+    /* editClient = async (item) => {
         //console.log("item Selected")
         //console.log(item)
         
@@ -321,7 +332,7 @@ export default class ClientScreen extends Component{
             documentTypeId:filtroData[0].documentTypeId,
             idContactToEdit:filtroData[0].id
         })
-    }
+    } */
 
     modalOff = () => {
         this.setState({
@@ -332,8 +343,41 @@ export default class ClientScreen extends Component{
     }
 
     
+    addClientV2 = () => {
+        data = {
+            typeDocument : this.state.typeDocument,
+            contactsList : this.state.contactsList,
+            type_clients: this.state.type_clients
+        }
+        this.props.navigation.navigate('CreateClient', {
+            data: data
+          });
+    }
 
+    editClientV2 = (item) => { 
+        let filtroData = this.state.dataClientList.filter(n=>n.id===item.id)
+        console.log(filtroData)
+        let userDocumentId=0
 
+        if (filtroData[0].documentTypeId===1){
+             userDocumentId = this.state.typeDocument[0].value
+        }else{
+             userDocumentId = this.state.typeDocument[1].value
+        }
+        data = {
+            contactChecked:item.crm_contacts_assign,
+            editContactData:filtroData[0],
+            userDocumentId:userDocumentId,
+            documentTypeId:filtroData[0].documentTypeId,
+            typeDocument:this.state.typeDocument,
+            contactsList : this.state.contactsList,
+            type_clients: this.state.type_clients,
+            
+        }
+        this.props.navigation.navigate('EditClient', {
+            data: data
+          });
+    }
     
 
 
@@ -341,37 +385,7 @@ export default class ClientScreen extends Component{
     render(){
         return(
             <View style={styles.container}>
-                
-                <CreateClientModal 
-                searchContactList={this.searchContactList}
-                initialState= {this.initialState}
-                states={this.state}
-                show={this.state.showModal}
-                goBack={this.goBackModalAction}
-                data={[this.state.countryList,this.state.typeDocument,this.state.contactsList]}
-                modalOff={this.modalOff}
-                stateChange={this.stateChange}
-                />
-                <EditClientModal 
-                        searchContactList={this.searchContactList}
-                        initialState= {this.initialState}
-                        states={this.state}
-                        show={this.state.showEditModal}
-                        goBack={this.goBackModalAction}
-                        data={[this.state.countryList,this.state.typeDocument,this.state.contactsList,this.state.editContactData]}
-                        townId={this.state.townId}
-                        documentTypeId={this.state.documentTypeId}
-                        departmentName={this.state.departmentName}
-                        townName={this.state.townName}
-                        departmentsList={this.state.departmentsList}
-                        townsList={this.state.townsList}
-                        userDocumentId={this.state.userDocumentId}
-                        modalOff={this.modalOff}
-                        stateChange={this.stateChange}
-                        countryList={this.state.countryList}
-                        idContactToEdit={this.state.idContactToEdit}
-                        //state={this.state}
-                />
+
                 <View style={styles.headerContainer}>
                     <Header 
                     showSearch={true}
@@ -383,9 +397,11 @@ export default class ClientScreen extends Component{
                     actionSearchBar={this.searchMethods}
 
                     />
+
+                    
                     
                 </View>
-                
+
                 <View style={styles.subcontainer}>
                 <View style={[styles.bodyContainer]}>
                     {this.state.loadingData ? (
@@ -397,8 +413,8 @@ export default class ClientScreen extends Component{
                         
                         <View style={styles.body}>
                             
-                            <ClientList clientList={this.state.dataClientList}  editClient={this.editClient}/>
-                            <FloatButton add={this.addClient}/>
+                            <ClientList clientList={this.state.dataClientList}  editClient={this.editClientV2}/>
+                            <FloatButton add={this.addClientV2}/>
                             
                             
                             

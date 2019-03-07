@@ -130,7 +130,9 @@ class SideMenu extends Component {
 
             <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===0 && (styles.onTabCalendar,colors.greyColor)]} onPress={()=>{this.controlTabNavigator('Calendar',0)}}>
                 <Icon name="calendar-check" size={20}  
-                style={[styles.offIcon, this.state.eyeSlash===0 && styles.onIcon]}/>
+                style={[styles.offIcon, this.state.eyeSlash===0 && styles.onIcon]}
+                onPress={()=>{this.controlTabNavigator('Calendar',0)}}
+                />
     
                 <TouchableHighlight onPress={()=>{this.controlTabNavigator('Calendar',0)}} underlayColor="white"
                 style={{flex:1}}>
@@ -144,7 +146,9 @@ class SideMenu extends Component {
             
             <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===1 && (styles.onTabCalendar,colors.greyColor)]}>
             <IconCrm name="folder-account" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===1 && styles.onIcon]} />
+            style={[styles.offIcon, this.state.eyeSlash===1 && styles.onIcon]}
+            onPress={()=>{this.controlTabNavigator('Crm',1)}}
+             />
     
                 <TouchableHighlight onPress={()=>{this.controlTabNavigator('Crm',1)}} underlayColor="white"
                 style={{flex:1}}>
@@ -155,9 +159,13 @@ class SideMenu extends Component {
                 </TouchableHighlight>
               
             </View>
-            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===2 && (styles.onTabCalendar,colors.greyColor)]}>
+            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===2 && (styles.onTabCalendar,colors.greyColor)]}
+            
+            >
             <IconRequest name="question-answer" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===2 && styles.onIcon]} />
+            style={[styles.offIcon, this.state.eyeSlash===2 && styles.onIcon]} 
+            onPress={()=>{this.controlTabNavigator('SolicitudScreen',2)}}
+            />
             <TouchableHighlight onPress={()=>{this.controlTabNavigator('SolicitudScreen',2)}} underlayColor="white"
                 style={{flex:1}}>
 
@@ -173,7 +181,9 @@ class SideMenu extends Component {
 
             <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===3 && (styles.onTabCalendar,colors.greyColor)]}>
             <Profile name="user" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===3 && styles.onIcon,[{marginLeft:13}]]} />
+            style={[styles.offIcon, this.state.eyeSlash===3 && styles.onIcon,[{marginLeft:13}]]} 
+            onPress={()=>{this.controlTabNavigator('Profile',3)}}
+            />
             <TouchableHighlight onPress={()=>{this.controlTabNavigator('Profile',3)}} underlayColor="white"
                 style={{flex:1}}>
 
@@ -188,7 +198,9 @@ class SideMenu extends Component {
 
             <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===4 && (styles.onTabCalendar,colors.greyColor)]}>
             <IconExit name="sign-out-alt" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===4 && styles.onIcon]} />
+            style={[styles.offIcon, this.state.eyeSlash===4 && styles.onIcon]} 
+            onPress={()=>{this.logOut()}}
+            />
             <TouchableHighlight onPress={()=>{this.logOut()}} underlayColor="white"
                 style={{flex:1}}>
 

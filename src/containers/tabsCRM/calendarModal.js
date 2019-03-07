@@ -47,7 +47,7 @@ export default class CalendarModal extends Component {
     return (
       <Modal
         visible={this.props.show}
-        animationType="slide"
+        animationType="none"
         onRequestClose={() => { this.props.stateChange("showModalCalendar", false); } }
       >
         <KeyboardAvoidingView

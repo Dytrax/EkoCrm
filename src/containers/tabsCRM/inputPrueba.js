@@ -46,6 +46,29 @@ export default class InputPrueba extends Component{
                         this.setState({texto:text})
                         
                         this.props.stateChange(this.props.state,text)
+                        if (this.props.ciuu){
+                            if (text.length>7){
+                            this.setState({
+                                error:true,
+                                
+                            })
+                            }else{
+                                this.setState({
+                                    error:false
+                                })
+                            }
+                        }else{
+                            if(text.length<1){
+                            this.setState({
+                                error:true,
+                                
+                            })
+                            }else{
+                                this.setState({
+                                    error:false
+                                })
+                            }
+                        }
 
                         if (text.length>0){
                             this.setState({
@@ -61,16 +84,7 @@ export default class InputPrueba extends Component{
                         
                         //console.log(text)
                         
-                        if(text.length<1){
-                        this.setState({
-                            error:true,
-                            
-                        })
-                        }else{
-                            this.setState({
-                                error:false
-                            })
-                        }
+                       
                             }}
                     value={this.state.texto}
                     keyboardType={this.props.type}

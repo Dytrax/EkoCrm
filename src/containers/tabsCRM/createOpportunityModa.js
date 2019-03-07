@@ -89,7 +89,7 @@ export default class OpportunityModal extends Component {
     render(){
         return(
             <Modal visible={this.props.states.showModalAddOpportunity}
-            animationType="fade"
+            animationType="slide"
             onRequestClose={() => { this.props.stateChange("showModalAddOpportunity",false) } }
             >
             <SelectClientModal 

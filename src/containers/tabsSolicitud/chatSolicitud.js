@@ -158,6 +158,7 @@ export default class ChatSolicitud extends Component {
         return(
             <Modal visible={this.props.states.showChat}
             animationType="none"
+            onRequestClose={() => { this.props.stateChange("showChat",false)} }
             //onRequestClose={() => { this.props.stateChange("showModalAddOpportunity",false) } }
             
             >
