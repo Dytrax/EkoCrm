@@ -3,13 +3,12 @@ import React, {Component} from 'react';
 //import styles from './SideMenu.style';
 import {NavigationActions} from 'react-navigation';
 import {ScrollView, Text, View, StyleSheet, Image, TouchableHighlight,ImageBackground,Alert} from 'react-native';
-//import Logo from "../../assets/Logo.png"
+import Logo from "../../assets/Logo.png"
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import IconCrm from "react-native-vector-icons/MaterialCommunityIcons";
 import IconRequest from "react-native-vector-icons/MaterialIcons";
 import IconExit from "react-native-vector-icons/FontAwesome5";
 import Profile from "react-native-vector-icons/FontAwesome";
-import AddRequest from "react-native-vector-icons/MaterialIcons";
 import DB from "../../storeData/storeData"
 import CONFIG from "../../config/config"
 import colors from "../../config/colors"
@@ -34,6 +33,7 @@ class SideMenu extends Component {
       email:email
     })
     console.log(URL_IMAGEN+compnayId)
+    console.log("HOLAAAA")
   }
   navigateToScreen = (route) => () => {
     const navigateAction = NavigationActions.navigate({
@@ -111,6 +111,7 @@ class SideMenu extends Component {
           }}
 
           />
+          
 
           <View style={{marginTop:20, alignSelf:"flex-start",marginLeft:20}}>
           {/* <Text style={{marginBottom:5,color:"rgb(255,255,255)",fontWeight: "bold",fontSize:17}}>EkoEnergia</Text> */}
@@ -127,94 +128,6 @@ class SideMenu extends Component {
         <ScrollView style={[colors.primaryColor,{borderColor:"white",borderTopWidth:0.5,paddingTop:15}]}>
 
             
-
-
-            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===0 && (styles.onTabCalendar,colors.greyColor)]} onPress={()=>{this.controlTabNavigator('Calendar',0)}}>
-                <Icon name="calendar-check" size={20}  
-                style={[styles.offIcon, this.state.eyeSlash===0 && styles.onIcon]}
-                onPress={()=>{this.controlTabNavigator('Calendar',0)}}
-                />
-    
-                <TouchableHighlight onPress={()=>{this.controlTabNavigator('Calendar',0)}} underlayColor="white"
-                style={{flex:1}}>
-
-                <Text style={[styles.offPressFont, this.state.eyeSlash===0 && styles.onPressFont]} >
-                Calendario Actividades</Text>
-                      
-                </TouchableHighlight>
-                
-            </View>
-            
-            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===1 && (styles.onTabCalendar,colors.greyColor)]}>
-            <IconCrm name="folder-account" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===1 && styles.onIcon]}
-            onPress={()=>{this.controlTabNavigator('Crm',1)}}
-             />
-    
-                <TouchableHighlight onPress={()=>{this.controlTabNavigator('Crm',1)}} underlayColor="white"
-                style={{flex:1}}>
-
-                <Text style={[styles.offPressFont, this.state.eyeSlash===1 && styles.onPressFont]} >
-                CRM</Text>
-                      
-                </TouchableHighlight>
-              
-            </View>
-            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===2 && (styles.onTabCalendar,colors.greyColor)]}
-            
-            >
-            <IconRequest name="question-answer" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===2 && styles.onIcon]} 
-            onPress={()=>{this.controlTabNavigator('SolicitudScreen',2)}}
-            />
-            <TouchableHighlight onPress={()=>{this.controlTabNavigator('SolicitudScreen',2)}} underlayColor="white"
-                style={{flex:1}}>
-
-                <Text style={[styles.offPressFont, this.state.eyeSlash===2 && styles.onPressFont]} >
-                Solicitudes
-                </Text>
-                      
-                </TouchableHighlight>
-
-            
-            </View>
-             <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===5 && (styles.onTabCalendar,colors.greyColor)]}
-            
-            >
-            <AddRequest name="add-to-photos" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===5 && styles.onIcon]} 
-            onPress={()=>{this.controlTabNavigator('CrearSolicitud',5)}}
-            />
-            <TouchableHighlight onPress={()=>{this.controlTabNavigator('CrearSolicitud',5)}} underlayColor="white"
-                style={{flex:1}}>
-
-                <Text style={[styles.offPressFont, this.state.eyeSlash===5 && styles.onPressFont]} >
-                Crear Solicitud
-                </Text>
-                      
-                </TouchableHighlight>
-
-            
-            </View> 
-            
-
-            <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===3 && (styles.onTabCalendar,colors.greyColor)]}>
-            <Profile name="user" size={20} 
-            style={[styles.offIcon, this.state.eyeSlash===3 && styles.onIcon,[{marginLeft:13}]]} 
-            onPress={()=>{this.controlTabNavigator('Profile',3)}}
-            />
-            <TouchableHighlight onPress={()=>{this.controlTabNavigator('Profile',3)}} underlayColor="white"
-                style={{flex:1}}>
-
-                <Text style={[styles.offPressFont, this.state.eyeSlash===3 && styles.onPressFont,[{marginLeft:4}]]} >
-                Perfil
-                </Text>
-                      
-                </TouchableHighlight>
-
-            
-            </View>
-
             <View style={[styles.offTabCalendar,colors.lightColor, this.state.eyeSlash===4 && (styles.onTabCalendar,colors.greyColor)]}>
             <IconExit name="sign-out-alt" size={20} 
             style={[styles.offIcon, this.state.eyeSlash===4 && styles.onIcon]} 
@@ -231,6 +144,16 @@ class SideMenu extends Component {
 
             
             </View>
+
+          
+            
+            
+            
+            
+
+            
+
+            
             
             
           

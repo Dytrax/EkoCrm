@@ -9,6 +9,10 @@ import FlashMessage from "react-native-flash-message";
 //import firebase from 'firebase'
 import Login from './src/containers/loginScreen'
 import RootStack from './router/RootStack'
+//energia.ejecutivo@leadis.co
+import {Provider} from 'react-redux'
+import {createStore} from 'redux'
+import Reducers from './Redux/reducer/reducerIndex'
 export default class App extends Component {
 /*     constructor(){
       super();
@@ -57,17 +61,19 @@ export default class App extends Component {
             messagingSenderId: "207426050363"
           };
           firebase.initializeApp(config); */
-        SplashScreen.hide()
+        //SplashScreen.hide()
     } 
     
              /*  {this.state.currentScreen==='Splash' ? <Splash/> : <Login/>} */
            
     render(){
         return(
-            <View style={{ flex: 1 }}>
-            <RootStack/>
-            <FlashMessage position="top" />
-            </View>                
+            <Provider store={createStore(Reducers)}>
+                <View style={{ flex: 1 }}>
+                <RootStack/>
+                <FlashMessage position="top" />
+                </View>                
+            </Provider>
         );
     }
 }

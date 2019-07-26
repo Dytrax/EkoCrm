@@ -16,7 +16,7 @@ import RootStackSolicitud from './RootStackSolicitud';
 import RootStackCrm from './RootStackCrm'
 import RootStackCalendar from "./RootStackCalendar"
 import RootStackProfile from './RootStackProfile';
-
+import RootStackCrearSolicitud from './RootStackCrearSolicitud';
 
 /* const CustomDrawerComponent = (props) => {
   return(
@@ -46,6 +46,9 @@ const DrawerV2 = createDrawerNavigator({
     screen: RootStackProfile,
     
   },
+  CrearSolicitud: {
+    screen: RootStackCrearSolicitud
+  }
   
 },{
   //contentComponent:SideMenu,

@@ -11,6 +11,9 @@ const URL_CHAT_CLOSE = `${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_A
 
 //http://138.197.160.240:7002/v1/pqr/pqrs/uploads/18/datos.xlsx
 const URL_DOWNLOAD_FILES =`${CONFIG.URL_BASE}:${CONFIG.PORT_CRM}/${CONFIG.VERSION_API}/pqr/pqrs/uploads/` 
+const URL_GET_CLIENT = `${CONFIG.URL_BASE}:${CONFIG.PORT_IMAGE}/${CONFIG.VERSION_API_IMAGE}/companies/clients-ejecutive`
+const URL_TIPOS_SOLICITUD = `${CONFIG.URL_BASE}:${CONFIG.PORT_SOLICITUD}/ekosave-api/v1/clients/data-empresa?module=27&permission=0&data=clasesproceso`
+
 
 
 
@@ -326,6 +329,71 @@ class Api {
 
   }
 
+  }
+
+
+  async getClients(token){
+    try {
+      const rest = await fetch(URL_GET_CLIENT, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+      });
+
+      let resjson = await rest.json();
+      //console.log('Este es',resjson)
+      return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors.Text());
+
+
+  }
+
+  }
+
+  async getTipoSolicitudes(token){
+    try {
+      const rest = await fetch(URL_TIPOS_SOLICITUD, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+      });
+
+      let resjson = await rest.json();
+      //console.log('Este es',resjson)
+      return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors.Text());
+    }
+  }
+
+  async createSolicitud(codigo,contracts,dateInit,description,title,token) {
+    try {
+      const rest = await fetch(URL_SOLICITUD, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          codigo: codigo, 
+          contracts: contracts,
+          dateInit:dateInit,
+          description:description,
+          title:title
+        })
+      });
+
+      let resjson = await rest.json();
+      console.log('Este es',resjson)
+      return [rest.status,resjson];
+    } catch (errors) {
+      console.log("catch errors: " + errors);
+    }
   }
   
 }
